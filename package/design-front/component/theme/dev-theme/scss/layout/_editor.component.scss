@@ -1,0 +1,216 @@
+@mixin ra-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+
+.editor{
+  width: 100%;
+  height: 100vh;
+
+  @include ra-container;
+
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  /* 头部 */
+  .editor-header{
+    -webkit-box-shadow: 0 8px 20px 0 rgba(40,37,89,.6);
+    box-shadow: 0 8px 20px 0 rgba(40,37,89,.6);
+    height: 4.75rem;
+    padding: 1.25rem;
+    background: #1c2b36;
+    color: #fff;
+    box-sizing: border-box;
+    border-bottom: 1px solid #131e26;
+  }
+  // 中间
+  .editor-main{
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    display: flex;
+    box-sizing: border-box;
+    // 舞台(编辑器)
+    .editor-stage{
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: $ra-back-color;
+      //舞台头部(任务栏)
+      .editor-stage-taskbar{
+        height: 26px;
+        background: $ra-back-extra-color;
+        user-select: none;
+        .editor-tools-item{
+          height: 26px;
+          display: inline-block;
+          align-items: center;
+          color: $ra-font-color;
+          border-right: 1px solid $ra-font-color;
+          padding-left: 5px;
+          padding-right: 5px;
+          font-size: 16px;
+          i{
+            width: 16px;
+            height: 16px;
+            text-align: center;
+          }
+          span{
+            padding-left: 5px;
+            padding-right: 5px;
+          }
+          .fa-close:hover{
+            color: $ra-font-light-color;
+          }
+          &.is-select{
+            color: $ra-hover-extra;
+            border-bottom: 2px solid $ra-primary;
+          }
+
+        }
+      }
+      .editor-stage-main{
+        flex: 1;
+      }
+      .editor-stage-footer{
+        height: 26px;
+        background: $ra-back-light-color;
+      }
+    }
+
+    //工具栏
+    .editor-tools{
+      width: 31px;
+      background: #1c2b36;
+      user-select: none;
+      .editor-tools-item{
+        height: 26px;
+        display: flex;
+        align-items: center;
+        color: $ra-font-color;
+        margin-bottom: 8px;
+        i{
+          width: 20px;
+          height: 20px;
+          font-size: 20px;
+          text-align: center;
+        }
+        span{
+          display: none;
+        }
+        &:hover{
+          color: $ra-font-light-color;
+        }
+        &.is-select{
+          color: #ffffff;
+        }
+
+      }
+      .editor-tools-home{
+        color: #fff;
+        cursor: default;
+        background-image: -webkit-gradient(linear,left top,right top,from(#00d9bf),to(#00d977));
+        background-image: linear-gradient(to right,#00d9bf,#00d977);
+        -webkit-box-shadow: 0 3px 0 0 #00bb85, 0 2px 8px 0 #00d99b, 0 4px 10px 0 rgba(33,7,77,.5);
+        box-shadow: 0 3px 0 0 #00bb85, 0 2px 8px 0 #00d99b, 0 4px 10px 0 rgba(33,7,77,.5);
+        text-shadow: 0 1px 3px rgba(0,0,0,.3);
+        border: none;
+        line-height: calc((1rem * 1.25) + 4px);
+        font-weight: 700;
+        height: 26px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        -webkit-transition: none;
+        transition: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        i{
+          width: 20px;
+          height: 20px;
+          font-size: 20px;
+          text-align: center;
+        }
+      }
+      .editor-tools-center{
+        order: 100;
+        flex: 1;
+      }
+      &:first-of-type{
+        border-right: 1px solid #131e26;
+
+        .editor-tools-item{
+          padding-left: 2px;
+          i{
+            margin-left: 4px;
+          }
+          span{
+            margin-left: 10px;
+          }
+          &.is-select{
+            border-left: 2px solid #00f9a6;
+            padding-left: 0;
+          }
+        }
+      }
+      &:last-of-type{
+        border-left: 1px solid #131e26;
+        .editor-tools-item{
+          justify-content: flex-end;
+          flex-direction: row;
+          padding-right: 2px;
+          i{
+            order: 1;
+            margin-right: 4px;
+          }
+          span{
+            order: 0;
+            margin-right: 10px;
+          }
+          &.is-select{
+            border-right: 2px solid #00f9a6;
+            padding-right: 0;
+          }
+        }
+      }
+      &.editor-tools_enlarge{
+        width: 150px;
+        .editor-tools-item{
+          span{
+            display: block;
+          }
+        }
+      }
+    }
+
+    //工具栏界面
+    .editor-tools-interface{
+      &:nth-child(2){
+        border-right: 1px solid $ra-back-color;
+      }
+      &:nth-last-child(2){
+        border-left: 1px solid $ra-back-color;
+      }
+    }
+  }
+  /** 尾部 */
+  .editor-footer{
+    background: $ra-back-extra-color;
+    border-top: 1px solid $ra-back-color;
+    height: 26px;
+  }
+}
+
+

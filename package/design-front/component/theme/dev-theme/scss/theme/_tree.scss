@@ -1,0 +1,45 @@
+.ra-design-tree {
+  color: $ra-font-light-color;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: $ra-back-extra-color;
+  user-select: none;
+  .ra-design-tree-node {
+    .ra-design-tree-node__content {
+      display: flex;
+      align-items: center;
+      height: 26px;
+      line-height: 26px;
+      &.is-drop{
+        .ra-design-tree-node_icon{
+          border: 1px solid red;
+          border-right: none;
+          height: 28px;
+        }
+        .ra-design-tree-node_label{
+          border: 1px solid red;
+          border-left: none;
+        }
+      }
+      &.is-select {
+        background: $ra-hover-light;
+        color: #FFF;
+      }
+      &.is-context {
+        background: $ra-hover;
+      }
+      .is-leaf {
+        color: transparent;
+      }
+      .ra-design-tree-node_icon,.ra-design-tree-node_expand-icon {
+        font-weight: bold;
+        padding: 6px;
+        min-width: 26px;
+        height: 26px;
+        text-align: center;
+      }
+    }
+  }
+  @include ra-design-scrollbar;
+}

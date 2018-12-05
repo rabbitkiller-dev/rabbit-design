@@ -1,0 +1,41 @@
+.select-project{
+  width: 450px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -225px;
+  margin-left: -225px;
+  color: $ra-font-light-color;
+  .select-project_input{
+    width: 100%;
+    height: 50px;
+  }
+  .select-project_button_area{
+    width: 210px;
+    margin: 0 auto;
+    .select-project_button{
+      width: 50px;
+      height: 80px;
+      margin-right: 10px;
+      margin-left: 10px;
+      display: inline-block;
+      text-align: center;
+      cursor: pointer;
+      i{
+        //font-size: 45px;
+      }
+    }
+  }
+  .select-project_history{
+    margin-top: 50px;
+    i{
+
+    }
+    span{
+      padding-left: 20px;
+    }
+    &hover{
+      
+    }
+  }
+}

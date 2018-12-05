@@ -17,6 +17,22 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "ra-component": [
+        "component/ra-component/src/public_api",
+        "dist/ra-component"
+      ],
+      "ra-component/*": [
+        "component/ra-component/src/public_api",
+        "dist/ra-component/*"
+      ],
+      "ra-design-component": [
+        "dist/ra-design-component"
+      ],
+      "ra-design-component/*": [
+        "dist/ra-design-component/*"
+      ]
+    }
   }
 }
