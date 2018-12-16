@@ -12,6 +12,16 @@
       "element",
       "ra-design",
       "kebab-case"
+    ],
+    "no-shadowed-variable": [
+      false
+    ],
+    "no-inferrable-types": [
+      false
+    ],
+    "max-line-length": [
+      true,
+      180
     ]
   }
 }

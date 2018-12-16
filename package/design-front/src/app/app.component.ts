@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import {RaIconService} from 'ra-component';
 
 @Component({
-  selector: 'app-root',
+  selector: 'design-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })

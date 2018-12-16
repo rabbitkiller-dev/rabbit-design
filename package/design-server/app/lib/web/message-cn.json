@@ -1,0 +1,19 @@
+{
+  "sys.model.IdIsNull":"Id不能为空",
+  "sys.model.NotFind":"找不到对应的信息",
+  "sys.error":"系统错误",
+  "sys.noLogin":"没有登录",
+  "meiyoucar.card.notNum":"卡包没有次数了",
+  "meiyoucar.card.repeatConfirm":"卡包没有次数了",
+  "user.notJurisdiction":"你没有权限",
+  "user.userNotRegister":"用户没有注册",
+  "user.repeatRegister":"已经注册过",
+  "user.codeIsNotNull":"code不能为空",
+  "user.phoneIsNotNull":"手机号不能为空",
+  "user.auth.headerNot(X-WX-Id)":"请求头X-WX-Id错误",
+  "user.auth.headerNot(X-WX-Skey)":"请求头X-WX-Skey错误",
+  "user.auth.X-WX-SkeyNotEQBravo":"请求头X-WX-Skey只支持bravo",
+  "jscode.request.statusError":"微信jscode请求状态码不正确",
+  "jscode.request.failed":"微信jscode请求失败",
+  "jscode.session.failed":"微信jscode sessionKey不符合"
+}

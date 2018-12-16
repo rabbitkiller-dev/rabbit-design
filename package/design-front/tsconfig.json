@@ -28,9 +28,11 @@
         "dist/ra-component/*"
       ],
       "ra-design-component": [
+        "component/ra-design-component/src/public_api",
         "dist/ra-design-component"
       ],
       "ra-design-component/*": [
+        "component/ra-design-component/src/public_api",
         "dist/ra-design-component/*"
       ]
     }
