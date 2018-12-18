@@ -1,0 +1,36 @@
+<!--<li class="editor-tools-home"
+    (click)="toggleEnlarge()"><i class="fa fa-home"></i></li>
+<ng-container *ngFor="let tools of toolsList">
+  <li class="editor-tools-item" [class.is-select]="tools.select" (click)="clickTools(tools)"
+      [style.order]="tools.order">
+    <i class="fa {{tools.icon}}"></i>
+    <span>{{tools.label}}</span>
+  </li>
+</ng-container>
+<li class="editor-tools-center">
+</li>-->
+
+
+<!--<div class="editor-tools" [class.editor-tools_enlarge]="RuntimeDataService.toolsData.leftToolsEnlarge">-->
+<div class="editor-tools">
+  <!--<ra-design-tools position="left"></ra-design-tools>-->
+  <span (click)="abc()">asdasd</span>
+</div>
+<div class="ra-design-tools-interface" style="width:350px">
+  <!--<ra-design-tools-interface position="left"></ra-design-tools-interface>-->
+  <span #left></span>
+</div>
+
+<!--中间区域 (舞台)-->
+<div class="editor-stage">
+  <ng-content></ng-content>
+</div>
+
+<!--右侧工具栏-->
+<div class="ra-design-tools-interface">
+  <!--<ra-design-tools-interface position="right"></ra-design-tools-interface>-->
+</div>
+<!--<div class="editor-tools" [class.editor-tools_enlarge]="RuntimeDataService.toolsData.rightToolsEnlarge">-->
+<div class="editor-tools" >
+  <!--<ra-design-tools position="right"></ra-design-tools>-->
+</div>

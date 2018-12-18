@@ -22,6 +22,7 @@
     "max-line-length": [
       true,
       180
-    ]
+    ],
+    "component-class-suffix": false
   }
 }

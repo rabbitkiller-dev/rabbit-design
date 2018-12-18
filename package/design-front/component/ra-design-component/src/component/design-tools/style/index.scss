@@ -1,0 +1,118 @@
+ra-design-tools{
+  display: flex;
+  flex: 1;
+  //工具栏
+  .editor-tools{
+    width: 31px;
+    background: $back-extra-color;
+    user-select: none;
+    .editor-tools-item{
+      height: 26px;
+      display: flex;
+      align-items: center;
+      color: $font-color;
+      margin-bottom: 8px;
+      i{
+        width: 20px;
+        height: 20px;
+        font-size: 20px;
+        text-align: center;
+      }
+      span{
+        display: none;
+      }
+      &:hover{
+        color: $font-light-color;
+      }
+      &.is-select{
+        color: #ffffff;
+      }
+
+    }
+    .editor-tools-home{
+      color: #fff;
+      cursor: default;
+      background-image: -webkit-gradient(linear,left top,right top,from(#00d9bf),to(#00d977));
+      background-image: linear-gradient(to right,#00d9bf,#00d977);
+      -webkit-box-shadow: 0 3px 0 0 #00bb85, 0 2px 8px 0 #00d99b, 0 4px 10px 0 rgba(33,7,77,.5);
+      box-shadow: 0 3px 0 0 #00bb85, 0 2px 8px 0 #00d99b, 0 4px 10px 0 rgba(33,7,77,.5);
+      text-shadow: 0 1px 3px rgba(0,0,0,.3);
+      border: none;
+      line-height: calc((1rem * 1.25) + 4px);
+      font-weight: 700;
+      height: 26px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      -webkit-transition: none;
+      transition: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      i{
+        width: 20px;
+        height: 20px;
+        font-size: 20px;
+        text-align: center;
+      }
+    }
+    .editor-tools-center{
+      order: 100;
+      flex: 1;
+    }
+    &:first-of-type{
+      border-right: 1px solid $back-color;
+
+      .editor-tools-item{
+        padding-left: 2px;
+        i{
+          margin-left: 4px;
+        }
+        span{
+          margin-left: 10px;
+        }
+        &.is-select{
+          border-left: 2px solid #00f9a6;
+          padding-left: 0;
+        }
+      }
+    }
+    &:last-of-type{
+      border-left: 1px solid $back-color;
+      .editor-tools-item{
+        justify-content: flex-end;
+        flex-direction: row;
+        padding-right: 2px;
+        i{
+          order: 1;
+          margin-right: 4px;
+        }
+        span{
+          order: 0;
+          margin-right: 10px;
+        }
+        &.is-select{
+          border-right: 2px solid #00f9a6;
+          padding-right: 0;
+        }
+      }
+    }
+    &.editor-tools_enlarge{
+      width: 150px;
+      .editor-tools-item{
+        span{
+          display: block;
+        }
+      }
+    }
+  }
+
+  //工具栏界面
+  .ra-design-tools-interface{
+    &:nth-child(2){
+      border-right: 1px solid $back-color;
+    }
+    &:nth-last-child(2){
+      border-left: 1px solid $back-color;
+    }
+  }
+}

@@ -4,19 +4,7 @@
 
   <!--中间-->
   <div class="editor-main">
-
-    <!--<div class="editor-tools" [class.editor-tools_enlarge]="RuntimeDataService.toolsData.leftToolsEnlarge">-->
-    <div class="editor-tools">
-      <!--<ra-design-tools position="left"></ra-design-tools>-->
-    </div>
-    <div class="editor-tools-interface" style="width:350px">
-      <!--<ra-design-tools-interface position="left"></ra-design-tools-interface>-->
-      <ra-design-tree [nzData]="data"></ra-design-tree>
-    </div>
-
-
-    <!--中间区域 (舞台)-->
-    <div class="editor-stage">
+    <ra-design-tools>
       <div class="editor-stage-taskbar">
         <!--<ra-design-stage></ra-design-stage>-->
       </div>
@@ -25,16 +13,7 @@
       </div>
       <div class="editor-stage-footer">
       </div>
-    </div>
-
-    <!--右侧工具栏-->
-    <div class="editor-tools-interface">
-      <!--<ra-design-tools-interface position="right"></ra-design-tools-interface>-->
-    </div>
-    <!--<div class="editor-tools" [class.editor-tools_enlarge]="RuntimeDataService.toolsData.rightToolsEnlarge">-->
-    <div class="editor-tools" >
-      <!--<ra-design-tools position="right"></ra-design-tools>-->
-    </div>
+    </ra-design-tools>
   </div>
 
 
