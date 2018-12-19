@@ -14,11 +14,21 @@
 <!--<div class="editor-tools" [class.editor-tools_enlarge]="RuntimeDataService.toolsData.leftToolsEnlarge">-->
 <div class="editor-tools">
   <!--<ra-design-tools position="left"></ra-design-tools>-->
-  <span (click)="abc()">asdasd</span>
+  <!--<span (click)="abc()" style="writing-mode: vertical-lr">asdasd</span>-->
+  <li class="editor-tools-home"><i class="fa fa-home"></i></li>
+  <ng-container *ngFor="let tools of RaDesignToolsService.left">
+    <li class="editor-tools-item" [class.is-select]="tools.select" (click)="clickTools(tools)"
+        [style.order]="tools.order">
+      <i class="fa {{tools.icon}}"></i>
+      <span>{{tools.label}}</span>
+    </li>
+  </ng-container>
+  <li class="editor-tools-center">
+  </li>
 </div>
 <div class="ra-design-tools-interface" style="width:350px">
   <!--<ra-design-tools-interface position="left"></ra-design-tools-interface>-->
-  <span #left></span>
+  <ng-template #left></ng-template>
 </div>
 
 <!--中间区域 (舞台)-->

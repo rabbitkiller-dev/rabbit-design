@@ -1,4 +1,11 @@
-import {AfterViewInit, Component, ComponentFactoryResolver, ElementRef, Input, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ComponentFactory,
+  ComponentFactoryResolver, ComponentRef,
+  ViewChild,
+  ViewContainerRef
+} from '@angular/core';
 import {RaDesignToolsService} from './ra-design-tools.service';
 
 @Component({
@@ -7,17 +14,20 @@ import {RaDesignToolsService} from './ra-design-tools.service';
   styles: []
 })
 export class RaDesignToolsComponent implements AfterViewInit {
+  private componentRefList: Map<>;
   @ViewChild('left', {read: ViewContainerRef}) left: ViewContainerRef;
 
   constructor(public ComponentFactoryResolver: ComponentFactoryResolver,
               public RaDesignToolsService: RaDesignToolsService) {
-    this.RaDesignToolsService.init();
+    this.RaDesignToolsService.init(this);
   }
 
   ngAfterViewInit() {
   }
 
-  abc() {
-    this.left.createComponent(this.RaDesignToolsService.factory.get('DataSource'));
+  showTools(componentFactory: ComponentFactory<any>) {
+    // this.componentRefList.push()
+
+    this.left.createComponent(componentFactory);
   }
 }
