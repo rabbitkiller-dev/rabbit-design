@@ -39,6 +39,9 @@ export default class AuthController extends Controller {
     };
   }
 
+  /**
+   * 注册
+   */
   public async register() {
     this.validate({
       userName: {type: 'string'},

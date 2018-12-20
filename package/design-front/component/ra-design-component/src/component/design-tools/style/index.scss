@@ -12,12 +12,6 @@ ra-design-tools{
       align-items: center;
       color: $font-color;
       margin-bottom: 8px;
-      i{
-        width: 20px;
-        height: 20px;
-        font-size: 20px;
-        text-align: center;
-      }
       span{
         display: none;
       }
@@ -114,5 +108,10 @@ ra-design-tools{
     &:nth-last-child(2){
       border-left: 1px solid $back-color;
     }
+  }
+
+  // tools 的 icon大小
+  [nz-icon]{
+    font-size: 20px;
   }
 }

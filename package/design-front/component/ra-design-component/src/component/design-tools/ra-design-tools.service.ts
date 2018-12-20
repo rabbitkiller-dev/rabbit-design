@@ -2,17 +2,20 @@ import {ComponentFactory, ComponentFactoryResolver, Injectable, ViewContainerRef
 import {ToolsTabModel} from './interface';
 import {RaDesignToolsComponent} from './ra-design-tools.component';
 import {DataSourceInterface} from './data-source/data-source.interface';
+import {ComponentInterface} from './component/component.interface';
 
 export enum ToolsFactory {
   DataSource = 'dataSource',
+  Component = 'component',
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class RaDesignToolsService {
-  private tools: ToolsTabModel[] = [];
-  private factory: Map<String, ComponentFactory> = new Map();
+  private toolsMap: Map<ToolsFactory, ToolsTabModel> = new Map();
+  private toolsList: ToolsTabModel[] = [];
+  private factory: Map<String, ComponentFactory<any>> = new Map();
   private RaDesignToolsComponent: RaDesignToolsComponent;
   left: ToolsTabModel[] = [];
 
@@ -22,17 +25,29 @@ export class RaDesignToolsService {
   init(RaDesignToolsComponent: RaDesignToolsComponent) {
     this.RaDesignToolsComponent = RaDesignToolsComponent;
     // 数据源管理
-    this.tools.push({
+    this.toolsList.push({
       factory: ToolsFactory.DataSource,
-      icon: 'fa-first-order',
+      icon: 'database',
       label: 'dataSource',
       position: 'left-top',
       order: 1,
       select: true,
     });
     this.factory.set(ToolsFactory.DataSource, this.ComponentFactoryResolver.resolveComponentFactory(DataSourceInterface));
+    // 组件列表
+    this.toolsList.push({
+      factory: ToolsFactory.Component,
+      icon: 'database',
+      label: 'dataSource',
+      position: 'left-top',
+      order: 2,
+      select: false,
+    });
+    this.factory.set(ToolsFactory.Component, this.ComponentFactoryResolver.resolveComponentFactory(ComponentInterface));
 
-    this.tools.forEach((tools) => {
+    this.toolsList.forEach((tools) => {
+      this.toolsMap.set(tools.factory, tools);
+
       switch (tools.position) {
         case 'left-top':
           this.left.push(tools);
@@ -48,10 +63,10 @@ export class RaDesignToolsService {
   }
 
   showTools(tools: ToolsFactory) {
-
-    this.tools.forEach((tools) => {
+    this.toolsList.forEach((tools) => {
       tools.select = false;
     });
+    this.toolsMap.get(tools).select = true;
     this.RaDesignToolsComponent.showTools(this.factory.get(tools));
   }
 }

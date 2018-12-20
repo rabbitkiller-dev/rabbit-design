@@ -14,7 +14,7 @@ import {RaDesignToolsService} from './ra-design-tools.service';
   styles: []
 })
 export class RaDesignToolsComponent implements AfterViewInit {
-  private componentRefList: Map<>;
+  // private componentRefList: Map<>;
   @ViewChild('left', {read: ViewContainerRef}) left: ViewContainerRef;
 
   constructor(public ComponentFactoryResolver: ComponentFactoryResolver,
@@ -27,7 +27,7 @@ export class RaDesignToolsComponent implements AfterViewInit {
 
   showTools(componentFactory: ComponentFactory<any>) {
     // this.componentRefList.push()
-
+    this.left.clear();
     this.left.createComponent(componentFactory);
   }
 }

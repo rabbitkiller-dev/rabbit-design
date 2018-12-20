@@ -25,7 +25,7 @@ import {AppComponent} from './app.component';
     RouterModule.forRoot([
       {
         path: '',
-        redirectTo: 'home',
+        redirectTo: 'editor',
         pathMatch: 'full'
       },
       {
