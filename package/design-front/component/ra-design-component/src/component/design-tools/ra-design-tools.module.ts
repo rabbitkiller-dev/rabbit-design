@@ -7,6 +7,7 @@ import {RaDesignToolsInterface} from './ra-design-tools.interface';
 import {RaDesignToolsService} from './ra-design-tools.service';
 import {DataSourceInterface} from './data-source/data-source.interface';
 import {ComponentInterface} from './component/component.interface';
+import {PageInterface} from './page/page.interface';
 
 @NgModule({
   imports: [
@@ -20,6 +21,7 @@ import {ComponentInterface} from './component/component.interface';
     // data-source
     DataSourceInterface,
     ComponentInterface,
+    PageInterface,
   ],
   exports: [
     RaDesignToolsComponent,
@@ -32,6 +34,7 @@ import {ComponentInterface} from './component/component.interface';
     // data-source
     DataSourceInterface,
     ComponentInterface,
+    PageInterface,
   ]
 })
 

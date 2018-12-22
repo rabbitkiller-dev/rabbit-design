@@ -3,9 +3,11 @@ import {ToolsTabModel} from './interface';
 import {RaDesignToolsComponent} from './ra-design-tools.component';
 import {DataSourceInterface} from './data-source/data-source.interface';
 import {ComponentInterface} from './component/component.interface';
+import {PageInterface} from './page/page.interface';
 
 export enum ToolsFactory {
   DataSource = 'dataSource',
+  Page = 'page',
   Component = 'component',
 }
 
@@ -34,13 +36,23 @@ export class RaDesignToolsService {
       select: true,
     });
     this.factory.set(ToolsFactory.DataSource, this.ComponentFactoryResolver.resolveComponentFactory(DataSourceInterface));
+    // 页面列表
+    this.toolsList.push({
+      factory: ToolsFactory.Page,
+      icon: 'database',
+      label: 'page',
+      position: 'left-top',
+      order: 2,
+      select: false,
+    });
+    this.factory.set(ToolsFactory.Page, this.ComponentFactoryResolver.resolveComponentFactory(PageInterface));
     // 组件列表
     this.toolsList.push({
       factory: ToolsFactory.Component,
       icon: 'database',
-      label: 'dataSource',
+      label: 'component',
       position: 'left-top',
-      order: 2,
+      order: 3,
       select: false,
     });
     this.factory.set(ToolsFactory.Component, this.ComponentFactoryResolver.resolveComponentFactory(ComponentInterface));
