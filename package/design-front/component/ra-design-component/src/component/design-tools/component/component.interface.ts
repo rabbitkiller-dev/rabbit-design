@@ -6,7 +6,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
       <i class="fa fa-first-order"></i>
       <label>组件列表</label>
     </div>
-    <ra-design-tree [nzData]="data" nzDraggable="true"></ra-design-tree>
+    <ra-design-tree [nzData]="data" [cdkDrag]="true"></ra-design-tree>
   `,
   styles: []
 })

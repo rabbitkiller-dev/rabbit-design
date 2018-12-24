@@ -76,6 +76,7 @@
   </ng-template>
 </li>
 <ul
+  cdkDropList
   role="group"
   [attr.data-expanded]="nzTreeNode.isExpanded"
   [ngClass]="nzNodeChildrenClass"
@@ -84,7 +85,6 @@
     *ngFor="let node of nzTreeNode.getChildren()"
     [nzTreeNode]="node"
     [nzShowLine]="nzShowLine"
-    [nzDraggable]="nzDraggable"
     [nzCheckable]="nzCheckable"
     [nzShowExpand]="nzShowExpand"
     [nzAsyncData]="nzAsyncData"
@@ -106,6 +106,8 @@
     (nzDragOver)="nzDragOver.emit($event)"
     (nzDragLeave)="nzDragLeave.emit($event)"
     (nzDrop)="nzDrop.emit($event)"
-    (nzDragEnd)="nzDragEnd.emit($event)">
+    (nzDragEnd)="nzDragEnd.emit($event)"
+    cdkDrag
+    [cdkDragDisabled]="!RaDesignTreeComponent.cdkDrag">
   </ra-design-tree-node>
 </ul>

@@ -1,4 +1,5 @@
 <ul
+  cdkDropList
   role="tree"
   unselectable="on"
   [ngClass]="nzTreeClass">
@@ -6,7 +7,6 @@
     *ngFor="let node of nzNodes"
     [nzTreeNode]="node"
     [nzShowLine]="nzShowLine"
-    [nzDraggable]="nzDraggable"
     [nzCheckable]="nzCheckable"
     [nzShowExpand]="nzShowExpand"
     [nzAsyncData]="nzAsyncData"
@@ -28,6 +28,8 @@
     (nzDragOver)="nzOnDragOver.emit($event)"
     (nzDragLeave)="nzOnDragLeave.emit($event)"
     (nzDrop)="nzOnDrop.emit($event)"
-    (nzDragEnd)="nzOnDragEnd.emit($event)">
+    (nzDragEnd)="nzOnDragEnd.emit($event)"
+    cdkDrag
+    [cdkDragDisabled]="!cdkDrag">
   </ra-design-tree-node>
 </ul>

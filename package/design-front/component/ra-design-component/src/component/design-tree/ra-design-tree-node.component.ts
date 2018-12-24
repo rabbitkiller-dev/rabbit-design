@@ -22,6 +22,7 @@ import {NzFormatBeforeDropEvent, NzFormatEmitEvent} from './interface';
 import {TreeNodeModel} from './tree-node.model';
 import {isCheckDisabled} from './nz-tree-util';
 import {RaDesignTreeService} from './ra-design-tree.service';
+import {RaDesignTreeComponent} from './ra-design-tree.component';
 
 @Component({
   selector: 'ra-design-tree-node',
@@ -75,16 +76,6 @@ export class RaDesignTreeNodeComponent implements OnInit, OnChanges, OnDestroy {
 
   get nzTreeNode(): TreeNodeModel {
     return this._nzTreeNode;
-  }
-
-  @Input()
-  set nzDraggable(value: boolean) {
-    this._nzDraggable = value;
-    this.handDragEvent();
-  }
-
-  get nzDraggable(): boolean {
-    return this._nzDraggable;
   }
 
   /**
@@ -425,7 +416,7 @@ export class RaDesignTreeNodeComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  constructor(private RaDesignTreeService: RaDesignTreeService, private ngZone: NgZone, private renderer: Renderer2, private elRef: ElementRef) {
+  constructor(private RaDesignTreeService: RaDesignTreeService, private ngZone: NgZone, private renderer: Renderer2, private elRef: ElementRef, public RaDesignTreeComponent: RaDesignTreeComponent) {
   }
 
   ngOnInit(): void {

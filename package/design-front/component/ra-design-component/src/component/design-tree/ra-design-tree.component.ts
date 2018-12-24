@@ -33,10 +33,10 @@ export class RaDesignTreeComponent implements OnInit, OnChanges, OnDestroy {
   @Input() @InputBoolean() nzCheckable = false;
   @Input() @InputBoolean() nzShowExpand = true;
   @Input() @InputBoolean() nzAsyncData = false;
-  @Input() @InputBoolean() nzDraggable = false;
   @Input() @InputBoolean() nzMultiple = false;
   @Input() @InputBoolean() nzExpandAll: boolean = false;
   @Input() @InputBoolean() nzHideUnMatched = false;
+  @Input() @InputBoolean() cdkDrag = false;
   /**
    * @deprecated use
    * nzExpandAll instead

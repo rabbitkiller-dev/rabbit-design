@@ -19,6 +19,12 @@ export class PageInterface {
       // 'icon': 'fa-file',
       'id': '1',
     },
+    {
+      'key': 1,
+      'title': '登录',
+      // 'icon': 'fa-file',
+      'id': '1',
+    },
   ];
 
   constructor(public RaDesignStageService: RaDesignStageService) {

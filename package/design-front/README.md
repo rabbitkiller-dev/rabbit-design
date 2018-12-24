@@ -1,3 +1,16 @@
+
+## 设计平台相关
+ - 尽量不停止冒泡功能,导致父节点无法触发事件.采用判断target和$event记录事件确认是否无视该事件,
+ - tools-interface 在此处实现工具栏
+ - 平台相关事件先在runtime-event.service.ts 事件枚举对象RUNTIME_EVENT_ENUM定义枚举
+ - 平台相关变量先在runtime-data.service.ts  定义model对象并初始化
+ - 以上两点为规范事件和全局变量,做为顶级服务供全平台组件使用
+ - TODO: ctrl时就不会放到容器里
+ - TODO: 树节点拖拉拽,移动目录功能
+ - TODO: 本地node服务,开启后能够知道服务器发生什么事做对应的反应
+    - push/commit/update功能
+## 编译相关
+
 # DesignFront
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.1.0.

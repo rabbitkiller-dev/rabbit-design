@@ -46,38 +46,6 @@
       flex-direction: column;
       background: $ra-back-color;
       //舞台头部(任务栏)
-      .editor-stage-taskbar{
-        height: 26px;
-        background: $ra-back-extra-color;
-        user-select: none;
-        .editor-tools-item{
-          height: 26px;
-          display: inline-block;
-          align-items: center;
-          color: $ra-font-color;
-          border-right: 1px solid $ra-font-color;
-          padding-left: 5px;
-          padding-right: 5px;
-          font-size: 16px;
-          i{
-            width: 16px;
-            height: 16px;
-            text-align: center;
-          }
-          span{
-            padding-left: 5px;
-            padding-right: 5px;
-          }
-          .fa-close:hover{
-            color: $ra-font-light-color;
-          }
-          &.is-select{
-            color: $ra-hover-extra;
-            border-bottom: 2px solid $ra-primary;
-          }
-
-        }
-      }
       .editor-stage-main{
         flex: 1;
       }
