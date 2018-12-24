@@ -1,4 +1,5 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
+import {RaDesignStageService, StageFactory} from '../../design-stage';
 
 @Component({
   template: `
@@ -6,7 +7,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
       <i class="fa fa-first-order"></i>
       <label>页面管理</label>
     </div>
-    <ra-design-tree [nzData]="data"></ra-design-tree>
+    <ra-design-tree [nzData]="data" (nzDblClick)="onDblclick($event)"></ra-design-tree>
   `,
   styles: []
 })
@@ -14,18 +15,19 @@ export class PageInterface {
   data: any[] = [
     {
       'key': 1,
-      'title': 'forms',
+      'title': '首页',
       // 'icon': 'fa-file',
-      'children': [
-        {
-          'key': 2,
-          'title': 'icon',
-          // 'icon': 'fa-file'
-        }
-      ]
+      'id': '1',
     },
   ];
 
-  constructor() {
+  constructor(public RaDesignStageService: RaDesignStageService) {
   }
+
+  onDblclick($event) {
+    console.log($event);
+    console.log(this.RaDesignStageService);
+    this.RaDesignStageService.openStage(StageFactory.PageEditor, $event.node);
+  }
+
 }

@@ -11,9 +11,7 @@ export enum ToolsFactory {
   Component = 'component',
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class RaDesignToolsService {
   private toolsMap: Map<ToolsFactory, ToolsTabModel> = new Map();
   private toolsList: ToolsTabModel[] = [];

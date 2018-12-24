@@ -1,4 +1,7 @@
 ra-design-stage{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   [nz-icon]{
     font-size: 20px;
   }

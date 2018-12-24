@@ -7,12 +7,10 @@ export enum StageFactory {
   PageEditor = 'pageEditor',
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class RaDesignStageService {
-  private toolsMap: Map<string, StageTabModel> = new Map();
-  private toolsList: StageTabModel[] = [];
+  private stageMap: Map<string, StageTabModel> = new Map();
+  private stageList: StageTabModel[] = [];
   private factory: Map<String, ComponentFactory<any>> = new Map();
   private RaDesignStageComponent: RaDesignStageComponent;
 
@@ -29,16 +27,17 @@ export class RaDesignStageService {
       case StageFactory.PageEditor:
         const stage = {
           factory: StageFactory.PageEditor,
-          icon: 'database'
+          icon: 'database',
+          ...stageTabServer,
         };
-        this.toolsList.push(stage);
-        this.toolsMap.set(stageTabServer.id, stage);
+        this.stageList.push(stage);
+        this.stageMap.set(stageTabServer.id, stage);
         break;
       default:
         throw new Error('NotStageFactory');
     }
 
-    this.toolsMap.get(tools).select = true;
+    this.stageMap.get(stageTabServer.id).select = true;
     this.RaDesignStageComponent.showTools(this.factory.get(tools));
   }
 }

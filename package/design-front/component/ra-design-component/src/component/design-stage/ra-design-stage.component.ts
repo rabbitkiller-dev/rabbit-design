@@ -6,7 +6,7 @@ import {RaDesignStageService} from './ra-design-stage.service';
   selector: 'ra-design-stage',
   template: `
     <div class="editor-stage-taskbar">
-      <ng-container *ngFor="let tools of stageData.items">
+      <ng-container *ngFor="let tools of RaDesignStageService.stageList">
         <li class="editor-tools-item" [class.is-select]="tools.select" (click)="clickStageTools(tools)"
             [style.order]="tools.order">
           <i class="fa {{tools.icon}}"></i>
@@ -18,8 +18,6 @@ import {RaDesignStageService} from './ra-design-stage.service';
     <div class="editor-stage-main">
       <ng-template #main></ng-template>
       <!--<ra-design-stage-interface></ra-design-stage-interface>-->
-    </div>
-    <div class="editor-stage-footer">
     </div>
   `,
   styles: []
