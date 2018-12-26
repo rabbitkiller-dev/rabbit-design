@@ -7,4 +7,10 @@ export default (app: Application) => {
   router.get('/api/auth', controller.auth.auth); // 认证信息
   router.post('/api/auth/login', controller.auth.login); // 登录
   router.post('/api/auth/register', controller.auth.register); // 注册
+
+  /**
+   * tools-page
+   */
+
+  router.post('/api/tools-page', controller.auth.register); // 注册
 };

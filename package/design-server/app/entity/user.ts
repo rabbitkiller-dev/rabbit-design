@@ -16,6 +16,6 @@ export class User {
   email: string;
 
   @Column('tinyint')
-  enable: boolean; // 是否启用
+  enable: boolean; // 是否有效
 
 }

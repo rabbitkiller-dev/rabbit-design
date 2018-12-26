@@ -22,7 +22,6 @@ import {NzFormatBeforeDropEvent, NzFormatEmitEvent} from './interface';
 import {TreeNodeModel} from './tree-node.model';
 import {isCheckDisabled} from './nz-tree-util';
 import {RaDesignTreeService} from './ra-design-tree.service';
-import {RaDesignTreeComponent} from './ra-design-tree.component';
 
 @Component({
   selector: 'ra-design-tree-node',
@@ -149,23 +148,11 @@ export class RaDesignTreeNodeComponent implements OnInit, OnChanges, OnDestroy {
   nzNodeChildrenClass = {};
 
   /**
-   * drag var
-   */
-  destory$ = new Subject();
-  dragPos = 2;
-  dragPosClass: object = {
-    '0': 'drag-over',
-    '1': 'drag-over-gap-bottom',
-    '-1': 'drag-over-gap-top'
-  };
-
-  /**
    * default set
    */
   _nzTreeNode: TreeNodeModel;
   _searchValue = '';
   _nzExpandAll = false;
-  _nzDraggable = false;
   oldAPIIcon = true;
 
   get nzIcon(): string {
@@ -173,10 +160,6 @@ export class RaDesignTreeNodeComponent implements OnInit, OnChanges, OnDestroy {
       this.oldAPIIcon = this.nzTreeNode.origin.icon.indexOf('anticon') > -1;
     }
     return this.nzTreeNode && this.nzTreeNode.origin.icon;
-  }
-
-  get canDraggable(): boolean | null {
-    return (this.nzDraggable && this.nzTreeNode && !this.nzTreeNode.isDisabled) ? true : null;
   }
 
   get isShowLineIcon(): boolean {
@@ -294,129 +277,7 @@ export class RaDesignTreeNodeComponent implements OnInit, OnChanges, OnDestroy {
     this.clickCheckBox.emit(this.RaDesignTreeService.formatEvent('check', this.nzTreeNode, event));
   }
 
-  /**
-   * drag event
-   * @param e
-   */
-  clearDragClass(): void {
-    const dragClass = ['drag-over-gap-top', 'drag-over-gap-bottom', 'drag-over'];
-    dragClass.forEach(e => {
-      this.renderer.removeClass(this.dragElement.nativeElement, e);
-    });
-  }
-
-  handleDragStart(e: DragEvent): void {
-    e.stopPropagation();
-    try {
-      // ie throw error
-      // firefox-need-it
-      e.dataTransfer.setData('text/plain', '');
-    } catch (error) {
-      // empty
-    }
-    this.RaDesignTreeService.setSelectedNode(this.nzTreeNode);
-    this.nzTreeNode.setExpanded(false);
-    this.nzDragStart.emit(this.RaDesignTreeService.formatEvent('dragstart', null, e));
-  }
-
-  handleDragEnter(e: DragEvent): void {
-    e.preventDefault();
-    e.stopPropagation();
-    // reset position
-    this.dragPos = 2;
-    this.ngZone.run(() => {
-      if ((this.nzTreeNode !== this.RaDesignTreeService.getSelectedNode()) && !this.nzTreeNode.isLeaf) {
-        this.nzTreeNode.setExpanded(true);
-      }
-    });
-    this.nzDragEnter.emit(this.RaDesignTreeService.formatEvent('dragenter', this.nzTreeNode, e));
-  }
-
-  handleDragOver(e: DragEvent): void {
-    e.preventDefault();
-    e.stopPropagation();
-    const dropPosition = this.RaDesignTreeService.calcDropPosition(e);
-    if (this.dragPos !== dropPosition) {
-      this.clearDragClass();
-      this.dragPos = dropPosition;
-      // leaf node will pass
-      if (!(this.dragPos === 0 && this.nzTreeNode.isLeaf)) {
-        this.renderer.addClass(this.dragElement.nativeElement, this.dragPosClass[this.dragPos]);
-      }
-    }
-    this.nzDragOver.emit(this.RaDesignTreeService.formatEvent('dragover', this.nzTreeNode, e));
-  }
-
-  handleDragLeave(e: DragEvent): void {
-    e.stopPropagation();
-    this.ngZone.run(() => {
-      this.clearDragClass();
-    });
-    this.nzDragLeave.emit(this.RaDesignTreeService.formatEvent('dragleave', this.nzTreeNode, e));
-  }
-
-  handleDragDrop(e: DragEvent): void {
-    e.preventDefault();
-    e.stopPropagation();
-    this.ngZone.run(() => {
-      this.clearDragClass();
-      if (this.RaDesignTreeService.getSelectedNode() === this.nzTreeNode) {
-        return;
-      } else if (this.dragPos === 0 && this.nzTreeNode.isLeaf) {
-        return;
-      }
-      // pass if node is leafNo
-      if (this.nzBeforeDrop) {
-        this.nzBeforeDrop({
-          dragNode: this.RaDesignTreeService.getSelectedNode(),
-          node: this.nzTreeNode,
-          pos: this.dragPos
-        }).subscribe((canDrop: boolean) => {
-          if (canDrop) {
-            this.RaDesignTreeService.dropAndApply(this.nzTreeNode, this.dragPos);
-          }
-          this.nzDrop.emit(this.RaDesignTreeService.formatEvent('drop', this.nzTreeNode, e));
-          this.nzDragEnd.emit(this.RaDesignTreeService.formatEvent('dragend', this.nzTreeNode, e));
-        });
-      } else if (this.nzTreeNode) {
-        this.RaDesignTreeService.dropAndApply(this.nzTreeNode, this.dragPos);
-        this.nzDrop.emit(this.RaDesignTreeService.formatEvent('drop', this.nzTreeNode, e));
-      }
-    });
-  }
-
-  handleDragEnd(e: DragEvent): void {
-    e.stopPropagation();
-    this.ngZone.run(() => {
-      // if user do not custom beforeDrop
-      if (!this.nzBeforeDrop) {
-        this.RaDesignTreeService.setSelectedNode(null);
-        this.nzDragEnd.emit(this.RaDesignTreeService.formatEvent('dragend', this.nzTreeNode, e));
-      }
-    });
-  }
-
-  /**
-   * 监听拖拽事件
-   */
-  handDragEvent(): void {
-    this.ngZone.runOutsideAngular(() => {
-      if (this.nzDraggable) {
-        this.destory$ = new Subject();
-        fromEvent<DragEvent>(this.elRef.nativeElement, 'dragstart').pipe(takeUntil(this.destory$)).subscribe((e: DragEvent) => this.handleDragStart(e));
-        fromEvent<DragEvent>(this.elRef.nativeElement, 'dragenter').pipe(takeUntil(this.destory$)).subscribe((e: DragEvent) => this.handleDragEnter(e));
-        fromEvent<DragEvent>(this.elRef.nativeElement, 'dragover').pipe(takeUntil(this.destory$)).subscribe((e: DragEvent) => this.handleDragOver(e));
-        fromEvent<DragEvent>(this.elRef.nativeElement, 'dragleave').pipe(takeUntil(this.destory$)).subscribe((e: DragEvent) => this.handleDragLeave(e));
-        fromEvent<DragEvent>(this.elRef.nativeElement, 'drop').pipe(takeUntil(this.destory$)).subscribe((e: DragEvent) => this.handleDragDrop(e));
-        fromEvent<DragEvent>(this.elRef.nativeElement, 'dragend').pipe(takeUntil(this.destory$)).subscribe((e: DragEvent) => this.handleDragEnd(e));
-      } else {
-        this.destory$.next();
-        this.destory$.complete();
-      }
-    });
-  }
-
-  constructor(private RaDesignTreeService: RaDesignTreeService, private ngZone: NgZone, private renderer: Renderer2, private elRef: ElementRef, public RaDesignTreeComponent: RaDesignTreeComponent) {
+  constructor(private RaDesignTreeService: RaDesignTreeService, private ngZone: NgZone, private renderer: Renderer2, private elRef: ElementRef) {
   }
 
   ngOnInit(): void {
@@ -428,7 +289,5 @@ export class RaDesignTreeNodeComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.destory$.next();
-    this.destory$.complete();
   }
 }
