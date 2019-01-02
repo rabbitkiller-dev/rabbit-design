@@ -16,6 +16,7 @@ import {DropListRefInternal as DropListRef} from './drop-list-ref';
 import {DragDropRegistry} from './drag-drop-registry';
 import {extendStyles, toggleNativeDragInteractions} from './drag-styling';
 import {getTransformTransitionDurationInMs} from './transition-duration';
+import {CdkDrag} from './directives/drag';
 
 /** Object that can be used to configure the behavior of DragRef. */
 export interface DragRefConfig {
@@ -69,13 +70,14 @@ interface DragHandle {
  * Used to avoid circular import issues between the `DragRef` and the `DropListRef`.
  * @docs-private
  */
-export interface DragRefInternal extends DragRef {}
+export interface DragRefInternal extends DragRef {
+}
 
 /**
  * Reference to a draggable item. Used to manipulate or dispose of the item.
  * @docs-private
  */
-export class DragRef<T = any> {
+export class DragRef<T = CdkDrag> {
   /** Element displayed next to the user's pointer while the element is dragged. */
   private _preview: HTMLElement;
 
@@ -127,14 +129,14 @@ export class DragRef<T = any> {
   private _initialContainer: DropListRef;
 
   /** Cached scroll position on the page when the element was picked up. */
-  private _scrollPosition: {top: number, left: number};
+  private _scrollPosition: { top: number, left: number };
 
   /** Emits when the item is being moved. */
   private _moveEvents = new Subject<{
     source: DragRef;
-    pointerPosition: {x: number, y: number};
+    pointerPosition: { x: number, y: number };
     event: MouseEvent | TouchEvent;
-    delta: {x: -1 | 0 | 1, y: -1 | 0 | 1};
+    delta: { x: -1 | 0 | 1, y: -1 | 0 | 1 };
   }>();
 
   /**
@@ -144,7 +146,7 @@ export class DragRef<T = any> {
   private _moveEventSubscriptions = 0;
 
   /** Keeps track of the direction in which the user is dragging along each axis. */
-  private _pointerDirectionDelta: {x: -1 | 0 | 1, y: -1 | 0 | 1};
+  private _pointerDirectionDelta: { x: -1 | 0 | 1, y: -1 | 0 | 1 };
 
   /** Pointer position at which the last change in the delta occurred. */
   private _pointerPositionAtLastDirectionChange: Point;
@@ -202,6 +204,7 @@ export class DragRef<T = any> {
   get disabled(): boolean {
     return this._disabled || !!(this.dropContainer && this.dropContainer.disabled);
   }
+
   set disabled(value: boolean) {
     const newValue = coerceBooleanProperty(value);
 
@@ -210,25 +213,26 @@ export class DragRef<T = any> {
       this._toggleNativeDragInteractions();
     }
   }
+
   private _disabled = false;
 
   /** Emits as the drag sequence is being prepared. */
   beforeStarted = new Subject<void>();
 
   /** Emits when the user starts dragging the item. */
-  started = new Subject<{source: DragRef}>();
+  started = new Subject<{ source: DragRef }>();
 
   /** Emits when the user has released a drag item, before any animations have started. */
-  released = new Subject<{source: DragRef}>();
+  released = new Subject<{ source: DragRef }>();
 
   /** Emits when the user stops dragging an item in the container. */
-  ended = new Subject<{source: DragRef}>();
+  ended = new Subject<{ source: DragRef }>();
 
   /** Emits when the user has moved the item into a new container. */
-  entered = new Subject<{container: DropListRef, item: DragRef}>();
+  entered = new Subject<{ container: DropListRef, item: DragRef }>();
 
   /** Emits when the user removes the item its container by dragging it into another container. */
-  exited = new Subject<{container: DropListRef, item: DragRef}>();
+  exited = new Subject<{ container: DropListRef, item: DragRef }>();
 
   /** Emits when the user drops the item inside a container. */
   dropped = new Subject<{
@@ -246,9 +250,9 @@ export class DragRef<T = any> {
    */
   moved: Observable<{
     source: DragRef;
-    pointerPosition: {x: number, y: number};
+    pointerPosition: { x: number, y: number };
     event: MouseEvent | TouchEvent;
-    delta: {x: -1 | 0 | 1, y: -1 | 0 | 1};
+    delta: { x: -1 | 0 | 1, y: -1 | 0 | 1 };
   }> = Observable.create((observer: Observer<any>) => {
     const subscription = this._moveEvents.subscribe(observer);
     this._moveEventSubscriptions++;
@@ -260,7 +264,7 @@ export class DragRef<T = any> {
   });
 
   /** Arbitrary data that can be attached to the drag item. */
-  data: T;
+  data: CdkDrag;
 
   constructor(
     element: ElementRef<HTMLElement> | HTMLElement,
@@ -341,7 +345,7 @@ export class DragRef<T = any> {
    */
   withBoundaryElement(boundaryElement: ElementRef<HTMLElement> | HTMLElement | null): this {
     this._boundaryElement = boundaryElement instanceof ElementRef ?
-        boundaryElement.nativeElement : boundaryElement;
+      boundaryElement.nativeElement : boundaryElement;
     return this;
   }
 
@@ -371,7 +375,7 @@ export class DragRef<T = any> {
     this._moveEvents.complete();
     this._handles = [];
     this._boundaryElement = this._rootElement = this._placeholderTemplate =
-        this._previewTemplate = this._nextSibling = null!;
+      this._previewTemplate = this._nextSibling = null!;
   }
 
   /** Checks whether the element is currently being dragged. */
@@ -477,14 +481,14 @@ export class DragRef<T = any> {
     } else {
       const activeTransform = this._activeTransform;
       activeTransform.x =
-          constrainedPointerPosition.x - this._pickupPositionOnPage.x + this._passiveTransform.x;
+        constrainedPointerPosition.x - this._pickupPositionOnPage.x + this._passiveTransform.x;
       activeTransform.y =
-          constrainedPointerPosition.y - this._pickupPositionOnPage.y + this._passiveTransform.y;
+        constrainedPointerPosition.y - this._pickupPositionOnPage.y + this._passiveTransform.y;
       const transform = getTransform(activeTransform.x, activeTransform.y);
 
       // Preserve the previous `transform` value, if there was one.
       this._rootElement.style.transform = this._initialTransform ?
-          this._initialTransform + ' ' + transform : transform;
+        this._initialTransform + ' ' + transform : transform;
 
       // Apply transform as attribute if dragging and svg element to work for IE
       if (typeof SVGElement !== 'undefined' && this._rootElement instanceof SVGElement) {
@@ -698,7 +702,7 @@ export class DragRef<T = any> {
     // case where two containers are connected one way and the user tries to undo dragging an
     // item into a new container.
     if (!newContainer && this.dropContainer !== this._initialContainer &&
-        this._initialContainer._isOverContainer(x, y)) {
+      this._initialContainer._isOverContainer(x, y)) {
       newContainer = this._initialContainer;
     }
 
@@ -716,7 +720,7 @@ export class DragRef<T = any> {
 
     this.dropContainer!._sortItem(this, x, y, this._pointerDirectionDelta);
     this._preview.style.transform =
-        getTransform(x - this._pickupPositionInElement.x, y - this._pickupPositionInElement.y);
+      getTransform(x - this._pickupPositionInElement.x, y - this._pickupPositionInElement.y);
   }
 
   /**
@@ -728,12 +732,12 @@ export class DragRef<T = any> {
 
     if (this._previewTemplate) {
       const viewRef = this._viewContainerRef.createEmbeddedView(this._previewTemplate.templateRef,
-                                                                this._previewTemplate.data);
+        this._previewTemplate.data);
 
       preview = viewRef.rootNodes[0];
       this._previewRef = viewRef;
       preview.style.transform =
-          getTransform(this._pickupPositionOnPage.x, this._pickupPositionOnPage.y);
+        getTransform(this._pickupPositionOnPage.x, this._pickupPositionOnPage.y);
     } else {
       const element = this._rootElement;
       const elementRect = element.getBoundingClientRect();

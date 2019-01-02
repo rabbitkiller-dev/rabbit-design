@@ -1,17 +1,19 @@
 import {Component, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {CdkDragDrop, moveItemInArray} from '../cdk-drag-drop';
 import {RaDesignStageService} from './ra-design-stage.service';
+import {RaDesignDragDirective, RaDesignDropDirective, DesignDragDrop} from '../design-drag-drop';
 
 
 @Component({
   selector: 'ra-design-stage',
   template: `
     <!-- stage的上方上任务栏 -->
-    <div class="stage-taskbar" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)">
+    <div class="stage-taskbar" designDrop [enterPredicate]="enterPredicate" [orientation]="'horizontal'"
+         (designDropped)="onDesignDropped($event)">
       <ng-container *ngFor="let tools of RaDesignStageService.stageList">
         <!-- TODO cdkDragBoundary=".stage-taskbar" 限制移动元素 -->
         <li class="stage-taskbar-item" [class.is-select]="tools.select"
-            [style.order]="tools.order" cdkDrag>
+            [style.order]="tools.order" designDrag dragType="stage-task">
           <i nz-icon [type]="tools.icon" theme="outline"></i>
           <span>{{tools.title}}</span>
           <i nz-icon type="close" theme="outline"></i>
@@ -40,8 +42,16 @@ export class RaDesignStageComponent implements OnInit {
     this.main.clear();
     this.main.createComponent(componentFactory);
   }
+
   drop(event: CdkDragDrop<string[]>) {
-    console.log(event);
     moveItemInArray(this.RaDesignStageService.stageList, event.previousIndex, event.currentIndex);
+  }
+
+  enterPredicate(drag: RaDesignDragDirective<any>, drop: RaDesignDropDirective<any>) {
+    return drag.dragType === 'stage-task';
+  }
+
+  onDesignDropped($event: DesignDragDrop) {
+    moveItemInArray(this.RaDesignStageService.stageList, $event.currentIndex, $event.previousIndex);
   }
 }

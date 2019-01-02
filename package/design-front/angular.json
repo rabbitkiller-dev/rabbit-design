@@ -34,8 +34,8 @@
             "styles": [
               "src/styles.scss",
               "component/theme/dev-theme/default.scss",
-              "component/ra-design-component/src/component/design-component.scss",
-              "node_modules/ng-zorro-antd/ng-zorro-antd.min.css"
+              "node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
+              "component/ra-design-component/src/component/design-component.scss"
             ],
             "scripts": []
           },

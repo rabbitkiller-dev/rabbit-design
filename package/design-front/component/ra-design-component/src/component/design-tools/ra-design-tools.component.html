@@ -15,7 +15,6 @@
 <div class="editor-tools">
   <!--<ra-design-tools position="left"></ra-design-tools>-->
   <!--<span (click)="abc()" style="writing-mode: vertical-lr">asdasd</span>-->
-  <li class="editor-tools-home"><i class="fa fa-home"></i></li>
   <ng-container *ngFor="let tools of RaDesignToolsService.left">
     <li class="editor-tools-item" [class.is-select]="tools.select" (click)="RaDesignToolsService.showTools(tools.factory)" [style.order]="tools.order">
       <i nz-icon [type]="tools.icon" theme="outline"></i>

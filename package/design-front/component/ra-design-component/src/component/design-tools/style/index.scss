@@ -5,49 +5,29 @@ ra-design-tools{
   .editor-tools{
     width: 31px;
     background: $back-extra-color;
+    color: $primary-extra;
     user-select: none;
     .editor-tools-item{
-      height: 26px;
       display: flex;
-      align-items: center;
-      color: $font-color;
-      margin-bottom: 8px;
+      flex-direction: column;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      // tools 的 icon大小
+      [nz-icon]{
+        font-size: 14px;
+        margin-bottom: 4px;
+      }
       span{
-        display: none;
+        writing-mode: vertical-rl;
       }
       &:hover{
-        color: $font-light-color;
+        background: $back-light-color;
       }
       &.is-select{
-        color: #ffffff;
+        color: $primary-color;
+        background: $back-color;
       }
 
-    }
-    .editor-tools-home{
-      color: #fff;
-      cursor: default;
-      background-image: -webkit-gradient(linear,left top,right top,from(#00d9bf),to(#00d977));
-      background-image: linear-gradient(to right,#00d9bf,#00d977);
-      -webkit-box-shadow: 0 3px 0 0 #00bb85, 0 2px 8px 0 #00d99b, 0 4px 10px 0 rgba(33,7,77,.5);
-      box-shadow: 0 3px 0 0 #00bb85, 0 2px 8px 0 #00d99b, 0 4px 10px 0 rgba(33,7,77,.5);
-      text-shadow: 0 1px 3px rgba(0,0,0,.3);
-      border: none;
-      line-height: calc((1rem * 1.25) + 4px);
-      font-weight: 700;
-      height: 26px;
-      margin-bottom: 20px;
-      border-radius: 5px;
-      -webkit-transition: none;
-      transition: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      i{
-        width: 20px;
-        height: 20px;
-        font-size: 20px;
-        text-align: center;
-      }
     }
     .editor-tools-center{
       order: 100;
@@ -58,14 +38,14 @@ ra-design-tools{
 
       .editor-tools-item{
         padding-left: 2px;
-        i{
+        [nz-icon]{
           margin-left: 4px;
         }
         span{
-          margin-left: 10px;
+          margin-left: 4px;
         }
         &.is-select{
-          border-left: 2px solid #00f9a6;
+          border-left: 2px solid $primary-color;
           padding-left: 0;
         }
       }
@@ -76,25 +56,15 @@ ra-design-tools{
         justify-content: flex-end;
         flex-direction: row;
         padding-right: 2px;
-        i{
-          order: 1;
+        [nz-icon]{
           margin-right: 4px;
         }
         span{
-          order: 0;
-          margin-right: 10px;
+          margin-right: 4px;
         }
         &.is-select{
           border-right: 2px solid #00f9a6;
           padding-right: 0;
-        }
-      }
-    }
-    &.editor-tools_enlarge{
-      width: 150px;
-      .editor-tools-item{
-        span{
-          display: block;
         }
       }
     }
@@ -110,8 +80,5 @@ ra-design-tools{
     }
   }
 
-  // tools 的 icon大小
-  [nz-icon]{
-    font-size: 20px;
-  }
+
 }

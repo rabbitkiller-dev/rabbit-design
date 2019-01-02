@@ -17,7 +17,6 @@ import {InputBoolean} from 'ng-zorro-antd';
 import {NzFormatBeforeDropEvent, NzFormatEmitEvent} from '../design-tree/interface';
 import {TreeNodeModel} from './tree-node.model';
 import {RaDesignTreeService} from './ra-design-tree.service';
-import {CdkDrag, CdkDragEnd, CdkDragSortEvent, CdkDropList} from '@angular/cdk/drag-drop';
 
 
 @Component({

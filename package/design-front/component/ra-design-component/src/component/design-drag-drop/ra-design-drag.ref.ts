@@ -12,10 +12,12 @@ import {Directionality} from '@angular/cdk/bidi';
 import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Subscription, Subject, Observable, Observer} from 'rxjs';
-import {DropListRefInternal as DropListRef} from '@angular/cdk/drag-drop';
-import {DragDropRegistry} from './drag-drop-registry';
-import {extendStyles, toggleNativeDragInteractions} from './drag-styling';
-import {getTransformTransitionDurationInMs} from '../../cdk-drag-drop/transition-duration';
+import {DragDropRegistry} from '../cdk-drag-drop';
+import {extendStyles, toggleNativeDragInteractions} from '../cdk-drag-drop/drag-styling';
+import {RaDesignDragDirective} from './ra-design-drag.directive';
+import {RaDesignDropDirective} from './ra-design-drop.directive';
+import {DropListRefInternal as DropListRef} from '../cdk-drag-drop/drop-list-ref';
+import {getTransformTransitionDurationInMs} from '../cdk-drag-drop/transition-duration';
 
 /** Object that can be used to configure the behavior of DragRef. */
 export interface DragRefConfig {
@@ -59,23 +61,11 @@ interface DragHandle {
   disabled: boolean;
 }
 
-// TODO(crisbeto): add auto-scrolling functionality.
-// TODO(crisbeto): add an API for moving a draggable up/down the
-// list programmatically. Useful for keyboard controls.
-
-
-/**
- * Internal compile-time-only representation of a `DragRef`.
- * Used to avoid circular import issues between the `DragRef` and the `DropListRef`.
- * @docs-private
- */
-export interface DragRefInternal extends DragRef {}
-
 /**
  * Reference to a draggable item. Used to manipulate or dispose of the item.
  * @docs-private
  */
-export class DragRef<T = any> {
+export class RaDesignDragRef<T = any> {
   /** Element displayed next to the user's pointer while the element is dragged. */
   private _preview: HTMLElement;
 
@@ -124,17 +114,17 @@ export class DragRef<T = any> {
   private _hasMoved: boolean;
 
   /** Drop container in which the DragRef resided when dragging began. */
-  private _initialContainer: DropListRef;
+  private _initialContainer: RaDesignDropDirective<T>;
 
   /** Cached scroll position on the page when the element was picked up. */
-  private _scrollPosition: {top: number, left: number};
+  private _scrollPosition: { top: number, left: number };
 
   /** Emits when the item is being moved. */
   private _moveEvents = new Subject<{
-    source: DragRef;
-    pointerPosition: {x: number, y: number};
+    source: RaDesignDragRef;
+    pointerPosition: { x: number, y: number };
     event: MouseEvent | TouchEvent;
-    delta: {x: -1 | 0 | 1, y: -1 | 0 | 1};
+    delta: { x: -1 | 0 | 1, y: -1 | 0 | 1 };
   }>();
 
   /**
@@ -144,7 +134,7 @@ export class DragRef<T = any> {
   private _moveEventSubscriptions = 0;
 
   /** Keeps track of the direction in which the user is dragging along each axis. */
-  private _pointerDirectionDelta: {x: -1 | 0 | 1, y: -1 | 0 | 1};
+  private _pointerDirectionDelta: { x: -1 | 0 | 1, y: -1 | 0 | 1 };
 
   /** Pointer position at which the last change in the delta occurred. */
   private _pointerPositionAtLastDirectionChange: Point;
@@ -200,8 +190,9 @@ export class DragRef<T = any> {
 
   /** Whether starting to drag this element is disabled. */
   get disabled(): boolean {
-    return this._disabled || !!(this.dropContainer && this.dropContainer.disabled);
+    return this._disabled;
   }
+
   set disabled(value: boolean) {
     const newValue = coerceBooleanProperty(value);
 
@@ -210,33 +201,34 @@ export class DragRef<T = any> {
       this._toggleNativeDragInteractions();
     }
   }
+
   private _disabled = false;
 
   /** Emits as the drag sequence is being prepared. */
   beforeStarted = new Subject<void>();
 
   /** Emits when the user starts dragging the item. */
-  started = new Subject<{source: DragRef}>();
+  started = new Subject<{ source: RaDesignDragRef }>();
 
   /** Emits when the user has released a drag item, before any animations have started. */
-  released = new Subject<{source: DragRef}>();
+  released = new Subject<{ source: RaDesignDragRef }>();
 
   /** Emits when the user stops dragging an item in the container. */
-  ended = new Subject<{source: DragRef}>();
+  ended = new Subject<{ source: RaDesignDragRef }>();
 
   /** Emits when the user has moved the item into a new container. */
-  entered = new Subject<{container: DropListRef, item: DragRef}>();
+  entered = new Subject<{ container: DropListRef, item: RaDesignDragRef }>();
 
   /** Emits when the user removes the item its container by dragging it into another container. */
-  exited = new Subject<{container: DropListRef, item: DragRef}>();
+  exited = new Subject<{ container: DropListRef, item: RaDesignDragRef }>();
 
   /** Emits when the user drops the item inside a container. */
   dropped = new Subject<{
     previousIndex: number;
     currentIndex: number;
-    item: DragRef;
-    container: DropListRef;
-    previousContainer: DropListRef;
+    item: RaDesignDragRef;
+    container: RaDesignDropDirective<T>;
+    previousContainer: RaDesignDropDirective<T>;
     isPointerOverContainer: boolean;
   }>();
 
@@ -245,10 +237,10 @@ export class DragRef<T = any> {
    * because this event will fire for every pixel that the user has dragged.
    */
   moved: Observable<{
-    source: DragRef;
-    pointerPosition: {x: number, y: number};
+    source: RaDesignDragRef;
+    pointerPosition: { x: number, y: number };
     event: MouseEvent | TouchEvent;
-    delta: {x: -1 | 0 | 1, y: -1 | 0 | 1};
+    delta: { x: -1 | 0 | 1, y: -1 | 0 | 1 };
   }> = Observable.create((observer: Observer<any>) => {
     const subscription = this._moveEvents.subscribe(observer);
     this._moveEventSubscriptions++;
@@ -260,20 +252,20 @@ export class DragRef<T = any> {
   });
 
   /** Arbitrary data that can be attached to the drag item. */
-  data: T;
+  data: RaDesignDragDirective;
+
+  dropContainer: RaDesignDropDirective<T>;
 
   constructor(
-    element: ElementRef<HTMLElement> | HTMLElement,
+    private element: ElementRef<HTMLElement>,
     private _document: Document,
     private _ngZone: NgZone,
     private _viewContainerRef: ViewContainerRef,
     private _viewportRuler: ViewportRuler,
-    private _dragDropRegistry: DragDropRegistry<DragRef, DropListRef>,
+    private _dragDropRegistry: DragDropRegistry<RaDesignDragRef, any>,
     private _config: DragRefConfig,
-    /** Droppable container that the draggable is a part of. */
-    public dropContainer?: DropListRef,
-    private _dir?: Directionality) {
-
+    private _dir?: Directionality
+  ) {
     this.withRootElement(element);
     _dragDropRegistry.registerDragItem(this);
   }
@@ -341,7 +333,7 @@ export class DragRef<T = any> {
    */
   withBoundaryElement(boundaryElement: ElementRef<HTMLElement> | HTMLElement | null): this {
     this._boundaryElement = boundaryElement instanceof ElementRef ?
-        boundaryElement.nativeElement : boundaryElement;
+      boundaryElement.nativeElement : boundaryElement;
     return this;
   }
 
@@ -371,7 +363,7 @@ export class DragRef<T = any> {
     this._moveEvents.complete();
     this._handles = [];
     this._boundaryElement = this._rootElement = this._placeholderTemplate =
-        this._previewTemplate = this._nextSibling = null!;
+      this._previewTemplate = this._nextSibling = null!;
   }
 
   /** Checks whether the element is currently being dragged. */
@@ -437,10 +429,11 @@ export class DragRef<T = any> {
     } else if (!this.disabled) {
       this._initializeDragSequence(this._rootElement, event);
     }
-  }
+  };
 
   /** Handler that is invoked when the user moves their pointer after they've initiated a drag. */
   private _pointerMove = (event: MouseEvent | TouchEvent) => {
+
     if (!this._hasStartedDragging) {
       const pointerPosition = this._getPointerPositionOnPage(event);
       const distanceX = Math.abs(pointerPosition.x - this._pickupPositionOnPage.x);
@@ -471,20 +464,36 @@ export class DragRef<T = any> {
     this._hasMoved = true;
     event.preventDefault();
     this._updatePointerDirectionDelta(constrainedPointerPosition);
-
-    if (this.dropContainer) {
-      this._updateActiveDropContainer(constrainedPointerPosition);
+    // 查找drop元素
+    const ele: {
+      type: 'drop',
+      drop: RaDesignDropDirective<T>,
+    } = this.findElementUp(event.target);
+    if (ele) {
+      if (ele.type === 'drop') {
+        if (this.dropContainer === ele.drop) {
+          ele.drop.enter(this.data, constrainedPointerPosition.x, constrainedPointerPosition.y, this._pointerDirectionDelta);
+        } else {
+          this.dropContainer = ele.drop;
+          ele.drop.start();
+        }
+        this._preview.style.transform =
+          getTransform(constrainedPointerPosition.x - this._pickupPositionInElement.x, constrainedPointerPosition.y - this._pickupPositionInElement.y);
+        // this._preview.style.transform =
+        //   getTransform(constrainedPointerPosition.x - this._pickupPositionInElement.x, constrainedPointerPosition.y - this._pickupPositionInElement.y);
+      }
     } else {
       const activeTransform = this._activeTransform;
       activeTransform.x =
-          constrainedPointerPosition.x - this._pickupPositionOnPage.x + this._passiveTransform.x;
+        constrainedPointerPosition.x - this._pickupPositionOnPage.x + this._passiveTransform.x;
       activeTransform.y =
-          constrainedPointerPosition.y - this._pickupPositionOnPage.y + this._passiveTransform.y;
+        constrainedPointerPosition.y - this._pickupPositionOnPage.y + this._passiveTransform.y;
       const transform = getTransform(activeTransform.x, activeTransform.y);
-
+      this._preview.style.transform =
+        getTransform(constrainedPointerPosition.x - this._pickupPositionInElement.x, constrainedPointerPosition.y - this._pickupPositionInElement.y);
       // Preserve the previous `transform` value, if there was one.
-      this._rootElement.style.transform = this._initialTransform ?
-          this._initialTransform + ' ' + transform : transform;
+      // this._rootElement.style.transform = this._initialTransform ?
+      //   this._initialTransform + ' ' + transform : transform;
 
       // Apply transform as attribute if dragging and svg element to work for IE
       if (typeof SVGElement !== 'undefined' && this._rootElement instanceof SVGElement) {
@@ -506,7 +515,7 @@ export class DragRef<T = any> {
         });
       });
     }
-  }
+  };
 
   /** Handler that is invoked when the user lifts their pointer up, after initiating a drag. */
   private _pointerUp = (event: MouseEvent | TouchEvent) => {
@@ -546,7 +555,7 @@ export class DragRef<T = any> {
       this._cleanupDragArtifacts(event);
       this._dragDropRegistry.stopDragging(this);
     });
-  }
+  };
 
   /** Starts the dragging sequence. */
   private _startDragSequence(event: MouseEvent | TouchEvent) {
@@ -557,22 +566,22 @@ export class DragRef<T = any> {
       this._lastTouchEventTime = Date.now();
     }
 
+    const element = this._rootElement;
+
+    // Grab the `nextSibling` before the preview and placeholder
+    // have been created so we don't get the preview by accident.
+    this._nextSibling = element.nextSibling;
+
+    const preview = this._preview = this._createPreviewElement();
+    const placeholder = this._placeholder = this._createPlaceholderElement();
+
+    // We move the element out at the end of the body and we make it hidden, because keeping it in
+    // place will throw off the consumer's `:last-child` selectors. We can't remove the element
+    // from the DOM completely, because iOS will stop firing all subsequent events in the chain.
+    element.style.display = 'none';
+    this._document.body.appendChild(element.parentNode!.replaceChild(placeholder, element));
+    this._document.body.appendChild(preview);
     if (this.dropContainer) {
-      const element = this._rootElement;
-
-      // Grab the `nextSibling` before the preview and placeholder
-      // have been created so we don't get the preview by accident.
-      this._nextSibling = element.nextSibling;
-
-      const preview = this._preview = this._createPreviewElement();
-      const placeholder = this._placeholder = this._createPlaceholderElement();
-
-      // We move the element out at the end of the body and we make it hidden, because keeping it in
-      // place will throw off the consumer's `:last-child` selectors. We can't remove the element
-      // from the DOM completely, because iOS will stop firing all subsequent events in the chain.
-      element.style.display = 'none';
-      this._document.body.appendChild(element.parentNode!.replaceChild(placeholder, element));
-      this._document.body.appendChild(preview);
       this.dropContainer.start();
     }
   }
@@ -627,7 +636,7 @@ export class DragRef<T = any> {
 
     this._toggleNativeDragInteractions();
     this._hasStartedDragging = this._hasMoved = false;
-    this._initialContainer = this.dropContainer!;
+    this._initialContainer = (this.element.nativeElement.parentElement as any).designDrop!;
     this._pointerMoveSubscription = this._dragDropRegistry.pointerMove.subscribe(this._pointerMove);
     this._pointerUpSubscription = this._dragDropRegistry.pointerUp.subscribe(this._pointerUp);
     this._scrollPosition = this._viewportRuler.getViewportScrollPosition();
@@ -686,40 +695,6 @@ export class DragRef<T = any> {
   }
 
   /**
-   * Updates the item's position in its drop container, or moves it
-   * into a new one, depending on its current drag position.
-   */
-  private _updateActiveDropContainer({x, y}: Point) {
-    // Drop container that draggable has been moved into.
-    let newContainer = this.dropContainer!._getSiblingContainerFromPosition(this, x, y);
-
-    // If we couldn't find a new container to move the item into, and the item has left it's
-    // initial container, check whether the it's over the initial container. This handles the
-    // case where two containers are connected one way and the user tries to undo dragging an
-    // item into a new container.
-    if (!newContainer && this.dropContainer !== this._initialContainer &&
-        this._initialContainer._isOverContainer(x, y)) {
-      newContainer = this._initialContainer;
-    }
-
-    if (newContainer) {
-      this._ngZone.run(() => {
-        // Notify the old container that the item has left.
-        this.exited.next({item: this, container: this.dropContainer!});
-        this.dropContainer!.exit(this);
-        // Notify the new container that the item has entered.
-        this.entered.next({item: this, container: newContainer!});
-        this.dropContainer = newContainer!;
-        this.dropContainer.enter(this, x, y);
-      });
-    }
-
-    this.dropContainer!._sortItem(this, x, y, this._pointerDirectionDelta);
-    this._preview.style.transform =
-        getTransform(x - this._pickupPositionInElement.x, y - this._pickupPositionInElement.y);
-  }
-
-  /**
    * Creates the element that will be rendered next to the user's pointer
    * and will be used as a preview of the element that is being dragged.
    */
@@ -728,12 +703,12 @@ export class DragRef<T = any> {
 
     if (this._previewTemplate) {
       const viewRef = this._viewContainerRef.createEmbeddedView(this._previewTemplate.templateRef,
-                                                                this._previewTemplate.data);
+        this._previewTemplate.data);
 
       preview = viewRef.rootNodes[0];
       this._previewRef = viewRef;
       preview.style.transform =
-          getTransform(this._pickupPositionOnPage.x, this._pickupPositionOnPage.y);
+        getTransform(this._pickupPositionOnPage.x, this._pickupPositionOnPage.y);
     } else {
       const element = this._rootElement;
       const elementRect = element.getBoundingClientRect();
@@ -934,6 +909,34 @@ export class DragRef<T = any> {
     element.removeEventListener('touchstart', this._pointerDown, passiveEventListenerOptions);
   }
 
+  /** Find element up */
+  private findElementUp(eventTarget: any): {
+    type: 'drop',
+    drop: RaDesignDropDirective<T>
+  } {
+    let currentElement: HTMLElement = eventTarget;
+    let drop: RaDesignDropDirective<T> = null;
+    let type: 'drop' = null;
+    do {
+      // if (currentElement.classList.contains('cdk-drag') || currentElement.classList.contains('cdk-drop-list')) {
+      if (currentElement.classList.contains('cdk-drop-list')) {
+        const designDrop: RaDesignDropDirective<T> = (currentElement as any).designDrop;
+        if (designDrop.enterPredicate(this.data, drop)) {
+          type = 'drop';
+          drop = designDrop;
+        }
+      }
+      currentElement = currentElement.parentElement;
+    } while (!drop && currentElement);
+    if (drop) {
+      return {
+        type,
+        drop
+      };
+    } else {
+      return null;
+    }
+  }
 }
 
 /** Point on the page or within an element. */

@@ -88,6 +88,9 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
   /** Template for placeholder element rendered to show where a draggable would be dropped. */
   @ContentChild(CdkDragPlaceholder) _placeholderTemplate: CdkDragPlaceholder;
 
+  /** Design: model */
+  @Input('cdkDrag') model: 'tools-component';
+
   /** Arbitrary data to attach to this drag instance. */
   @Input('cdkDragData') data: T;
 

@@ -587,7 +587,9 @@ export class DropListRef<T = any> {
    */
   _getSiblingContainerFromPosition(item: DragRef, x: number, y: number): DropListRef | null {
     const results = this._positionCache.siblings.filter(sibling => {
-      return isInsideClientRect(sibling.clientRect, x, y);
+      let a = isInsideClientRect(sibling.clientRect, x, y);
+
+      return a;
     });
 
     // No drop containers are intersecting with the pointer.
