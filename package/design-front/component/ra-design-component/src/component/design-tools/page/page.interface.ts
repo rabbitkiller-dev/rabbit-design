@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {RaDesignStageService, StageFactory} from '../../design-stage';
+import {NzFormatEmitEvent} from '../../design-tree';
 
 @Component({
   template: `
@@ -69,10 +70,10 @@ export class PageInterface {
   constructor(public RaDesignStageService: RaDesignStageService) {
   }
 
-  onDblclick($event) {
-    console.log($event);
-    console.log(this.RaDesignStageService);
-    this.RaDesignStageService.openStage(StageFactory.PageEditor, $event.node);
+  onDblclick($event: NzFormatEmitEvent) {
+    console.log($event.node);
+    const node = $event.node;
+    this.RaDesignStageService.putStage(StageFactory.PageEditor, {id: node.key, title: node.title});
   }
 
 }

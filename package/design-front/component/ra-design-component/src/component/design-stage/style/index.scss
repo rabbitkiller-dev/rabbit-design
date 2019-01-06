@@ -6,20 +6,41 @@ ra-design-stage{
     font-size: 20px;
   }
   // stage的上方上任务栏
-  .stage-taskbar{
-    height: 26px;
+  .stage-bar{
+    position: relative;
+    height: 32px;
     background: $back-extra-color;
     user-select: none;
+    border-bottom: 2px solid $back-color;
+    &:after{
+      content: '';
+      position: absolute;
+      top: 24px;
+      left: 0;
+      width: 100%;
+      background: $back-light-color;
+      height: 6px;
+      border-top: 2px solid $back-color;
+    }
   }
-  .stage-taskbar-item{
-    height: 26px;
+  .stage-bar-item{
+    position: relative;
+    top: 3px;
+    z-index: 2;
     display: inline-block;
-    align-items: center;
+    min-width: 140px;
+    height: 23px;
+    text-align: center;
     color: $font-color;
-    border-right: 1px solid $font-color;
-    padding-left: 5px;
-    padding-right: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-left: -10px;
     font-size: 16px;
+    border: 2px solid $back-color;
+    border-bottom: 2px solid transparent;
+    border-top-left-radius: 50px 60px;
+    border-top-right-radius: 50px 60px;
+    background: $back-extra-color;
     span{
       padding-left: 5px;
       padding-right: 5px;
@@ -36,14 +57,18 @@ ra-design-stage{
     }
     &.is-select{
       color: $primary-extra;
-      border-bottom: 2px solid $primary-color;
+      background: $back-light-color;
+      z-index: 3;
+    }
+    &:first-of-type{
+      margin-left: 10px;
     }
   }
 }
 
 
 // stage 拖拉拽样式
-.stage-taskbar-item{
+.stage-bar-item{
   &.cdk-drag-preview {
     box-sizing: border-box;
     border-radius: 4px;
@@ -74,6 +99,23 @@ ra-design-stage{
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
   }
 }
-.stage-taskbar.cdk-drop-list-dragging .stage-taskbar-item:not(.cdk-drag-placeholder) {
+.stage-bar.cdk-drop-list-dragging .stage-bar-item:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+// 舞台(编辑器)
+.editor-stage{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: $back-color;
+  .editor-stage-footer{
+    height: 26px;
+    background: $back-light-color;
+  }
+}
+
+//舞台头部(任务栏)
+.editor-stage-main{
+  flex: 1;
+  background: $back-light-color;
 }

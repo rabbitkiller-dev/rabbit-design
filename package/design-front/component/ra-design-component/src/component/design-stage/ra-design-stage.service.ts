@@ -9,8 +9,8 @@ export enum StageFactory {
 
 @Injectable()
 export class RaDesignStageService {
-  private stageMap: Map<string, StageTabModel> = new Map();
   stageList: StageTabModel[] = [];
+  private stageMap: Map<string, StageTabModel> = new Map();
   private factory: Map<String, ComponentFactory<any>> = new Map();
   private RaDesignStageComponent: RaDesignStageComponent;
 
@@ -22,7 +22,12 @@ export class RaDesignStageService {
     this.factory.set(StageFactory.PageEditor, this.ComponentFactoryResolver.resolveComponentFactory(PageEditorInterface));
   }
 
-  openStage(tools: StageFactory, stageTabServer: StageTabServerModel) {
+  putStage(tools: StageFactory, stageTabServer: StageTabServerModel) {
+    if (this.stageMap.get(stageTabServer.id)) {
+      this.openStage(stageTabServer.id);
+      return;
+    }
+
     switch (tools) {
       case StageFactory.PageEditor:
         const stage = {
@@ -36,8 +41,18 @@ export class RaDesignStageService {
       default:
         throw new Error('NotStageFactory');
     }
-
+    this.stageList.forEach(stage => stage.select = false);
     this.stageMap.get(stageTabServer.id).select = true;
     this.RaDesignStageComponent.showTools(this.factory.get(tools));
+  }
+
+  openStage(stageID: string) {
+    const stage = this.stageMap.get(stageID);
+    if (stage.select) {
+      return;
+    }
+    this.stageList.forEach(stage => stage.select = false);
+    stage.select = true;
+    this.RaDesignStageComponent.showTools(this.factory.get(stage.factory));
   }
 }

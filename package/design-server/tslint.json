@@ -37,7 +37,10 @@
       true,
       "allow-leading-underscore"
     ],
-    "align": [true, "statements"]
+    "align": [true, "statements"],
+    "max-line-length": [true, 180],
+    "object-literal-shorthand" : [false],
+    "ban-types": [false]
   }
 }
 

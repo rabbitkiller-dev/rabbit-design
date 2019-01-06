@@ -1,4 +1,4 @@
-import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, Entity, PrimaryColumn} from 'typeorm';
 
 export enum PageType {
   dir = 'dir',
@@ -14,7 +14,7 @@ export enum PageType {
 @Entity()
 export class Page {
 
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn()
   pageID: string; // 页面ID
 
   @Column()
@@ -23,7 +23,7 @@ export class Page {
   @Column()
   pageName: string; // 页面名称
 
-  @Column()
+  @Column({nullable: true})
   pageDesc: string; // 页面描述
 
   @Column()
@@ -33,7 +33,7 @@ export class Page {
   parentPageID: string; // 父页面ID
 
   @Column()
-  pageIDPath: string; // 页面ID路径
+  pagePath: string; // 页面ID路径
 
   @Column()
   author: string; // 创作者 @User.userID

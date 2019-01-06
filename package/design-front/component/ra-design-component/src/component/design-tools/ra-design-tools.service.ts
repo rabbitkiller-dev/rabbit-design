@@ -38,7 +38,7 @@ export class RaDesignToolsService {
     this.toolsList.push({
       factory: ToolsFactory.Page,
       icon: 'database',
-      label: 'page',
+      label: '页面管理',
       position: 'left-top',
       order: 2,
       select: false,

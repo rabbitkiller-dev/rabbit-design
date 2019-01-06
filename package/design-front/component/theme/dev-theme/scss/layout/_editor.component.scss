@@ -24,37 +24,6 @@
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
-  /* 头部 */
-  .editor-header{
-    -webkit-box-shadow: 0 8px 20px 0 rgba(40,37,89,.6);
-    box-shadow: 0 8px 20px 0 rgba(40,37,89,.6);
-    height: 60px;
-    padding: 1.25rem;
-    background: #1c2b36;
-    color: #fff;
-    box-sizing: border-box;
-    border-bottom: 1px solid #131e26;
-  }
-  // 中间
-  .editor-main{
-    display: flex;
-    flex: 1;
-    // 舞台(编辑器)
-    .editor-stage{
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      background: $ra-back-color;
-      //舞台头部(任务栏)
-      .editor-stage-main{
-        flex: 1;
-      }
-      .editor-stage-footer{
-        height: 26px;
-        background: $ra-back-light-color;
-      }
-    }
-  }
   /** 尾部 */
   .editor-footer{
     background: $ra-back-extra-color;

@@ -11,18 +11,20 @@
 </li>-->
 
 
-<!--<div class="editor-tools" [class.editor-tools_enlarge]="RuntimeDataService.toolsData.leftToolsEnlarge">-->
-<div class="editor-tools">
-  <!--<ra-design-tools position="left"></ra-design-tools>-->
-  <!--<span (click)="abc()" style="writing-mode: vertical-lr">asdasd</span>-->
+<div class="side-bar left">
   <ng-container *ngFor="let tools of RaDesignToolsService.left">
-    <li class="editor-tools-item" [class.is-select]="tools.select" (click)="RaDesignToolsService.showTools(tools.factory)" [style.order]="tools.order">
-      <i nz-icon [type]="tools.icon" theme="outline"></i>
-      <span>{{tools.label}}</span>
-    </li>
+    <div class="side-bar-label" [class.is-select]="tools.select" (click)="RaDesignToolsService.showTools(tools.factory)" [style.order]="tools.order">
+      <div class="side-bar-label-container">
+        <div class="side-bar-label-content">
+          <i nz-icon [type]="tools.icon" theme="outline"></i>
+          <span>{{tools.label}}</span>
+        </div>
+      </div>
+    </div>
+    <div style="flex: 1;"></div>
   </ng-container>
-  <li class="editor-tools-center">
-  </li>
+  <!--<li class="editor-tools-center">
+  </li>-->
 </div>
 <div class="ra-design-tools-interface" style="width:350px">
   <!--<ra-design-tools-interface position="left"></ra-design-tools-interface>-->
@@ -35,10 +37,8 @@
 </div>
 
 <!--右侧工具栏-->
-<div class="ra-design-tools-interface">
+<div class="ra-design-tools-interface" style="width:350px">
   <!--<ra-design-tools-interface position="right"></ra-design-tools-interface>-->
 </div>
-<!--<div class="editor-tools" [class.editor-tools_enlarge]="RuntimeDataService.toolsData.rightToolsEnlarge">-->
-<div class="editor-tools" >
-  <!--<ra-design-tools position="right"></ra-design-tools>-->
+<div class="side-bar right" >
 </div>

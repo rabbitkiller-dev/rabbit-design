@@ -16,3 +16,8 @@ export interface DesignDragMove<T = any> {
    */
   delta: {x: -1 | 0 | 1, y: -1 | 0 | 1};
 }
+
+
+
+
+export * from './ref/drop.interface';

@@ -5,8 +5,8 @@ export interface StageTabModel extends StageTabServerModel, StageTabLocalModel {
   icon: string;
 }
 export interface StageTabServerModel {
-  id?: string;
-  title?: string;
+  id: string;
+  title: string;
 }
 export interface StageTabLocalModel {
   position?: 'left-top' | 'right-top' | 'left-bottom' | 'right-bottom';
