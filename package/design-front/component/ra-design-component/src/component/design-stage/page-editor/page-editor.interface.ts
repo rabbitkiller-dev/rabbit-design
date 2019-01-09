@@ -21,7 +21,7 @@ export class PageEditorInterface {
   }
 
   enterPredicate(drag: RaDesignDragDirective<any>, drop: RaDesignDropDirective<any>) {
-    return drag.dragType === 'tools-component';
+    return drag.designDragType === 'tools-component';
   }
 
   onDesignDropped($event) {

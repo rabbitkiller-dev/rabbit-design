@@ -14,9 +14,10 @@ import {
 import {Observable, ReplaySubject, Subscription} from 'rxjs';
 import {isNotNil} from 'ng-zorro-antd';
 import {InputBoolean} from 'ng-zorro-antd';
-import {NzFormatBeforeDropEvent, NzFormatEmitEvent} from '../design-tree/interface';
+import {NzFormatBeforeDropEvent, NzFormatEmitEvent} from './interface';
 import {TreeNodeModel} from './tree-node.model';
 import {RaDesignTreeService} from './ra-design-tree.service';
+import {RaDesignDragDirective, RaDesignDropDirective} from '../design-drag-drop';
 
 
 @Component({
@@ -37,7 +38,13 @@ export class RaDesignTreeComponent implements OnInit, OnChanges, OnDestroy {
   @Input() @InputBoolean() nzMultiple = false;
   @Input() @InputBoolean() nzExpandAll: boolean = false;
   @Input() @InputBoolean() nzHideUnMatched = false;
-  @Input() @InputBoolean() cdkDrag = false;
+  /**
+   * drag-drop
+   */
+  @Input() @InputBoolean() designDragDisabled = true;
+  @Input() designDragType: string;
+  @Input() designDropType: string;
+  @Input() enterPredicate: (drag: RaDesignDragDirective<any>, drop: RaDesignDropDirective<any>) => boolean = () => true;
   /**
    * @deprecated use
    * nzExpandAll instead

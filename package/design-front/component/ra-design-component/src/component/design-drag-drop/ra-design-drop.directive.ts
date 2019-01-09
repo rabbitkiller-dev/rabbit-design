@@ -107,6 +107,7 @@ export class RaDesignDropDirective<T = any> implements OnDestroy {
 
   /** Arbitrary data to attach to this container. */
   @Input('cdkDropListData') data: T;
+  @Input() designDropType: string;
 
   /** Direction in which the list is oriented. */
   @Input() orientation: 'horizontal' | 'vertical' = 'vertical';

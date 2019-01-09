@@ -104,6 +104,10 @@
     (nzDragOver)="nzDragOver.emit($event)"
     (nzDragLeave)="nzDragLeave.emit($event)"
     (nzDrop)="nzDrop.emit($event)"
-    (nzDragEnd)="nzDragEnd.emit($event)">
+    (nzDragEnd)="nzDragEnd.emit($event)"
+    designDrag
+    [designDragDisabled]="RaDesignTreeComponent.designDragDisabled"
+    [designDragType]="RaDesignTreeComponent.designDragType"
+  >
   </ra-design-tree-node>
 </ul>

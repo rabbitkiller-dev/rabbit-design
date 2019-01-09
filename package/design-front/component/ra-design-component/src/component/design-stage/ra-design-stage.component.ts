@@ -14,7 +14,7 @@ import {StageTabModel} from 'ra-design-component';
       <ng-container *ngFor="let tools of RaDesignStageService.stageList">
         <!-- TODO cdkDragBoundary=".stage-bar" 限制移动元素 -->
         <li class="stage-bar-item" [class.is-select]="tools.select" (click)="select(tools)"
-            [style.order]="tools.order" designDrag dragType="stage-task">
+            [style.order]="tools.order" designDrag designDragType="stage-task">
           <i nz-icon [type]="tools.icon" theme="outline"></i>
           <span>{{tools.title}}</span>
           <i nz-icon type="close" theme="outline"></i>
@@ -53,7 +53,7 @@ export class RaDesignStageComponent implements OnInit {
   }
 
   enterPredicate(drag: RaDesignDragDirective<any>, drop: RaDesignDropDirective<any>) {
-    return drag.dragType === 'stage-task';
+    return drag.designDragType === 'stage-task';
   }
 
   onDesignDropped($event: DesignDragDrop<any>) {

@@ -22,6 +22,7 @@ import {NzFormatBeforeDropEvent, NzFormatEmitEvent} from './interface';
 import {TreeNodeModel} from './tree-node.model';
 import {isCheckDisabled} from './nz-tree-util';
 import {RaDesignTreeService} from './ra-design-tree.service';
+import {RaDesignTreeComponent} from './ra-design-tree.component';
 
 @Component({
   selector: 'ra-design-tree-node',
@@ -277,7 +278,7 @@ export class RaDesignTreeNodeComponent implements OnInit, OnChanges, OnDestroy {
     this.clickCheckBox.emit(this.RaDesignTreeService.formatEvent('check', this.nzTreeNode, event));
   }
 
-  constructor(private RaDesignTreeService: RaDesignTreeService, private ngZone: NgZone, private renderer: Renderer2, private elRef: ElementRef) {
+  constructor(private RaDesignTreeService: RaDesignTreeService, private ngZone: NgZone, private renderer: Renderer2, private elRef: ElementRef, private RaDesignTreeComponent: RaDesignTreeComponent) {
   }
 
   ngOnInit(): void {

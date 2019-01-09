@@ -77,7 +77,7 @@ export class RaDesignDragDirective<T = any> implements AfterViewInit, OnChanges,
 
   /** Arbitrary data to attach to this drag instance. */
   @Input() dragData: T;
-  @Input() dragType: 'stage-task' | string;
+  @Input('designDragType') designDragType: 'stage-task' | string;
 
   /** Locks the position of the dragged element along the specified axis. */
   @Input('cdkDragLockAxis') lockAxis: 'x' | 'y';
@@ -97,7 +97,7 @@ export class RaDesignDragDirective<T = any> implements AfterViewInit, OnChanges,
   @Input('cdkDragBoundary') boundaryElementSelector: string;
 
   /** Whether starting to drag this element is disabled. */
-  @Input('cdkDragDisabled')
+  @Input('designDragDisabled')
   get disabled(): boolean {
     return this._disabled;
   }

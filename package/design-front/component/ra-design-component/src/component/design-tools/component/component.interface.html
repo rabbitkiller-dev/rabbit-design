@@ -2,37 +2,8 @@
   <i class="fa fa-first-order"></i>
   <label>组件列表</label>
 </div>
-<ul
-  role="tree"
-  unselectable="on"
-  [ngClass]="nzTreeClass">
-  <ra-design-tree-node
-    *ngFor="let node of nzNodes"
-    [nzTreeNode]="node"
-    [nzShowLine]="nzShowLine"
-    [nzCheckable]="nzCheckable"
-    [nzShowExpand]="nzShowExpand"
-    [nzAsyncData]="nzAsyncData"
-    [nzMultiple]="nzMultiple"
-    [nzSearchValue]="nzSearchValue"
-    [nzHideUnMatched]="nzHideUnMatched"
-    [nzBeforeDrop]="nzBeforeDrop"
-    [nzCheckStrictly]="nzCheckStrictly"
-    [nzExpandAll]="nzExpandAll"
-    [nzDefaultExpandAll]="nzDefaultExpandAll"
-    [nzTreeTemplate]="nzTreeTemplate"
-    (clickNode)="nzClick.emit($event)"
-    (dblClick)="nzDblClick.emit($event)"
-    (contextMenu)="nzContextMenu.emit($event)"
-    (clickExpand)="nzExpandChange.emit($event)"
-    (clickCheckBox)="nzCheckBoxChange.emit($event)"
-    (nzDragStart)="nzOnDragStart.emit($event)"
-    (nzDragEnter)="nzOnDragEnter.emit($event)"
-    (nzDragOver)="nzOnDragOver.emit($event)"
-    (nzDragLeave)="nzOnDragLeave.emit($event)"
-    (nzDrop)="nzOnDrop.emit($event)"
-    (nzDragEnd)="nzOnDragEnd.emit($event)"
-    designDrag
-    dragType="tools-component">
-  </ra-design-tree-node>
-</ul>
+<ra-design-tree [nzData]="nzData"
+                designDragDisabled="false"
+                designDragType="component"
+                designDropType="component"
+                [enterPredicate]="enterPredicate"></ra-design-tree>

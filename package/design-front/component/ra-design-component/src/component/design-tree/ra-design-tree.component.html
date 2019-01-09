@@ -1,7 +1,11 @@
 <ul
   role="tree"
   unselectable="on"
-  [ngClass]="nzTreeClass">
+  [ngClass]="nzTreeClass"
+  designDrop
+  [designDropType]="designDropType"
+  (enterPredicate)="enterPredicate"
+>
   <ra-design-tree-node
     *ngFor="let node of nzNodes"
     [nzTreeNode]="node"
@@ -27,6 +31,9 @@
     (nzDragOver)="nzOnDragOver.emit($event)"
     (nzDragLeave)="nzOnDragLeave.emit($event)"
     (nzDrop)="nzOnDrop.emit($event)"
-    (nzDragEnd)="nzOnDragEnd.emit($event)">
+    (nzDragEnd)="nzOnDragEnd.emit($event)"
+    designDrag
+    [designDragDisabled]="designDragDisabled"
+    [designDragType]="designDragType">
   </ra-design-tree-node>
 </ul>

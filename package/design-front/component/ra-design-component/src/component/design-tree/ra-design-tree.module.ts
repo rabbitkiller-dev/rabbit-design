@@ -1,6 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {DragDropModule} from '../cdk-drag-drop';
+import {RaDesignDragDropModule} from '../design-drag-drop';
 import {NzIconModule} from 'ng-zorro-antd';
 import {RaDesignTreeComponent} from './ra-design-tree.component';
 import {RaDesignTreeNodeComponent} from './ra-design-tree-node.component';
@@ -9,6 +10,7 @@ import {RaDesignTreeNodeComponent} from './ra-design-tree-node.component';
   imports: [
     CommonModule,
     DragDropModule,
+    RaDesignDragDropModule,
     NzIconModule
   ],
   declarations: [

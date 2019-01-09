@@ -1,29 +1,32 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {RaDesignTreeComponent, RaDesignTreeService} from '../../design-tree';
 
 @Component({
   templateUrl: './component.interface.html',
-  providers: [
-    RaDesignTreeService
-  ]
 })
-export class ComponentInterface extends RaDesignTreeComponent implements OnInit{
-  constructor(public RaDesignTreeService: RaDesignTreeService) {
-    super(RaDesignTreeService);
+export class ComponentInterface implements OnInit {
+  nzData = [];
+  enterPredicate = () => false;
+
+  constructor() {
   }
 
   ngOnInit() {
-    super.ngOnInit();
     this.nzData = [
       {
-        'key': 1,
+        'key': 'forms',
         'title': 'forms',
         // 'icon': 'fa-file',
         'children': [
           {
-            'key': 2,
+            'key': 'icon',
             'title': 'icon',
+            'leaf': false,
             // 'icon': 'fa-file'
+          },
+          {
+            'key': 'input',
+            'title': 'input',
+            'leaf': true,
           }
         ]
       },
