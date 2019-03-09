@@ -1,5 +1,5 @@
 cd ./package/design-front
-npm install
+npm install --unsafe-perm
 npm run build
 
 cd ../../
