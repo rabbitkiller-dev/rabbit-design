@@ -23,8 +23,7 @@ import {NzInputModule} from 'ng-zorro-antd';
     background-image: linear-gradient(45deg, #666 25%, transparent 0, transparent 75%, #666 0), linear-gradient(45deg, #666 25%, transparent 0, transparent 75%, #666 0);
     background-position: 0 0, 15px 15px;
     background-size: 30px 30px;
-" designDrop [enterPredicate]="enterPredicate"
-           (designDropped)="onDesignDropped($event)">
+" designDrop >
         <ng-template #dynamic></ng-template>
       </div>
       <div class="editor-stage-footer">
@@ -52,9 +51,9 @@ export class PageEditorInterface implements OnInit {
     console.log($event);
   }
 
-  enterPredicate(drag: RaDesignDragDirective<any>, drop: RaDesignDropDirective<any>) {
-    return drag.designDragType === 'tools-component';
-  }
+  // enterPredicate(drag: RaDesignDragDirective<any>, drop: RaDesignDropDirective<any>) {
+  //   return drag.designDragType === 'tools-component';
+  // }
 
   onDesignDropped($event) {
 
