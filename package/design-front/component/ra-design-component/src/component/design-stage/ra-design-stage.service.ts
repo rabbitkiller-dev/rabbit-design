@@ -9,11 +9,18 @@ export enum StageFactory {
 
 @Injectable()
 export class RaDesignStageService {
+  /**
+   * static
+   */
   stageList: StageTabModel[] = [];
   private stageMap: Map<string, StageTabModel> = new Map();
   private factory: Map<String, ComponentFactory<any>> = new Map();
   private RaDesignStageComponent: RaDesignStageComponent;
 
+  /**
+   * runtime
+   */
+  stage
   constructor(public ComponentFactoryResolver: ComponentFactoryResolver) {
   }
 

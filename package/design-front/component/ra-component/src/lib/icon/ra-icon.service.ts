@@ -1,5 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { HttpBackend } from '@angular/common/http';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Inject, Injectable, InjectionToken, Optional, RendererFactory2 } from '@angular/core';
 import { IconDefinition, IconService } from '@ant-design/icons-angular';
 import {
@@ -118,13 +119,14 @@ export class RaIconService extends IconService {
 
   constructor(
     protected rendererFactory: RendererFactory2,
+    protected domSanitizer: DomSanitizer,
     @Optional() protected handler: HttpBackend,
     // tslint:disable-next-line:no-any
     @Optional() @Inject(DOCUMENT) protected document: any,
     @Optional() @Inject(NZ_ICONS) private icons: IconDefinition[],
     @Optional() @Inject(NZ_ICON_DEFAULT_TWOTONE_COLOR) private defaultColor: string
   ) {
-    super(rendererFactory, handler, document);
+    super(rendererFactory, handler, document, domSanitizer);
 
     this.addIcon(...NZ_ICONS_USED_BY_ZORRO, ...(this.icons || []));
 

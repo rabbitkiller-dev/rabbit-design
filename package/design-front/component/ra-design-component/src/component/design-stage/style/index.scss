@@ -12,14 +12,24 @@ ra-design-stage{
     background: $back-extra-color;
     user-select: none;
     border-bottom: 2px solid $back-color;
+    box-shadow: 0px 2px 5px #000;
+    &:before{
+      content: '';
+      position: absolute;
+      top: 26px;
+      left: 0;
+      width: 100%;
+      background: $back-light-color;
+      height: 4px;
+      z-index: 4;
+      pointer-events: none;
+    }
     &:after{
       content: '';
       position: absolute;
       top: 24px;
       left: 0;
       width: 100%;
-      background: $back-light-color;
-      height: 6px;
       border-top: 2px solid $back-color;
     }
   }
@@ -29,7 +39,7 @@ ra-design-stage{
     z-index: 2;
     display: inline-block;
     min-width: 140px;
-    height: 23px;
+    height: 29px;
     text-align: center;
     color: $font-color;
     padding-left: 15px;
@@ -37,7 +47,6 @@ ra-design-stage{
     margin-left: -10px;
     font-size: 16px;
     border: 2px solid $back-color;
-    border-bottom: 2px solid transparent;
     border-top-left-radius: 50px 60px;
     border-top-right-radius: 50px 60px;
     background: $back-extra-color;

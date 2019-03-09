@@ -79,3 +79,24 @@ ra-design-tools{
 
 
 }
+
+ra-design-component-interface{
+
+}
+
+// stage 拖拉拽样式
+ra-design-tree-node[ng-reflect-design-drag-type="component"]{
+  &.cdk-drag-preview {
+    opacity: 0;
+    &:after{
+      content: '1 item';
+      opacity: 100;
+    }
+  }
+  //&.cdk-drag-placeholder {
+  //  opacity: 0;
+  //}
+  &.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+}

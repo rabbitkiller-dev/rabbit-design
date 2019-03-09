@@ -131,7 +131,7 @@ export class RaDesignDropDirective<T = any> implements OnDestroy {
    * is allowed to be moved into a drop container.
    */
   @Input()
-  enterPredicate: (drag: RaDesignDragDirective<any>, drop: RaDesignDropDirective<any>) => boolean = () => true;
+  enterPredicate: (drag: RaDesignDragDirective<any>, drop: RaDesignDropDirective<any>) => boolean = () => false;
 
   /** Emits when the user drops an item inside the container. */
   @Output('designDropped')
@@ -139,9 +139,9 @@ export class RaDesignDropDirective<T = any> implements OnDestroy {
 
   constructor(
     public element: ElementRef<HTMLElement>,
+    public Renderer2: Renderer2,
     dragDropRegistry: DragDropRegistry<RaDesignDragRef, RaDesignDropRef>,
     private _changeDetectorRef: ChangeDetectorRef,
-    private Renderer2: Renderer2,
     @Optional() dir?: Directionality,
     // @breaking-change 8.0.0 `_document` parameter to be made required.
     @Optional() @Inject(DOCUMENT) _document?: any) {

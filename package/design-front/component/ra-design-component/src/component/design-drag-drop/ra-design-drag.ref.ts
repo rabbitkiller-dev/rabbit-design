@@ -418,6 +418,11 @@ export class RaDesignDragRef<T = any> {
           getTransform(constrainedPointerPosition.x - this._pickupPositionInElement.x, constrainedPointerPosition.y - this._pickupPositionInElement.y);
       }
     } else {
+      this._ngZone.run(() => {
+        if (this.dropContainer) {
+          this.dropContainer.exit(this.data);
+        }
+      });
       this.dropContainer = null;
       const activeTransform = this._activeTransform;
       activeTransform.x =
@@ -624,6 +629,7 @@ export class RaDesignDragRef<T = any> {
       const elementRect = element.getBoundingClientRect();
 
       preview = deepCloneNode(element);
+      this.data.Renderer2.setProperty(preview, 'designDragType', this.data.designDragType);
       preview.style.width = `${elementRect.width}px`;
       preview.style.height = `${elementRect.height}px`;
       preview.style.transform = getTransform(elementRect.left, elementRect.top);

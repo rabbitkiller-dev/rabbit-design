@@ -38,3 +38,25 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+
+
+- 注册
+  - drag-drop-service
+- 移动
+  - drag-item
+    - 任意移动(绝对定位)
+    - _previewTemplate
+    - _placeholderTemplate
+    - move-start
+    - move-ing
+- 放
+  - drop-list
+    - drop
+    - drop-in
+    - drop-out
+  - drop-item
+    - 合并
+
+文件名不带前缀
+selector带前缀

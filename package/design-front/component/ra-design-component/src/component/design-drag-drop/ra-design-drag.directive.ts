@@ -27,7 +27,7 @@ import {
   SkipSelf,
   ViewContainerRef,
   OnChanges,
-  SimpleChanges,
+  SimpleChanges, Renderer2,
 } from '@angular/core';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Observable, Subscription, Observer} from 'rxjs';
@@ -109,6 +109,7 @@ export class RaDesignDragDirective<T = any> implements AfterViewInit, OnChanges,
 
   constructor(
     public element: ElementRef<HTMLElement>,
+    public Renderer2: Renderer2,
     @Inject(DOCUMENT) private _document: any,
     private _ngZone: NgZone,
     private _viewContainerRef: ViewContainerRef,
