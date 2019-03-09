@@ -1,5 +1,7 @@
 cd ./package/design-front
 npm install
-ng run build
+npm run build
 
-mv ./package/design-front/dist ./nginx/design-front
+cd ../../
+rm -rf ./nginx/design-front
+mv ./package/design-front/dist/design-front ./nginx/design-front
