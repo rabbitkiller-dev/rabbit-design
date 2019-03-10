@@ -3,7 +3,6 @@ import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 @Component({
   selector: 'ra-design-component-interface',
   templateUrl: './component.interface.html',
-  styleUrls: ['./component.interface.scss'],
 })
 export class ComponentInterface implements OnInit {
   nzData = [];

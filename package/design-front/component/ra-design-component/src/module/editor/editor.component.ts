@@ -1,5 +1,5 @@
 import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input} from '@angular/core';
-import {CdkDragDrop, moveItemInArray, transferArrayItem} from 'ra-design-component';
+import {CdkDragDrop, moveItemInArray, transferArrayItem} from '../../component/ra-design-component.module';
 
 @Component({
   selector: 'design-editor',

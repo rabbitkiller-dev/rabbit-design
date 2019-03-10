@@ -10,7 +10,7 @@
       "prefix": "ra",
       "schematics": {
         "@schematics/angular:component": {
-          "styleext": "scss"
+          "styleext": "less"
         }
       },
       "architect": {
@@ -32,10 +32,9 @@
               }
             ],
             "styles": [
-              "src/styles.scss",
-              "component/theme/dev-theme/default.scss",
+              "src/styles.less",
               "node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
-              "component/ra-design-component/src/component/design-component.scss"
+              "component/ra-design-component/src/ra-design-component.less"
             ],
             "scripts": []
           },
@@ -92,7 +91,7 @@
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "styles": [
-              "src/styles.scss"
+              "src/styles.less"
             ],
             "scripts": [],
             "assets": [

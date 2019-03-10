@@ -133,7 +133,7 @@ export class RelativeDragRef implements DragRefInterface {
     if (!this.disabled) {
       this._initializeDragSequence(this._rootElement, event);
     }
-  }
+  };
 
   /**
    * Sets up the different variables and subscriptions
@@ -225,9 +225,9 @@ export class RelativeDragRef implements DragRefInterface {
 
     const activeTransform = this._activeTransform;
     activeTransform.x =
-      constrainedPointerPosition.x - this._pickupPositionOnPage.x;// + this._passiveTransform.x;
+      constrainedPointerPosition.x - this._pickupPositionOnPage.x; // + this._passiveTransform.x;
     activeTransform.y =
-      constrainedPointerPosition.y - this._pickupPositionOnPage.y;// + this._passiveTransform.y;
+      constrainedPointerPosition.y - this._pickupPositionOnPage.y; // + this._passiveTransform.y;
     const transform = getTransform(activeTransform.x, activeTransform.y);
     // Preserve the previous `transform` value, if there was one.
     this._rootElement.style.transform = this._initialTransform ?
@@ -238,7 +238,7 @@ export class RelativeDragRef implements DragRefInterface {
       const appliedTransform = `translate(${activeTransform.x} ${activeTransform.y})`;
       this._rootElement.setAttribute('transform', appliedTransform);
     }
-  }
+  };
 
   /** Starts the dragging sequence. */
   private _startDragSequence(event: MouseEvent | TouchEvent) {
@@ -251,8 +251,21 @@ export class RelativeDragRef implements DragRefInterface {
     // place will throw off the consumer's `:last-child` selectors. We can't remove the element
     // from the DOM completely, because iOS will stop firing all subsequent events in the chain.
     // element.style.display = 'none'; // TODO cdk-drag
-    this.Document.body.appendChild(element.parentNode!.replaceChild(placeholder, element));
+    this.Document.body.appendChild(element.parentNode.replaceChild(placeholder, element));
     this.Document.body.appendChild(preview);
+  }
+
+  /**
+   * Returns the element that is being used as a placeholder
+   * while the current element is being dragged.
+   */
+  getPlaceholderElement(): HTMLElement {
+    return this._placeholder;
+  }
+
+  /** Returns the root draggable element. */
+  getRootElement(): HTMLElement {
+    return this._rootElement;
   }
 
   /**
@@ -325,7 +338,7 @@ export class RelativeDragRef implements DragRefInterface {
   /** Handler that is invoked when the user lifts their pointer up, after initiating a drag. */
   private _pointerUp = (event: MouseEvent | TouchEvent) => {
     this.DragDropRegistry.stopDragging(this);
-  }
+  };
 
   /** Determines the point of the page that was touched by the user. */
   private _getPointerPositionOnPage(event: MouseEvent | TouchEvent): Point {

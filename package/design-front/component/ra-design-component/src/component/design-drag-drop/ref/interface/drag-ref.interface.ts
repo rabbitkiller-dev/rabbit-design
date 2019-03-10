@@ -21,4 +21,13 @@ export interface DragRefInterface {
    * dragging on an element that you might not have access to.
    */
   withRootElement(rootElement: ElementRef<HTMLElement> | HTMLElement): DragRefInterface;
+
+  /**
+   * Returns the element that is being used as a placeholder
+   * while the current element is being dragged.
+   */
+  getPlaceholderElement(): HTMLElement;
+
+  /** Returns the root draggable element. */
+  getRootElement(): HTMLElement;
 }

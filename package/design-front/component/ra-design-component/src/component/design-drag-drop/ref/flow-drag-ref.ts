@@ -257,6 +257,19 @@ export class FlowDragRef implements DragRefInterface {
   }
 
   /**
+   * Returns the element that is being used as a placeholder
+   * while the current element is being dragged.
+   */
+  getPlaceholderElement(): HTMLElement {
+    return this._placeholder;
+  }
+
+  /** Returns the root draggable element. */
+  getRootElement(): HTMLElement {
+    return this._rootElement;
+  }
+
+  /**
    * Creates the element that will be rendered next to the user's pointer
    * and will be used as a preview of the element that is being dragged.
    */

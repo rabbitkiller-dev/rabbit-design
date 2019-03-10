@@ -26,8 +26,8 @@
   flex-direction: column;
   /** 尾部 */
   .editor-footer{
-    background: $ra-back-extra-color;
-    border-top: 1px solid $ra-back-color;
+    background: @ra-back-extra-color;
+    border-top: 1px solid @ra-back-color;
     height: 26px;
   }
 }

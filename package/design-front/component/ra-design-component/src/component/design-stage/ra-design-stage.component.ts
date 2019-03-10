@@ -9,7 +9,7 @@ import {StageTabModel} from './interface';
   selector: 'ra-design-stage',
   template: `
     <!-- stage的上方上任务栏 -->
-    <div class="stage-bar" designDrop>
+    <div class="stage-bar" designDrop (onDesignDropped)="onDesignDropped($event)">
       <ng-container *ngFor="let tools of RaDesignStageService.stageList">
         <!-- TODO cdkDragBoundary=".stage-bar" 限制移动元素 -->
         <li class="stage-bar-item" [class.is-select]="tools.select" (click)="select(tools)"
