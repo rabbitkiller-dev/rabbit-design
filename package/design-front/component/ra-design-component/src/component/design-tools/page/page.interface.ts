@@ -21,7 +21,7 @@ export class PageInterface {
       children:[
         {
           key: 5,
-          title: '首页',
+          title: '首页超长文字首页超长文字首页超长文字首页超长文字',
           id: '5',
           leaf: false,
           children:[
@@ -61,7 +61,7 @@ export class PageInterface {
     },
     {
       key: 3,
-      title: '设置',
+      title: '设置超长文字设置超长文字设置超长文字设置超长文字设置超长文字',
       id: '3',
       leaf: false,
     },

@@ -139,7 +139,7 @@ export class RaDesignTreeNodeComponent implements OnInit, OnChanges, OnDestroy {
   @Output() readonly nzDragEnd: EventEmitter<NzFormatEmitEvent> = new EventEmitter();
 
   // default var
-  prefixCls = 'ant-tree';
+  prefixCls = 'ra-design-tree';
   highlightKeys = [];
   nzNodeClass = {};
   nzNodeSwitcherClass = {};

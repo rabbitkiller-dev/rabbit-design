@@ -3,7 +3,7 @@
 @tools-name: ~'@{ra-prefix}-tools';
 @toolsWidth: 34px;
 
-@{tools-name} {
+ra-design-tools{
   display: flex;
   flex: 1;
   //工具栏
@@ -81,7 +81,17 @@
   }
 
 }
-
+.ra-design-tools-title{
+  height: 30px;
+  line-height: 30px;
+  color: #FFFFFF;
+  //background: @ra-back-extra-color;
+  //border-bottom:1px solid @ra-is-primary;
+  padding-left: 10px;
+  label{
+    margin-left: 3px;
+  }
+}
 ra-design-component-interface {
 
 }
@@ -102,3 +112,4 @@ ra-design-tree-node[ng-reflect-design-drag-type="component"] {
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
   }
 }
+

@@ -3,37 +3,37 @@
   [style.display]="displayStyle"
   [style.padding-left]="nzTreeNode.level * 18 + 'px'"
   [ngClass]="nzNodeClass"
-  [class.ant-tree-treenode-switcher-open]="isSwitcherOpen"
-  [class.ant-tree-treenode-switcher-close]="isSwitcherClose"
-  [class.ant-tree-treenode-checkbox-checked]="nzTreeNode.isChecked"
-  [class.ant-tree-treenode-checkbox-indeterminate]="nzTreeNode.isHalfChecked"
-  [class.ant-tree-treenode-selected]="nzTreeNode.isSelected"
-  [class.ant-tree-treenode-loading]="nzTreeNode.isLoading">
+  [class.ra-design-tree-treenode-switcher-open]="isSwitcherOpen"
+  [class.ra-design-tree-treenode-switcher-close]="isSwitcherClose"
+  [class.ra-design-tree-treenode-checkbox-checked]="nzTreeNode.isChecked"
+  [class.ra-design-tree-treenode-checkbox-indeterminate]="nzTreeNode.isHalfChecked"
+  [class.ra-design-tree-treenode-selected]="nzTreeNode.isSelected"
+  [class.ra-design-tree-treenode-loading]="nzTreeNode.isLoading">
   <ng-container *ngIf="nzShowExpand">
     <span
       [ngClass]="nzNodeSwitcherClass"
-      [class.ant-tree-switcher_open]="isSwitcherOpen"
-      [class.ant-tree-switcher_close]="isSwitcherClose"
+      [class.ra-design-tree-switcher_open]="isSwitcherOpen"
+      [class.ra-design-tree-switcher_close]="isSwitcherClose"
       (click)="_clickExpand($event)">
       <ng-container *ngIf="isShowSwitchIcon">
-        <i *ngIf="!nzTreeNode.isLoading" nz-icon type="caret-down" class="ant-tree-switcher-icon"></i>
-        <i *ngIf="nzTreeNode.isLoading" nz-icon type="loading" [spin]="true" class="ant-tree-switcher-loading-icon"></i>
+        <i *ngIf="!nzTreeNode.isLoading" nz-icon type="caret-down" class="ra-design-tree-switcher-icon"></i>
+        <i *ngIf="nzTreeNode.isLoading" nz-icon type="loading" [spin]="true" class="ra-design-tree-switcher-loading-icon"></i>
       </ng-container>
       <ng-container *ngIf="nzShowLine">
         <i *ngIf="isShowLineIcon" nz-icon [type]="isSwitcherOpen ? 'minus-square' : 'plus-square'"
-           class="ant-tree-switcher-line-icon"></i>
-        <i *ngIf="!isShowLineIcon" nz-icon type="file" class="ant-tree-switcher-line-icon"></i>
+           class="ra-design-tree-switcher-line-icon"></i>
+        <i *ngIf="!isShowLineIcon" nz-icon type="file" class="ra-design-tree-switcher-line-icon"></i>
       </ng-container>
     </span>
   </ng-container>
   <ng-container *ngIf="nzCheckable">
     <span
-      class="ant-tree-checkbox"
-      [class.ant-tree-checkbox-checked]="nzTreeNode.isChecked"
-      [class.ant-tree-checkbox-indeterminate]="nzTreeNode.isHalfChecked"
-      [class.ant-tree-checkbox-disabled]="(nzTreeNode.isDisabled || nzTreeNode.isDisableCheckbox)"
+      class="ra-design-tree-checkbox"
+      [class.ra-design-tree-checkbox-checked]="nzTreeNode.isChecked"
+      [class.ra-design-tree-checkbox-indeterminate]="nzTreeNode.isHalfChecked"
+      [class.ra-design-tree-checkbox-disabled]="(nzTreeNode.isDisabled || nzTreeNode.isDisableCheckbox)"
       (click)="_clickCheckBox($event)">
-      <span class="ant-tree-checkbox-inner"></span>
+      <span class="ra-design-tree-checkbox-inner"></span>
     </span>
   </ng-container>
   <ng-container *ngIf="!nzTreeTemplate">
@@ -42,22 +42,22 @@
       [attr.draggable]="canDraggable"
       [attr.aria-grabbed]="canDraggable"
       [ngClass]="nzNodeContentClass"
-      [class.ant-tree-node-content-wrapper-open]="isSwitcherOpen"
-      [class.ant-tree-node-content-wrapper-close]="isSwitcherClose"
-      [class.ant-tree-node-selected]="nzTreeNode.isSelected"
+      [class.ra-design-tree-node-content-wrapper-open]="isSwitcherOpen"
+      [class.ra-design-tree-node-content-wrapper-close]="isSwitcherClose"
+      [class.ra-design-tree-node-selected]="nzTreeNode.isSelected"
       [class.draggable]="canDraggable">
       <span
         *ngIf="nzTreeNode.origin.icon"
-        [class.ant-tree-icon__open]="isSwitcherOpen"
-        [class.ant-tree-icon__close]="isSwitcherClose"
-        [class.ant-tree-icon_loading]="nzTreeNode.isLoading"
+        [class.ra-design-tree-icon__open]="isSwitcherOpen"
+        [class.ra-design-tree-icon__close]="isSwitcherClose"
+        [class.ra-design-tree-icon_loading]="nzTreeNode.isLoading"
         [ngClass]="nzNodeContentLoadingClass">
         <span
           [ngClass]="nzNodeContentIconClass">
           <i nz-icon *ngIf="nzIcon" [type]="!oldAPIIcon && nzIcon" [ngClass]="oldAPIIcon && nzIcon"></i>
         </span>
       </span>
-      <span class="ant-tree-title">
+      <span class="ra-design-tree-title">
         <ng-container *ngIf="nzTreeNode.isMatched">
           <span>
             {{highlightKeys[0]}}<span class="font-highlight">{{nzSearchValue}}</span>{{highlightKeys[1]}}

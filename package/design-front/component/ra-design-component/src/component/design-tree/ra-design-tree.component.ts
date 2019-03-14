@@ -157,7 +157,7 @@ export class RaDesignTreeComponent implements OnInit, OnChanges, OnDestroy {
   nzDefaultSubject = new ReplaySubject<{ type: string, keys: string[] }>(6);
   nzDefaultSubscription: Subscription;
   nzNodes: TreeNodeModel[] = [];
-  prefixCls = 'ant-tree';
+  prefixCls = 'ra-design-tree';
   nzTreeClass = {};
 
   getTreeNodes(): TreeNodeModel[] {

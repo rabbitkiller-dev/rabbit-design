@@ -1,11 +1,12 @@
-
+@import '../color/colors';
 
 // The prefix to use on all css classes from ant.
 @ra-prefix: ra-design;
 
 // -------- Colors -----------
 //@primary-color          : #1D8CE0;
-@primary-color          : #1890ff;
+//@primary-color          : #1890ff;
+@primary-color          : @blue-6;
 @info-color             : #1890ff;
 @success-color          : #52c41a;
 @processing-color       : #1890ff;
@@ -13,15 +14,43 @@
 @highlight-color        : #f5222d;
 @warning-color          : #faad14;
 @normal-color           : #d9d9d9;
+@white: #fff;
+@black: #000;
 
-@font-color: #5c798f;
+// Color used by default to control hover and active backgrounds and for
+// alert info backgrounds.
+@primary-1: color(~`colorPalette('@{primary-color}', 1) `); // replace tint(@primary-color, 90%)
+@primary-2: color(~`colorPalette('@{primary-color}', 2) `); // replace tint(@primary-color, 80%)
+@primary-3: color(~`colorPalette('@{primary-color}', 3) `); // unused
+@primary-4: color(~`colorPalette('@{primary-color}', 4) `); // unused
+@primary-5: color(
+  ~`colorPalette('@{primary-color}', 5) `
+); // color used to control the text color in many active and hover states, replace tint(@primary-color, 20%)
+@primary-6: @primary-color; // color used to control the text color of active buttons, don't use, use @primary-color
+@primary-7: color(~`colorPalette('@{primary-color}', 7) `); // replace shade(@primary-color, 5%)
+@primary-8: color(~`colorPalette('@{primary-color}', 8) `); // unused
+@primary-9: color(~`colorPalette('@{primary-color}', 9) `); // unused
+@primary-10: color(~`colorPalette('@{primary-color}', 10) `); // unused
+@primary-light: #20A0FF;
+@primary-extra: #58B7FF;
+
+@defulatBorder: 2px solid @back-color;
+
+@text-color: #5c798f;
 @font-light-color: #869fb1;
 @back-color: #131e26;
 @back-light-color: #16232d;
 @back-extra-color: #1c2b36;
+@font-variant-base: tabular-nums;
+@font-size-base: 14px;
+@font-size-lg: @font-size-base + 2px;
+@font-size-sm: 12px;
+@line-height-base: 1.5;
 
-@primary-light: #20A0FF;
-@primary-extra: #58B7FF;
 
-
-@defulatBorder: 2px solid @back-color;
+// Tree
+// ---
+@tree-title-height: 26px;
+@tree-child-padding: 18px;
+@tree-directory-selected-color: #fff;
+@tree-directory-selected-bg: @primary-color;
