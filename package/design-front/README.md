@@ -1,4 +1,4 @@
-preview http://47.105.84.128/design/editor
+preview http://47.105.84.128/design/
 
 
 ## 设计平台相关
