@@ -1,6 +1,6 @@
 cd ./package/design-front
 npm install --unsafe-perm
-npm run build
+npm run build --base-href=/design/
 
 cd ../../
 rm -rf ./nginx/design-front
