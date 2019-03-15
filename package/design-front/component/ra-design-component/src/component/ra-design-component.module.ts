@@ -3,6 +3,7 @@ import {RaDesignComponentComponent} from './ra-design-component.component';
 import {DragDropModule} from './cdk-drag-drop';
 import {RaDesignDragDropModule} from './design-drag-drop';
 import {RaDesignHeaderModule} from './design-header';
+import {RaDesignMenuModule} from './design-menu';
 import {RaDesignStageModule} from './design-stage';
 import {RaDesignToolsModule} from './design-tools';
 import {RaDesignTreeModule} from './design-tree';
@@ -10,6 +11,7 @@ import {RaDesignTreeModule} from './design-tree';
 export * from './cdk-drag-drop';
 export * from './design-drag-drop';
 export * from './design-header';
+export * from './design-menu';
 export * from './design-stage';
 export * from './design-tools';
 export * from './design-tree';
@@ -19,7 +21,7 @@ export * from './design-tree';
   imports: [],
   exports: [RaDesignComponentComponent,
     DragDropModule, RaDesignDragDropModule,
-    RaDesignHeaderModule,
+    RaDesignHeaderModule, RaDesignMenuModule,
     RaDesignStageModule, RaDesignToolsModule,
     RaDesignTreeModule, ]
 })

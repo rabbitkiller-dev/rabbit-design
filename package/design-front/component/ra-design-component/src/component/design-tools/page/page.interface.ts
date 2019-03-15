@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {RaDesignStageService, StageFactory} from '../../design-stage';
 import {NzFormatEmitEvent} from '../../design-tree';
+import {RaDesignMenuService} from '../../design-menu/ra-design-menu.service';
 
 @Component({
   template: `
@@ -8,7 +9,8 @@ import {NzFormatEmitEvent} from '../../design-tree';
       <i class="fa fa-first-order"></i>
       <label>页面管理</label>
     </div>
-    <ra-design-tree [nzData]="data" (nzDblClick)="onDblclick($event)" [cdkDrag]="true"></ra-design-tree>
+    <ra-design-tree [nzData]="data" (nzDblClick)="onDblclick($event)" (nzContextMenu)="onContextMenu($event)"
+                    [cdkDrag]="true"></ra-design-tree>
   `,
   styles: []
 })
@@ -18,13 +20,13 @@ export class PageInterface {
       key: 4,
       title: '设置管理',
       id: '4',
-      children:[
+      children: [
         {
           key: 5,
           title: '首页超长文字首页超长文字首页超长文字首页超长文字',
           id: '5',
           leaf: false,
-          children:[
+          children: [
             {
               key: 7,
               title: '首页',
@@ -67,13 +69,39 @@ export class PageInterface {
     },
   ];
 
-  constructor(public RaDesignStageService: RaDesignStageService) {
+  constructor(public RaDesignStageService: RaDesignStageService, public RaDesignMenuService: RaDesignMenuService) {
   }
 
   onDblclick($event: NzFormatEmitEvent) {
-    console.log($event.node);
     const node = $event.node;
     this.RaDesignStageService.putStage(StageFactory.PageEditor, {id: node.key, title: node.title});
+  }
+
+  onContextMenu($event: NzFormatEmitEvent) {
+    this.RaDesignMenuService.show($event.event, [
+        {
+          'label': 'New',
+          'icon': 'fa-file',
+          'items': [
+            {
+              'label': 'File',
+              'icon': 'fa-file'
+            }
+          ]
+        },
+        {
+          'label': 'Copy',
+          'icon': 'fa-file',
+          'shortcut': 'ctrl+c'
+        },
+        {
+          'label': 'Cut',
+          'icon': 'fa-file',
+          'shortcut': 'ctrl+x',
+          'items': []
+        }
+      ]
+    );
   }
 
 }

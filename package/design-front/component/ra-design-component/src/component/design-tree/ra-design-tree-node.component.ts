@@ -214,7 +214,7 @@ export class RaDesignTreeNodeComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * click node to select, 200ms to dbl click
    */
-  @HostListener('click', ['$event'])
+  @HostListener('mousedown', ['$event'])
   nzClick(event: MouseEvent): void {
     event.preventDefault();
     event.stopPropagation();
