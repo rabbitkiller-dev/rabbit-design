@@ -24,7 +24,6 @@ export class RaDesignMenu {
 
   constructor(public renderer: Renderer2, public RaDesignMenuService: RaDesignMenuService) {
     this.RaDesignMenuService.subject.subscribe((event) => {
-      console.log(event);
       this.preventDocumentDefault = true;
       this.model = event.item;
       this.container.nativeElement.style.display = 'block';

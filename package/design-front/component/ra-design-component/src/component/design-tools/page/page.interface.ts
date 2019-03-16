@@ -2,6 +2,8 @@ import {Component} from '@angular/core';
 import {RaDesignStageService, StageFactory} from '../../design-stage';
 import {NzFormatEmitEvent} from '../../design-tree';
 import {RaDesignMenuService} from '../../design-menu/ra-design-menu.service';
+import {PageContextMenuKey, PageService} from './page.service';
+import {PageModel} from './interface';
 
 @Component({
   template: `
@@ -11,8 +13,19 @@ import {RaDesignMenuService} from '../../design-menu/ra-design-menu.service';
     </div>
     <ra-design-tree [nzData]="data" (nzDblClick)="onDblclick($event)" (nzContextMenu)="onContextMenu($event)"
                     [cdkDrag]="true"></ra-design-tree>
+    <ra-design-dialog header="New File" *ngIf="newFileOption.visible">
+      <nz-form-item>
+        <nz-form-label>enter a new file name</nz-form-label>
+        <nz-form-control>
+          <input nz-input [(ngModel)]="newFileOption.filename" nzSize="small" autofocus="true"
+                 (keydown.enter)="newFile($event)"
+                 (keydown.esc)="newFileOption.filename = null;newFileOption.visible=false">
+        </nz-form-control>
+      </nz-form-item>
+    </ra-design-dialog>
   `,
-  styles: []
+  styles: [],
+  providers: [PageService],
 })
 export class PageInterface {
   data: any[] = [
@@ -68,8 +81,12 @@ export class PageInterface {
       leaf: false,
     },
   ];
+  newFileOption = {
+    visible: false,
+    filename: null,
+  };
 
-  constructor(public RaDesignStageService: RaDesignStageService, public RaDesignMenuService: RaDesignMenuService) {
+  constructor(public RaDesignStageService: RaDesignStageService, public RaDesignMenuService: RaDesignMenuService, public PageService: PageService) {
   }
 
   onDblclick($event: NzFormatEmitEvent) {
@@ -78,32 +95,22 @@ export class PageInterface {
   }
 
   onContextMenu($event: NzFormatEmitEvent) {
-    this.RaDesignMenuService.show($event.event, [
-        {
-          'label': 'New',
-          'icon': 'fa-file',
-          'items': [
-            {
-              'label': 'File',
-              'icon': 'fa-file'
-            }
-          ]
-        },
-        {
-          'label': 'Copy',
-          'icon': 'fa-file',
-          'shortcut': 'ctrl+c'
-        },
-        {
-          'label': 'Cut',
-          'icon': 'fa-file',
-          'shortcut': 'ctrl+x',
-          'items': []
-        }
-      ]
+    this.RaDesignMenuService.show($event.event, this.PageService.getContextMenu($event.node)
     ).subscribe(($event) => {
-      console.log($event);
+      switch ($event.key) {
+        case PageContextMenuKey.New.File:
+          this.newFileOption.visible = true;
+          break;
+      }
     });
   }
 
+  newFile() {
+    if (this.newFileOption.filename) {
+      console.log(this.newFileOption.filename);
+      this.newFileOption.visible = false;
+      this.newFileOption.filename = null;
+    }
+    return;
+  }
 }

@@ -1,0 +1,28 @@
+@import "../../design-style/mixins/index";
+.ra-design-dialog {
+  .reset-component;
+  padding: 10px;
+  position: absolute;
+  width: 400px;
+  height: 110px;
+  background-color: @back-light-color;
+  box-shadow: rgb(0, 0, 0) 0px 2px 8px;
+  top: 372px;
+  left: 585px;
+  box-sizing: content-box;
+  .ra-design-dialog__message{
+    width: 400px;
+    text-align: center;
+  }
+  .ant-form-item-label{
+    line-height: 20px;
+    label{
+      color: @text-color
+    }
+  }
+  .ant-input{
+    color: @text-color;
+    background-color: @back-extra-color;
+    border: 1px solid @back-color;
+  }
+}
