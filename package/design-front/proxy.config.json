@@ -1,5 +1,8 @@
 {
-  "/api":{
-    "target":"http://localhost:7001"
+  "/api": {
+    "target": "http://localhost:7001"
+  },
+  "/baidu": {
+    "target": "http://www.baidu.com"
   }
 }

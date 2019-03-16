@@ -101,7 +101,9 @@ export class PageInterface {
           'items': []
         }
       ]
-    );
+    ).subscribe(($event) => {
+      console.log($event);
+    });
   }
 
 }

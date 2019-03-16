@@ -90,6 +90,6 @@ export class RaDesignMenu {
   emitClickMenu($event: DesignMenuModel) {
     this.hide();
     this.clickMenu.emit($event);
-    this.RaDesignMenuService.click();
+    this.RaDesignMenuService.emit($event);
   }
 }

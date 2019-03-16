@@ -13,16 +13,22 @@ export class RaDesignMenuService {
 
   show(element: HTMLElement, item: DesignMenuModel[]);
   show($event: MouseEvent, item: DesignMenuModel[]);
-  show($event: HTMLElement | MouseEvent, item: DesignMenuModel[]) {
+  show($event: HTMLElement | MouseEvent, item: DesignMenuModel[]): Observable<any> {
+    if (this.event) {
+      this.event.unsubscribe();
+    }
+    this.event = new Subject<RaDesignMenuItem>();
     if ($event instanceof HTMLElement) {
       this.subject.next({item, ...this.elementToXY($event)});
     } else {
       this.subject.next({item, ...this.eventToXY($event)});
     }
+    return this.event.asObservable();
   }
 
-  emit() {
-
+  emit(data: any) {
+    this.event.next(data);
+    this.event.unsubscribe();
   }
 
   /**
