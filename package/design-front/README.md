@@ -4,15 +4,13 @@ preview http://47.105.84.128/design/
 page.interface.ts
 右键新增的弹窗出现在鼠标附近而不是屏幕中间
 快捷键功能
-复制功能
-
+复制/剪切
+提示功能-删除前要提交才能删除
+树节点排序
 
 ## 设计平台相关
  - 尽量不停止冒泡功能,导致父节点无法触发事件.采用判断target和$event记录事件确认是否无视该事件,
- - tools-interface 在此处实现工具栏
- - 平台相关事件先在runtime-event.service.ts 事件枚举对象RUNTIME_EVENT_ENUM定义枚举
- - 平台相关变量先在runtime-data.service.ts  定义model对象并初始化
- - 以上两点为规范事件和全局变量,做为顶级服务供全平台组件使用
+ - 按功能实现service,全部都是全局服务.就算远在异乡的组件也能操作彼此的组件
  - TODO: ctrl时就不会放到容器里
  - TODO: 树节点拖拉拽,移动目录功能
  - TODO: 本地node服务,开启后能够知道服务器发生什么事做对应的反应

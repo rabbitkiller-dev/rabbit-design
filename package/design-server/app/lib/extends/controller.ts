@@ -1,4 +1,5 @@
 import {Controller as EegController} from 'egg';
+import {Result} from '../web/result';
 
 export class Controller<E = any> extends EegController {
 
@@ -9,6 +10,8 @@ export class Controller<E = any> extends EegController {
       return Object.assign({}, this.ctx.request.body, this.ctx.query);
     } else if (this.ctx.request.method.toLowerCase() === 'put'.toLowerCase()) {
       return Object.assign({}, this.ctx.request.body, this.ctx.query);
+    } else if (this.ctx.request.method.toLowerCase() === 'delete'.toLowerCase()) {
+      return Object.assign({}, this.ctx.request.body, this.ctx.query);
     }
     return {} as any;
   }
@@ -17,4 +20,7 @@ export class Controller<E = any> extends EegController {
     this.ctx.validate(rules, data);
   }
 
+  result(data?) {
+    this.ctx.body = new Result(data);
+  }
 }

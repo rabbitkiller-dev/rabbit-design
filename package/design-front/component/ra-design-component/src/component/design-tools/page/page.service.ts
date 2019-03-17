@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {DesignMenuModel} from '../../design-menu/interface';
 import {map} from 'rxjs/operators';
-import {PageModel, PageType, QueryToolsPageTreeDto, Result} from './interface';
+import {PageModel, PageType, QueryToolsPageTreeDto, QueryToolsPageTreeNodeDto, Result, TreeDto} from './interface';
 import {Observable} from 'rxjs';
 
 export const PageContextMenuKey = {
@@ -13,6 +13,7 @@ export const PageContextMenuKey = {
     ComponentDir: 'ComponentDir',
   },
   Copy: 'Copy',
+  Delete: 'Delete',
 };
 export const PageContextMenu: {
   [index: string]: DesignMenuModel;
@@ -43,6 +44,12 @@ export const PageContextMenu: {
     shortcut: 'Ctrl+c',
     key: PageContextMenuKey.Copy
   },
+  Delete: {
+    label: 'Delete',
+    icon: 'fa-file',
+    shortcut: 'Delete',
+    key: PageContextMenuKey.Delete
+  },
 };
 
 @Injectable()
@@ -60,8 +67,14 @@ export class PageService {
     }));
   }
 
-  add(page: PageModel): Observable<PageModel> {
-    return this.HttpClient.post('/api/tools-page', page).pipe(map((result: Result<PageModel>) => {
+  add(page: PageModel): Observable<QueryToolsPageTreeNodeDto> {
+    return this.HttpClient.post('/api/tools-page', page).pipe(map((result: Result<QueryToolsPageTreeNodeDto>) => {
+      return result.data;
+    }));
+  }
+
+  delete(pageID: string): Observable<void> {
+    return this.HttpClient.delete('/api/tools-page', {params: {pageID: pageID}}).pipe(map((result: Result<void>) => {
       return result.data;
     }));
   }
@@ -69,56 +82,60 @@ export class PageService {
   getContextMenu(page: PageModel): DesignMenuModel[] {
     switch (page.pageType) {
       case PageType.page:
-        return [PageContextMenu.Copy];
+        return [
+          PageContextMenu.Copy,
+          PageContextMenu.Delete,
+        ];
       case PageType.dir:
-        return [{
-          label: 'New',
-          icon: 'fa-file',
-          items: [
-            PageContextMenu.Page,
-            PageContextMenu.Dir,
-          ]
-        }];
+        return [
+          {
+            label: 'New',
+            icon: 'fa-file',
+            items: [
+              PageContextMenu.Page,
+              PageContextMenu.Dir,
+            ]
+          },
+          PageContextMenu.Delete,
+        ];
       case PageType.router2:
-        return [{
-          label: 'New',
-          icon: 'fa-file',
-          items: [
-            PageContextMenu.Page,
-            PageContextMenu.Dir,
-          ]
-        }];
+        return [
+          {
+            label: 'New',
+            icon: 'fa-file',
+            items: [
+              PageContextMenu.Page,
+              PageContextMenu.Dir,
+            ]
+          },
+          PageContextMenu.Delete,
+        ];
       case PageType.component:
-        return [{
-          label: 'New',
-          icon: 'fa-file',
-          items: [
-            PageContextMenu.Page,
-            PageContextMenu.Dir,
-          ]
-        }];
+        return [
+          {
+            label: 'New',
+            icon: 'fa-file',
+            items: [
+              PageContextMenu.Page,
+              PageContextMenu.Dir,
+            ]
+          },
+          PageContextMenu.Delete,
+        ];
       default:
-        return [{
-          label: 'New',
-          icon: 'fa-file',
-          items: [
-            PageContextMenu.Page,
-            PageContextMenu.Dir,
-            PageContextMenu.Router2Dir,
-            PageContextMenu.ComponentDir,
-          ]
-        }];
+        return [
+          {
+            label: 'New',
+            icon: 'fa-file',
+            items: [
+              PageContextMenu.Page,
+              PageContextMenu.Dir,
+              PageContextMenu.Router2Dir,
+              PageContextMenu.ComponentDir,
+            ]
+          },
+          PageContextMenu.Delete,
+        ];
     }
-    /*{
-      label: 'Copy',
-      icon: 'fa-file',
-      'shortcut': 'ctrl+c'
-    },
-    {
-      label: 'Cut',
-      icon: 'fa-file',
-      'shortcut': 'ctrl+x',
-      'items': []
-    }*/
   }
 }

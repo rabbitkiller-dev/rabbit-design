@@ -36,6 +36,7 @@ export class PageInterface {
     filename: null,
     parentPageID: null,
     pageType: null,
+    node: TreeNodeModel
   };
 
   constructor(public RaDesignStageService: RaDesignStageService,
@@ -43,9 +44,7 @@ export class PageInterface {
               public PageService: PageService,
               public ChangeDetectorRef: ChangeDetectorRef) {
     this.PageService.index().subscribe((result) => {
-      console.log(this.data);
       this.data = result;
-      console.log(this.data);
       this.ChangeDetectorRef.markForCheck();
     });
   }
@@ -63,28 +62,36 @@ export class PageInterface {
         case PageContextMenuKey.New.Page:
           this.newFileOption.visible = true;
           this.newFileOption.header = 'Page';
-          this.newFileOption.parentPageID = node.origin.parentPageID;
+          this.newFileOption.parentPageID = node.key;
           this.newFileOption.pageType = PageType.page;
           break;
         case PageContextMenuKey.New.Dir:
           this.newFileOption.visible = true;
           this.newFileOption.header = 'Directory';
-          this.newFileOption.parentPageID = node.origin.parentPageID;
+          this.newFileOption.parentPageID = node.key;
           this.newFileOption.pageType = PageType.dir;
           break;
         case PageContextMenuKey.New.Router2Dir:
           this.newFileOption.visible = true;
           this.newFileOption.header = '2Level Router Directory';
-          this.newFileOption.parentPageID = node.origin.parentPageID;
+          this.newFileOption.parentPageID = node.key;
           this.newFileOption.pageType = PageType.router2;
           break;
         case PageContextMenuKey.New.ComponentDir:
           this.newFileOption.visible = true;
           this.newFileOption.header = 'Components Directory';
-          this.newFileOption.parentPageID = node.origin.parentPageID;
+          this.newFileOption.parentPageID = node.key;
           this.newFileOption.pageType = PageType.component;
           break;
+        case PageContextMenuKey.Delete:
+          this.PageService.delete(node.key).subscribe(() => {
+            node.parentNode.children.splice(node.parentNode.children.indexOf(node), 1);
+            this.ChangeDetectorRef.markForCheck();
+          });
+          break;
+        default:
       }
+      this.newFileOption.node = node;
     });
   }
 
@@ -96,9 +103,9 @@ export class PageInterface {
         pageType: option.pageType,
         parentPageID: option.parentPageID,
       }).subscribe((result) => {
-        console.log(result);
+        option.node.addChildren([result]);
+        this.newHidden();
       });
-      this.newHidden();
     }
     return;
   }
@@ -109,5 +116,6 @@ export class PageInterface {
     option.filename = null;
     option.parentPageID = null;
     option.pageType = null;
+    option.node = null;
   }
 }

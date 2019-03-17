@@ -15,4 +15,11 @@ export default class ToolsPageController extends Controller<Page> {
       this.ctx.body = new Result(await this.ctx.service.toolsPage.savePage(entityManager, entityManager.getRepository(Page).create(this.getParams())));
     });
   }
+
+  public async delete() {
+    await this.app.typeorm.transaction(async (entityManager: EntityManager) => {
+      await this.ctx.service.toolsPage.deletePage(entityManager, this.getParams().pageID);
+      this.result();
+    });
+  }
 }

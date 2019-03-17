@@ -14,4 +14,5 @@ export default (app: Application) => {
 
   router.get('/api/tools-page', controller.toolsPage.index); // 注册
   router.post('/api/tools-page', controller.toolsPage.add); // 注册
+  router.delete('/api/tools-page', controller.toolsPage.delete); // 注册
 };
