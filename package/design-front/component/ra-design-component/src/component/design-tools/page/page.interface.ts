@@ -13,9 +13,9 @@ import {PageModel, PageType} from './interface';
     </div>
     <ra-design-tree [nzData]="data" (nzDblClick)="onDblclick($event)" (nzContextMenu)="onContextMenu($event)"
                     [cdkDrag]="true"></ra-design-tree>
-    <ra-design-dialog header="New File" *ngIf="newFileOption.visible">
+    <ra-design-dialog header="New {{newFileOption.header}} name" *ngIf="newFileOption.visible">
       <nz-form-item>
-        <nz-form-label>enter a new file name</nz-form-label>
+        <nz-form-label>enter a new {{newFileOption.header}} name</nz-form-label>
         <nz-form-control>
           <input nz-input [(ngModel)]="newFileOption.filename" nzSize="small" autofocus="true"
                  (keydown.enter)="newFile($event)"
@@ -31,6 +31,8 @@ export class PageInterface {
   data: any[];
   newFileOption: any = {
     visible: false,
+    header: 'adsad',
+
     filename: null,
     parentPageID: null,
     pageType: null,
@@ -60,8 +62,27 @@ export class PageInterface {
       switch (menu.key) {
         case PageContextMenuKey.New.Page:
           this.newFileOption.visible = true;
+          this.newFileOption.header = 'Page';
           this.newFileOption.parentPageID = node.origin.parentPageID;
           this.newFileOption.pageType = PageType.page;
+          break;
+        case PageContextMenuKey.New.Dir:
+          this.newFileOption.visible = true;
+          this.newFileOption.header = 'Directory';
+          this.newFileOption.parentPageID = node.origin.parentPageID;
+          this.newFileOption.pageType = PageType.dir;
+          break;
+        case PageContextMenuKey.New.Router2Dir:
+          this.newFileOption.visible = true;
+          this.newFileOption.header = '2Level Router Directory';
+          this.newFileOption.parentPageID = node.origin.parentPageID;
+          this.newFileOption.pageType = PageType.router2;
+          break;
+        case PageContextMenuKey.New.ComponentDir:
+          this.newFileOption.visible = true;
+          this.newFileOption.header = 'Components Directory';
+          this.newFileOption.parentPageID = node.origin.parentPageID;
+          this.newFileOption.pageType = PageType.component;
           break;
       }
     });

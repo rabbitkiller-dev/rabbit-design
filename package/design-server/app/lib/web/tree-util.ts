@@ -7,7 +7,7 @@ interface DefaultDataTree {
   icon?: string | Function;
   children?: any[] | Function;
   expanded?: boolean | Function;
-  leaf?: boolean | Function;
+  isLeaf?: boolean | Function;
 }
 
 export interface TreeRules {
@@ -17,7 +17,7 @@ export interface TreeRules {
   icon?: string;
   children?: ((data: any) => string | boolean | any[]) | string;
   expanded?: ((data: any) => string | boolean | any[]) | string;
-  leaf?: ((data: any) => string | boolean | any[]) | string;
+  isLeaf?: ((data: any) => string | boolean | any[]) | string;
 }
 
 export const defulatRules: TreeRules = {
@@ -27,7 +27,7 @@ export const defulatRules: TreeRules = {
   icon: 'icon',
   children: 'children',
   expanded: 'expanded',
-  leaf: 'leaf',
+  isLeaf: 'leaf',
 };
 
 export class TreeUtil {

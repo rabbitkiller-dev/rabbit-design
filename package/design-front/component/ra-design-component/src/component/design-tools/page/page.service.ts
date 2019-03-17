@@ -14,27 +14,35 @@ export const PageContextMenuKey = {
   },
   Copy: 'Copy',
 };
-export const PageContextMenu = {
+export const PageContextMenu: {
+  [index: string]: DesignMenuModel;
+} = {
   Page: {
-    'label': 'Page',
-    'icon': 'fa-file',
-    'key': PageContextMenuKey.New.Page
+    label: 'Page',
+    icon: 'fa-file',
+    key: PageContextMenuKey.New.Page
   },
   Dir: {
-    'label': 'Dir',
-    'icon': 'fa-file',
-    'key': PageContextMenuKey.New.Dir
+    label: 'Dir',
+    icon: 'fa-file',
+    key: PageContextMenuKey.New.Dir
   },
   Router2Dir: {
-    'label': 'Router 2level Dir',
-    'icon': 'fa-file',
-    'key': PageContextMenuKey.New.Router2Dir
+    label: 'Router 2level Dir',
+    icon: 'fa-file',
+    key: PageContextMenuKey.New.Router2Dir
   },
   ComponentDir: {
-    'label': 'Components Dir',
-    'icon': 'fa-file',
-    'key': PageContextMenuKey.New.ComponentDir
-  }
+    label: 'Components Dir',
+    icon: 'fa-file',
+    key: PageContextMenuKey.New.ComponentDir
+  },
+  Copy: {
+    label: 'Copy',
+    icon: 'fa-file',
+    shortcut: 'Ctrl+c',
+    key: PageContextMenuKey.Copy
+  },
 };
 
 @Injectable()
@@ -61,12 +69,39 @@ export class PageService {
   getContextMenu(page: PageModel): DesignMenuModel[] {
     switch (page.pageType) {
       case PageType.page:
-        return [PageContextMenu.Page];
+        return [PageContextMenu.Copy];
+      case PageType.dir:
+        return [{
+          label: 'New',
+          icon: 'fa-file',
+          items: [
+            PageContextMenu.Page,
+            PageContextMenu.Dir,
+          ]
+        }];
+      case PageType.router2:
+        return [{
+          label: 'New',
+          icon: 'fa-file',
+          items: [
+            PageContextMenu.Page,
+            PageContextMenu.Dir,
+          ]
+        }];
+      case PageType.component:
+        return [{
+          label: 'New',
+          icon: 'fa-file',
+          items: [
+            PageContextMenu.Page,
+            PageContextMenu.Dir,
+          ]
+        }];
       default:
         return [{
-          'label': 'New',
-          'icon': 'fa-file',
-          'items': [
+          label: 'New',
+          icon: 'fa-file',
+          items: [
             PageContextMenu.Page,
             PageContextMenu.Dir,
             PageContextMenu.Router2Dir,
@@ -75,13 +110,13 @@ export class PageService {
         }];
     }
     /*{
-      'label': 'Copy',
-      'icon': 'fa-file',
+      label: 'Copy',
+      icon: 'fa-file',
       'shortcut': 'ctrl+c'
     },
     {
-      'label': 'Cut',
-      'icon': 'fa-file',
+      label: 'Cut',
+      icon: 'fa-file',
       'shortcut': 'ctrl+x',
       'items': []
     }*/

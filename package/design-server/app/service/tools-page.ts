@@ -32,12 +32,17 @@ export default class ToolsPageService extends Controller {
         switch (item.pageType) {
           case PageType.page:
             return 'appstore';
+          case PageType.dir:
+            return 'folder';
+          case PageType.page:
+            return 'cluster';
+          case PageType.component:
+            return 'inbox';
           default:
             break;
         }
       },
-      expanded: () => '',
-      leaf: () => '',
+      isLeaf: (item) => item.pageType === PageType.page,
     })) as QueryToolsPageTreeNodeDto[];
     return [result];
   }
@@ -65,7 +70,7 @@ export default class ToolsPageService extends Controller {
       this.logger.info(uuidv1);
       page.pageID = uuidv1();
       page.pagePath = `${page.pageID}`;
-      page.parentPageID = '-1';
+      page.parentPageID = this.config.user.projectID;
     }
     page.enable = true;
     page.author = this.config.user.userID;

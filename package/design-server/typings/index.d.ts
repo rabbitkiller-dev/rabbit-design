@@ -18,8 +18,13 @@ declare module 'egg' {
   interface Application {
     typeorm: Connection;
   }
+
   // 扩展你的配置
   interface EggAppConfig {
     typeorm: ConnectionOptions;
+    user: {
+      userID: string,
+      projectID: string,
+    };
   }
 }
