@@ -15,14 +15,14 @@ export interface NzTreeNodeOptions {
   [ key: string ]: any;
 }
 
-export class TreeNodeModel<T extends NzTreeNodeOptions = any> {
+export class TreeNodeModel {
   title?: string;
   key?: string;
   level: number = 0;
   children: TreeNodeModel[];
   isLeaf: boolean;
   // tslint:disable-next-line:no-any
-  origin: T;
+  origin: any;
   // Parent Node
   parentNode: TreeNodeModel;
   isChecked: boolean;
@@ -36,7 +36,7 @@ export class TreeNodeModel<T extends NzTreeNodeOptions = any> {
   isLoading: boolean;
   isMatched: boolean;
 
-  constructor(option: T, parent: TreeNodeModel = null) {
+  constructor(option, parent: TreeNodeModel = null) {
     this.title = option.title || '---';
     this.key = option.key || null;
     this.isLeaf = option.isLeaf || false;

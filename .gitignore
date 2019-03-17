@@ -8,3 +8,5 @@
 *.launch
 .settings/
 *.sublime-workspace
+
+./nginx/design-front

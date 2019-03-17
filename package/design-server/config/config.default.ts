@@ -20,6 +20,23 @@ export default (appInfo: EggAppInfo) => {
     httpOnly: true,
     encrypt: true,
   };
+  config.io = {
+    init: { }, // passed to engine.io
+    namespace: {
+      '/': {
+        connectionMiddleware: [],
+        packetMiddleware: [],
+      },
+      '/example': {
+        connectionMiddleware: [],
+        packetMiddleware: [],
+      },
+    },
+  }
+  config.user = {
+    userID: '1',
+    projectID: '6774c7ae-09a5-48dd-a4aa-8ba0496aed74',
+  }
   // the return config will combines to EggAppConfig
   return {
     ...config,

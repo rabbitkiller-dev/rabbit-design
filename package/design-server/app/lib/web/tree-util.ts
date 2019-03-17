@@ -39,14 +39,15 @@ export class TreeUtil {
   // 添加/覆盖
   static autoSet<T>(rules: TreeRules, data: T, defaultData?: DefaultDataTree): TreeDto & T;
   static autoSet<T>(rules: TreeRules, data: T[], defaultData: DefaultDataTree = {}): Array<TreeDto & T> {
+    const _rules = Object.assign({}, defulatRules, rules);
     if (Array.isArray(data)) {
       data.forEach((_d) => {
-        this.autoSet(rules, _d, defaultData);
+        this.autoSet(_rules, _d, defaultData);
       });
       return data as Array<TreeDto & T>;
     } else {
-      Object.keys(rules).forEach((property) => {
-        TreeUtil._runRule(data, property, rules[property], defaultData[property]);
+      Object.keys(_rules).forEach((property) => {
+        TreeUtil._runRule(data, property, _rules[property], defaultData[property]);
       });
       return data as any;
     }
@@ -86,6 +87,6 @@ export class TreeUtil {
     if (!propertyValue && defulatData) {
       propertyValue = typeof defulatData === 'function' ? defulatData(data) : defulatData;
     }
-    propertyValue[property] = propertyValue;
+    data[property] = propertyValue;
   }
 }

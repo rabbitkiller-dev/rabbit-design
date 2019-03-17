@@ -1,9 +1,9 @@
-import {Component} from '@angular/core';
+import {ChangeDetectorRef, Component} from '@angular/core';
 import {RaDesignStageService, StageFactory} from '../../design-stage';
-import {NzFormatEmitEvent} from '../../design-tree';
+import {NzFormatEmitEvent, TreeNodeModel} from '../../design-tree';
 import {RaDesignMenuService} from '../../design-menu/ra-design-menu.service';
 import {PageContextMenuKey, PageService} from './page.service';
-import {PageModel} from './interface';
+import {PageModel, PageType} from './interface';
 
 @Component({
   template: `
@@ -19,7 +19,7 @@ import {PageModel} from './interface';
         <nz-form-control>
           <input nz-input [(ngModel)]="newFileOption.filename" nzSize="small" autofocus="true"
                  (keydown.enter)="newFile($event)"
-                 (keydown.esc)="newFileOption.filename = null;newFileOption.visible=false">
+                 (keydown.esc)="newHidden()">
         </nz-form-control>
       </nz-form-item>
     </ra-design-dialog>
@@ -28,65 +28,24 @@ import {PageModel} from './interface';
   providers: [PageService],
 })
 export class PageInterface {
-  data: any[] = [
-    {
-      key: 4,
-      title: '设置管理',
-      id: '4',
-      children: [
-        {
-          key: 5,
-          title: '首页超长文字首页超长文字首页超长文字首页超长文字',
-          id: '5',
-          leaf: false,
-          children: [
-            {
-              key: 7,
-              title: '首页',
-              id: '7',
-              leaf: false,
-            },
-            {
-              key: 8,
-              title: '登录',
-              id: '8',
-              leaf: false,
-            },
-          ]
-        },
-        {
-          key: 6,
-          title: '登录',
-          id: '6',
-          leaf: false,
-        },
-      ]
-    },
-    {
-      key: 1,
-      title: '首页',
-      id: '1',
-      leaf: false,
-    },
-    {
-      key: 2,
-      title: '登录',
-      id: '2',
-      leaf: false,
-    },
-    {
-      key: 3,
-      title: '设置超长文字设置超长文字设置超长文字设置超长文字设置超长文字',
-      id: '3',
-      leaf: false,
-    },
-  ];
-  newFileOption = {
+  data: any[];
+  newFileOption: any = {
     visible: false,
     filename: null,
+    parentPageID: null,
+    pageType: null,
   };
 
-  constructor(public RaDesignStageService: RaDesignStageService, public RaDesignMenuService: RaDesignMenuService, public PageService: PageService) {
+  constructor(public RaDesignStageService: RaDesignStageService,
+              public RaDesignMenuService: RaDesignMenuService,
+              public PageService: PageService,
+              public ChangeDetectorRef: ChangeDetectorRef) {
+    this.PageService.index().subscribe((result) => {
+      console.log(this.data);
+      this.data = result;
+      console.log(this.data);
+      this.ChangeDetectorRef.markForCheck();
+    });
   }
 
   onDblclick($event: NzFormatEmitEvent) {
@@ -95,22 +54,39 @@ export class PageInterface {
   }
 
   onContextMenu($event: NzFormatEmitEvent) {
-    this.RaDesignMenuService.show($event.event, this.PageService.getContextMenu($event.node)
-    ).subscribe(($event) => {
-      switch ($event.key) {
-        case PageContextMenuKey.New.File:
+    const node: TreeNodeModel = $event.node;
+    this.RaDesignMenuService.show($event.event, this.PageService.getContextMenu(node.origin)
+    ).subscribe((menu) => {
+      switch (menu.key) {
+        case PageContextMenuKey.New.Page:
           this.newFileOption.visible = true;
+          this.newFileOption.parentPageID = node.origin.parentPageID;
+          this.newFileOption.pageType = PageType.page;
           break;
       }
     });
   }
 
   newFile() {
-    if (this.newFileOption.filename) {
-      console.log(this.newFileOption.filename);
-      this.newFileOption.visible = false;
-      this.newFileOption.filename = null;
+    const option = this.newFileOption;
+    if (option.filename) {
+      this.PageService.add({
+        pageName: option.filename,
+        pageType: option.pageType,
+        parentPageID: option.parentPageID,
+      }).subscribe((result) => {
+        console.log(result);
+      });
+      this.newHidden();
     }
     return;
+  }
+
+  newHidden() {
+    const option = this.newFileOption;
+    option.visible = false;
+    option.filename = null;
+    option.parentPageID = null;
+    option.pageType = null;
   }
 }
