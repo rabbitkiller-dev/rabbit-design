@@ -1,3 +1,4 @@
+### build front
 cd ./package/design-front
 npm install --unsafe-perm
 npm run build --base-href=/design/
