@@ -1,7 +1,7 @@
 import {Service} from 'egg';
 import {Repository} from 'typeorm';
 
-import {User} from '../entity';
+import {User} from '../entity/user';
 import {ErrorService} from '../lib';
 
 /**

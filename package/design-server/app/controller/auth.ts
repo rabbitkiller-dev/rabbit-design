@@ -1,4 +1,4 @@
-import {User} from '../entity';
+import {User} from '../entity/user';
 import {Controller} from '../lib';
 
 export default class AuthController extends Controller {
