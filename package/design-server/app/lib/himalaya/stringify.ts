@@ -6,9 +6,9 @@ export function formatAttributes (attributes) {
     if (value === null) {
       return `${attrs} ${key}`
     }
-    const quoteEscape = value.indexOf('\'') !== -1
-    const quote = quoteEscape ? '"' : '\''
-    return `${attrs} ${key}=${quote}${value}${quote}`
+    const quoteEscape = value.indexOf('"') !== -1;
+    const quote = quoteEscape ? '\'' : '"';
+    return `${attrs} ${key}=${quote}${value}${quote}`;
   }, '')
 }
 

@@ -25,7 +25,6 @@ import {PageModel, PageType} from './interface';
     </ra-design-dialog>
   `,
   styles: [],
-  providers: [PageService],
 })
 export class PageInterface {
   data: any[];
@@ -104,6 +103,8 @@ export class PageInterface {
         parentPageID: option.parentPageID,
       }).subscribe((result) => {
         option.node.addChildren([result]);
+        option.node.children.sort(this.PageService.sort);
+        this.ChangeDetectorRef.markForCheck();
         this.newHidden();
       });
     }

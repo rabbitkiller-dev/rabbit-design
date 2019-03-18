@@ -32,7 +32,12 @@ export default (appInfo: EggAppInfo) => {
         packetMiddleware: [],
       },
     },
-  }
+  };
+  config.view = {
+    mapping: {
+      '.ejs': 'ejs',
+    },
+  };
   config.user = {
     userID: '1',
     projectID: '6774c7ae-09a5-48dd-a4aa-8ba0496aed74',

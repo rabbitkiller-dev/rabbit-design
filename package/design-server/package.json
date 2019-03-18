@@ -7,9 +7,9 @@
     "typescript": true
   },
   "scripts": {
-    "start": "egg-scripts start --daemon --title=egg-server-design-server",
+    "start": "egg-scripts start --daemon --title=egg-server-design-server  --sticky",
     "stop": "egg-scripts stop --title=egg-server-design-server",
-    "dev": "egg-bin dev -r egg-ts-helper/register",
+    "dev": "egg-bin dev -r egg-ts-helper/register  --sticky",
     "debug": "egg-bin debug -r egg-ts-helper/register",
     "test-local": "egg-bin test -r egg-ts-helper/register",
     "test": "npm run lint -- --fix && npm run test-local",
@@ -23,7 +23,9 @@
   "dependencies": {
     "egg": "^2.6.1",
     "egg-scripts": "^2.6.0",
+    "egg-socket.io": "^4.1.5",
     "egg-validate": "^2.0.2",
+    "egg-view-ejs": "^2.0.0",
     "mysql": "^2.16.0",
     "reflect-metadata": "^0.1.12",
     "typeorm": "^0.2.9",

@@ -12,7 +12,7 @@ export interface NzTreeNodeOptions {
   children?: NzTreeNodeOptions[];
 
   // tslint:disable-next-line:no-any
-  [ key: string ]: any;
+  [key: string]: any;
 }
 
 export class TreeNodeModel {
@@ -140,4 +140,11 @@ export class TreeNodeModel {
   public clearChildren(): void {
     this.children = [];
   }
+  //
+  // public forEachNode(call: (node: TreeNodeModel) => boolean | undefined) {
+  //   const forEachTree = (node: TreeNodeModel[]) => {
+  //
+  //   }
+  //
+  // }
 }

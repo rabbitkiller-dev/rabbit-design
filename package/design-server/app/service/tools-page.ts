@@ -1,4 +1,4 @@
-import {Controller} from 'egg';
+import {Service} from 'egg';
 import {EntityManager} from 'typeorm';
 import {QueryToolsPageTreeDto, QueryToolsPageTreeNodeDto} from '../dto/tools-page.dto';
 import {Page, PageType} from '../entity/page';
@@ -11,7 +11,7 @@ import * as uuidv1 from 'uuid/v1';
 /**
  * 工具栏-页面管理 Service
  */
-export default class ToolsPageService extends Controller {
+export default class ToolsPageService extends Service {
 
   public async queryToolsPageTree(entityManager: EntityManager, params: { projectID: string }): Promise<QueryToolsPageTreeDto[]> {
     const projectRepo = entityManager.getRepository(Project);
@@ -19,7 +19,7 @@ export default class ToolsPageService extends Controller {
       key: 'projectID',
       title: 'projectName',
     }, await projectRepo.findOne({projectID: params.projectID, enable: true}), {
-      icon: 'table',
+      icon: 'rabbit-design:icon-server',
       expanded: true,
       parentKey: '-1',
     });
@@ -71,13 +71,13 @@ export default class ToolsPageService extends Controller {
       icon: (item) => {
         switch (item.pageType) {
           case PageType.page:
-            return 'file';
+            return 'rabbit-design:icon-page';
           case PageType.dir:
-            return 'folder';
+            return 'rabbit-design:icon-folder';
           case PageType.router2:
-            return 'cluster';
+            return 'rabbit-design:icon-route';
           case PageType.component:
-            return 'appstore';
+            return 'rabbit-design:icon-component';
           default:
             break;
         }

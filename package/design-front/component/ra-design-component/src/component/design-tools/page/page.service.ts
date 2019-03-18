@@ -2,8 +2,9 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {DesignMenuModel} from '../../design-menu/interface';
 import {map} from 'rxjs/operators';
-import {PageModel, PageType, QueryToolsPageTreeDto, QueryToolsPageTreeNodeDto, Result, TreeDto} from './interface';
+import {PageModel, PageType, QueryToolsPageTreeDto, QueryToolsPageTreeNodeDto, Result} from './interface';
 import {Observable} from 'rxjs';
+import {TreeNodeModel} from 'ra-design-component';
 
 export const PageContextMenuKey = {
   New: {
@@ -52,7 +53,7 @@ export const PageContextMenu: {
   },
 };
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class PageService {
   constructor(public HttpClient: HttpClient) {
 
@@ -63,6 +64,22 @@ export class PageService {
    */
   index(): Observable<QueryToolsPageTreeDto[]> {
     return this.HttpClient.get('/api/tools-page', {}).pipe(map((result: Result<QueryToolsPageTreeDto[]>) => {
+      const forEachTree = (node: any[], call) => {
+        node.forEach((_n) => {
+          if (call(_n)) {
+            return true;
+          }
+          if (_n.children && _n.children.length > 0) {
+            forEachTree(_n.children, call);
+          }
+        });
+      };
+      forEachTree(result.data, (node) => {
+        if (node.children) {
+          node.children.sort(this.sort);
+        }
+      });
+      // result.data[0].children.sort(this.sort);
       return result.data;
     }));
   }
@@ -136,6 +153,31 @@ export class PageService {
           },
           PageContextMenu.Delete,
         ];
+    }
+  }
+
+  sort(item1: TreeNodeModel, item2: TreeNodeModel): number;
+  sort(item1: PageModel, item2: PageModel): number;
+  sort(item1: any, item2: any): number {
+    const item1PageType: PageType = item1.pageType ? item1.pageType : item1.origin.pageType;
+    const item2PageType: PageType = item2.pageType ? item2.pageType : item2.origin.pageType;
+    const item1PageName: PageType = item1.pageName ? item1.pageName : item1.origin.pageName;
+    const item2PageName: PageType = item2.pageName ? item2.pageName : item2.origin.pageName;
+
+    if (item1PageType === item2PageType) { // 如果一样就对比名称
+      return item1PageName > item2PageName ? 1 : -1;
+    }
+    if (item1PageType === PageType.component) {
+      return -1;
+    }
+    if (item1PageType === PageType.router2) {
+      return item2PageType === PageType.component ? 1 : -1;
+    }
+    if (item1PageType === PageType.dir) {
+      return item2PageType === PageType.page ? -1 : 1;
+    }
+    if (item1PageType === PageType.page) {
+      return item2PageType === PageType.page ? 0 : 1;
     }
   }
 }
