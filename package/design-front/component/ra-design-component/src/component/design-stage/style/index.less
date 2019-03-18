@@ -2,17 +2,17 @@
 
 @stage-name: ~'@{ra-prefix}-stage';
 
-ra-design-stage{
+ra-design-stage {
   display: flex;
   height: 100%;
   flex: 1;
   flex-direction: column;
   overflow: hidden;
-  [nz-icon]{
+  [nz-icon] {
     font-size: 20px;
   }
   // stage的上方上任务栏
-  .stage-bar{
+  .stage-bar {
     display: flex;
     position: relative;
     height: 32px;
@@ -20,7 +20,7 @@ ra-design-stage{
     user-select: none;
     border-bottom: 2px solid @back-color;
     box-shadow: 0px 2px 5px #000;
-    &:before{
+    &:before {
       content: '';
       position: absolute;
       top: 26px;
@@ -31,7 +31,7 @@ ra-design-stage{
       z-index: 4;
       pointer-events: none;
     }
-    &:after{
+    &:after {
       content: '';
       position: absolute;
       top: 24px;
@@ -40,7 +40,7 @@ ra-design-stage{
       border-top: 2px solid @back-color;
     }
   }
-  .stage-bar-item{
+  .stage-bar-item {
     position: relative;
     top: 3px;
     z-index: 2;
@@ -57,34 +57,33 @@ ra-design-stage{
     border-top-left-radius: 50px 60px;
     border-top-right-radius: 50px 60px;
     background: @back-extra-color;
-    span{
+    span {
       padding-left: 5px;
       padding-right: 5px;
     }
-    [nz-icon]{
+    [nz-icon] {
       font-size: 16px;
     }
-    [nz-icon][type="close"]{
+    [nz-icon][type="close"] {
       font-size: 16px;
       color: @text-light-color;
     }
-    [nz-icon][type="close"]:hover{
+    [nz-icon][type="close"]:hover {
       color: @primary-extra;
     }
-    &.is-select{
+    &.is-select {
       color: @primary-extra;
       background: @back-light-color;
       z-index: 3;
     }
-    &:first-of-type{
+    &:first-of-type {
       margin-left: 10px;
     }
   }
 }
 
-
 // stage 拖拉拽样式
-.stage-bar-item{
+.stage-bar-item {
   &.cdk-drag-preview {
     box-sizing: border-box;
     border-radius: 4px;
@@ -100,11 +99,11 @@ ra-design-stage{
     padding-left: 5px;
     padding-right: 5px;
     font-size: 16px;
-    span{
+    span {
       padding-left: 5px;
       padding-right: 5px;
     }
-    [nz-icon]{
+    [nz-icon] {
       font-size: 16px;
     }
   }
@@ -115,20 +114,40 @@ ra-design-stage{
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
   }
 }
+
 .stage-bar.cdk-drop-list-dragging .stage-bar-item:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
+
 // 舞台(编辑器)
-.editor-stage{
+.editor-stage {
   background: @back-color;
-  .editor-stage-footer{
+  .editor-stage-footer {
     height: 26px;
     background: @back-light-color;
   }
 }
 
 //舞台头部(任务栏)
-.editor-stage-main{
+.editor-stage-main {
   flex: 1;
   background: @back-light-color;
+}
+
+.page-editor {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-editor__form {
+  flex: 1;
+  //background: #999;
+  //background-image: linear-gradient(45deg, #666 25%, transparent 0, transparent 75%, #666 0), linear-gradient(45deg, #666 25%, transparent 0, transparent 75%, #666 0);
+  //background-position: 0 0, 15px 15px;
+  //background-size: 30px 30px;
+  background-color: transparent;
+  background-image: url("../../../assets/images/transparent-square-tiles.png");
+  background-repeat: repeat;
+  background-size: 130px;
 }

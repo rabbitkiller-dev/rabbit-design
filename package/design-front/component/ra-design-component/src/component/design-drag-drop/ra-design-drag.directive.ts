@@ -9,7 +9,7 @@ import {DOCUMENT} from '@angular/common';
 import {ViewportRuler} from '@angular/cdk/overlay';
 
 import {DragDropRegistry} from './drag-drop-registry';
-import {DragRefInterface, RelativeDragRef, FlowDragRef} from './ref/index';
+import {ComponentDragRef, DragRefInterface, RelativeDragRef, FlowDragRef} from './ref/index';
 import {StageBarItemDragRef} from './ref/stage-bar-item-drag-ref';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
@@ -27,7 +27,7 @@ type DesignDragType = 'relative' | 'stage-bar-item' | string;
 export class RaDesignDragDirective<T = any> implements AfterViewInit, OnChanges, OnDestroy, OnInit {
 
   isDragging = false; // TODO
-
+  @Input('designData') data: T;
   @Input('designDrag') type: DesignDragType;
   /** Whether starting to drag this element is disabled. */
   @Input('designDragDisabled')
@@ -39,7 +39,7 @@ export class RaDesignDragDirective<T = any> implements AfterViewInit, OnChanges,
   }
   private _disabled = false;
 
-  dragRef: DragRefInterface;
+  dragRef: DragRefInterface<any>;
 
   constructor(public DragDropRegistry: DragDropRegistry<DragRefInterface>,
               public ElementRef: ElementRef,
@@ -60,6 +60,9 @@ export class RaDesignDragDirective<T = any> implements AfterViewInit, OnChanges,
         break;
       case 'stage-bar-item':
         this.dragRef = new StageBarItemDragRef(this);
+        break;
+      case 'component':
+        this.dragRef = new ComponentDragRef(this);
         break;
       default :
         this.dragRef = new FlowDragRef(this);

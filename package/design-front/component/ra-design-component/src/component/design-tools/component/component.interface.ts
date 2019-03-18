@@ -1,4 +1,5 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {NzFormatEmitEvent} from '../../design-tree';
 
 @Component({
   selector: 'ra-design-component-interface',
@@ -21,16 +22,22 @@ export class ComponentInterface implements OnInit {
           {
             'key': 'icon',
             'title': 'icon',
-            'leaf': false,
+            'isLeaf': true,
             // 'icon': 'fa-file'
           },
           {
             'key': 'input',
             'title': 'input',
-            'leaf': true,
+            'isLeaf': true,
           }
         ]
       },
     ];
+  }
+
+  ondbClick($event: NzFormatEmitEvent) {
+    if ($event.node.children && $event.node.children.length > 0) {
+      $event.node.setExpanded(!$event.node.isExpanded);
+    }
   }
 }

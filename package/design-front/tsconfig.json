@@ -19,6 +19,9 @@
       "dom"
     ],
     "paths": {
+      "himalaya": [
+        "../design-server/app/lib/himalaya/index"
+      ],
       "ra-component": [
         "component/ra-component/src/public_api",
         "dist/ra-component"

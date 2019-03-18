@@ -2,4 +2,4 @@
   <i class="fa fa-first-order"></i>
   <label>组件列表</label>
 </div>
-<ra-design-tree [nzData]="nzData"></ra-design-tree>
+<ra-design-tree [nzData]="nzData" designDragType="component" [designDragDisabled]="false" (nzDblClick)="ondbClick($event)"></ra-design-tree>

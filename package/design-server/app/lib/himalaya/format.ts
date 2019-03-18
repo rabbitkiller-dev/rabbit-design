@@ -14,24 +14,29 @@ export function unquote(str) {
   return str
 }
 
-export function format(nodes, options) {
+export interface HtmlJson {
+  type: string;
+  tagName?: string;
+  children?: HtmlJson[];
+  attributes?: [];
+  content?: string;
+  position?: string;
+}
+
+export function format(nodes, options): HtmlJson[] {
   return nodes.map((node) => {
-    const type = node.type
-    const outputNode: {
-      type: string,
-      tagName?: string,
-      children?: [],
-      attributes?: [],
-      content?: string,
-      position?: string,
-    } = type === 'element'
-      ? {
-        type,
+    const type = node.type as any;
+    let outputNode: HtmlJson;
+    if (type === 'element') {
+      outputNode = {
+        type: type,
         tagName: node.tagName.toLowerCase(),
         attributes: formatAttributes(node.attributes),
-        children: format(node.children, options)
-      }
-      : {type, content: node.content}
+        children: format(node.children, options),
+      };
+    } else {
+      outputNode = {type: type, content: node.content};
+    }
     if (options.includePositions) {
       outputNode.position = node.position;
     }

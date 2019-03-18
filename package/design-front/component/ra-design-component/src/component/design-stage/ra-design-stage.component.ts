@@ -70,7 +70,7 @@ export class RaDesignStageComponent implements OnInit {
     this.RaDesignStageService.deleteStage(stageTab.id);
   }
 
-  onMouseWheel() {
+  onMouseWheel($event) {
 
   }
 }

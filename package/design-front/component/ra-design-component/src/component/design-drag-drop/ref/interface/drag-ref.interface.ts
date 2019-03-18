@@ -3,8 +3,9 @@ import {DragDropRegistry} from '../../drag-drop-registry';
 import {Directionality} from '@angular/cdk/bidi';
 import {ViewportRuler} from '@angular/cdk/overlay';
 
-export interface DragRefInterface {
-  DragDropRegistry: DragDropRegistry<DragRefInterface>;
+export interface DragRefInterface<T = any> {
+  data: T;
+  DragDropRegistry: DragDropRegistry<DragRefInterface<T>>;
   NgZone: NgZone;
   ViewContainerRef: ViewContainerRef;
   Document: Document;
@@ -20,7 +21,7 @@ export interface DragRefInterface {
    * the user is dragging. Passing an alternate root element is useful when trying to enable
    * dragging on an element that you might not have access to.
    */
-  withRootElement(rootElement: ElementRef<HTMLElement> | HTMLElement): DragRefInterface;
+  withRootElement(rootElement: ElementRef<HTMLElement> | HTMLElement): DragRefInterface<T>;
 
   /**
    * Returns the element that is being used as a placeholder

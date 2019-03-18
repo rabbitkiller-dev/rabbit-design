@@ -43,8 +43,9 @@ interface DragHelperTemplate<T = any> {
   data: T;
 }
 
-export class RelativeDragRef implements DragRefInterface {
-  DragDropRegistry: DragDropRegistry<RelativeDragRef>;
+export class RelativeDragRef<T> implements DragRefInterface<T> {
+  data: T;
+  DragDropRegistry: DragDropRegistry<RelativeDragRef<T>>;
   NgZone: NgZone;
   ViewContainerRef: ViewContainerRef;
   Document: Document;
@@ -106,7 +107,7 @@ export class RelativeDragRef implements DragRefInterface {
 
 
   constructor(public RaDesignDragDirective: RaDesignDragDirective) {
-    this.DragDropRegistry = this.RaDesignDragDirective.DragDropRegistry as DragDropRegistry<RelativeDragRef>;
+    this.DragDropRegistry = this.RaDesignDragDirective.DragDropRegistry as DragDropRegistry<RelativeDragRef<T>>;
     this.NgZone = this.RaDesignDragDirective.NgZone;
     this.ViewContainerRef = this.RaDesignDragDirective.ViewContainerRef;
     this.Document = this.RaDesignDragDirective.Document;

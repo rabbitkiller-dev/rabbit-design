@@ -39,7 +39,8 @@ interface DragHelperTemplate<T = any> {
   data: T;
 }
 
-export class FlowDragRef implements DragRefInterface {
+export class FlowDragRef<T = any> implements DragRefInterface {
+  data: T;
   DragDropRegistry: DragDropRegistry<FlowDragRef>;
   NgZone: NgZone;
   ViewContainerRef: ViewContainerRef;
@@ -107,6 +108,7 @@ export class FlowDragRef implements DragRefInterface {
     this.Document = this.RaDesignDragDirective.Document;
     this.Directionality = this.RaDesignDragDirective.Directionality;
     this.ViewportRuler = this.RaDesignDragDirective.ViewportRuler;
+    this.data = this.RaDesignDragDirective.data;
   }
 
 
@@ -123,7 +125,7 @@ export class FlowDragRef implements DragRefInterface {
   }
 
   /** Handler for the `mousedown`/`touchstart` events. */
-  private _pointerDown = (event: MouseEvent | TouchEvent) => {
+  protected _pointerDown = (event: MouseEvent | TouchEvent) => {
     // TODO (@angular/cdk/cdk-drag-drop/drag-ref.ts!_pointerDown)
     if (!this.disabled) {
       this._initializeDragSequence(this._rootElement, event);
@@ -136,7 +138,7 @@ export class FlowDragRef implements DragRefInterface {
    * @param referenceElement Element that started the drag sequence.
    * @param event Browser event object that started the sequence.
    */
-  private _initializeDragSequence(referenceElement: HTMLElement, event: MouseEvent | TouchEvent) {
+  protected _initializeDragSequence(referenceElement: HTMLElement, event: MouseEvent | TouchEvent) {
     // Always stop propagation for the event that initializes
     // the dragging sequence, in order to prevent it from potentially
     // starting another sequence for a draggable parent somewhere up the DOM tree.
