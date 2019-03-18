@@ -9,4 +9,4 @@
 .settings/
 *.sublime-workspace
 
-./nginx/design-front
+nginx/design-front/*

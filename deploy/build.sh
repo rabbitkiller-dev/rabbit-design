@@ -2,7 +2,7 @@
 git pull
 
 ### build front
-sh deploy-design-front.sh
+sh deploy/deploy-design-front.sh
 
 ### start server
-sh deploy-design-server.sh
+sh deploy/deploy-design-server.sh

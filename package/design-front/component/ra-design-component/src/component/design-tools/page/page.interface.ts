@@ -50,7 +50,12 @@ export class PageInterface {
 
   onDblclick($event: NzFormatEmitEvent) {
     const node = $event.node;
-    this.RaDesignStageService.putStage(StageFactory.PageEditor, {id: node.key, title: node.title});
+    const page: PageModel = $event.node.origin;
+    if (page.pageType === PageType.page) {
+      this.RaDesignStageService.putStage(StageFactory.PageEditor, {id: node.key, title: node.title});
+    } else {
+      node.setExpanded(!node.isExpanded);
+    }
   }
 
   onContextMenu($event: NzFormatEmitEvent) {

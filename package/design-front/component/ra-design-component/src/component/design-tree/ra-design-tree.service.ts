@@ -160,7 +160,6 @@ export class RaDesignTreeService {
    * set node selected status
    */
   setNodeActive(node: TreeNodeModel, isMultiple: boolean = false): void {
-    const isSelected = node.isSelected;
     if (node.isDisabled) {
       return;
     }
@@ -170,7 +169,7 @@ export class RaDesignTreeService {
       });
       this.selectedNodeList = [];
     }
-    node.setSelected(!isSelected);
+    node.setSelected(true);
     this.setSelectedNodeList(node, isMultiple);
   }
 
@@ -500,6 +499,7 @@ export class RaDesignTreeService {
         break;
       case 'click':
       case 'dblclick':
+      case 'contextmenu':
         Object.assign(emitStructure, {'selectedKeys': this.getSelectedNodeList()});
         Object.assign(emitStructure, {'nodes': this.getSelectedNodeList()});
         Object.assign(emitStructure, {'keys': this.getSelectedNodeList().map(n => n.key)});

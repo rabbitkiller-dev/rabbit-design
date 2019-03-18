@@ -96,18 +96,8 @@ export class FlowDragRef implements DragRefInterface {
 
   /** Whether starting to drag this element is disabled. */
   get disabled(): boolean {
-    return this._disabled;
+    return this.RaDesignDragDirective.disabled;
   }
-
-  set disabled(value: boolean) {
-    const newValue = coerceBooleanProperty(value);
-
-    if (newValue !== this._disabled) {
-      this._disabled = newValue;
-    }
-  }
-
-  private _disabled = false;
 
 
   constructor(public RaDesignDragDirective: RaDesignDragDirective) {

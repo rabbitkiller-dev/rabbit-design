@@ -18,7 +18,8 @@
       (mousedown)="_clickExpand($event)">
       <ng-container *ngIf="isShowSwitchIcon">
         <i *ngIf="!nzTreeNode.isLoading" nz-icon type="caret-down" class="ra-design-tree-switcher-icon"></i>
-        <i *ngIf="nzTreeNode.isLoading" nz-icon type="loading" [spin]="true" class="ra-design-tree-switcher-loading-icon"></i>
+        <i *ngIf="nzTreeNode.isLoading" nz-icon type="loading" [spin]="true"
+           class="ra-design-tree-switcher-loading-icon"></i>
       </ng-container>
       <ng-container *ngIf="nzShowLine">
         <i *ngIf="isShowLineIcon" nz-icon [type]="isSwitcherOpen ? 'minus-square' : 'plus-square'"
@@ -106,9 +107,8 @@
     (nzDragLeave)="nzDragLeave.emit($event)"
     (nzDrop)="nzDrop.emit($event)"
     (nzDragEnd)="nzDragEnd.emit($event)"
-    designDrag
+    [designDrag]="RaDesignTreeComponent.designDragType"
+    [designDragDisabled]="RaDesignTreeComponent.designDragDisabled"
   >
-    <!--[designDragDisabled]="RaDesignTreeComponent.designDragDisabled"
-    [designDragType]="RaDesignTreeComponent.designDragType"-->
   </ra-design-tree-node>
 </ul>

@@ -11,7 +11,7 @@ export interface DragRefInterface {
   Directionality: Directionality;
   ViewportRuler: ViewportRuler;
 
-  disabled: boolean;
+  readonly disabled: boolean;
   _rootElement: HTMLElement;
 
 

@@ -17,10 +17,6 @@ export class RaDesignStageService {
   private factory: Map<String, ComponentFactory<any>> = new Map();
   private RaDesignStageComponent: RaDesignStageComponent;
 
-  /**
-   * runtime
-   */
-  stage
   constructor(public ComponentFactoryResolver: ComponentFactoryResolver) {
   }
 
@@ -39,7 +35,7 @@ export class RaDesignStageService {
       case StageFactory.PageEditor:
         const stage = {
           factory: StageFactory.PageEditor,
-          icon: 'database',
+          icon: 'rabbit-design:icon-page',
           ...stageTabServer,
         };
         this.stageList.push(stage);
@@ -51,6 +47,12 @@ export class RaDesignStageService {
     this.stageList.forEach(stage => stage.select = false);
     this.stageMap.get(stageTabServer.id).select = true;
     this.RaDesignStageComponent.showTools(this.factory.get(tools));
+  }
+
+  deleteStage(stageID: string) {
+    const stageTab = this.stageMap.get(stageID);
+    this.stageMap.delete(stageID);
+    this.stageList.splice(this.stageList.indexOf(stageTab), 1);
   }
 
   openStage(stageID: string) {

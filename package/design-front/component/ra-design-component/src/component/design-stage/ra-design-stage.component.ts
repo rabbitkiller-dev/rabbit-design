@@ -9,14 +9,14 @@ import {StageTabModel} from './interface';
   selector: 'ra-design-stage',
   template: `
     <!-- stage的上方上任务栏 -->
-    <div class="stage-bar" designDrop (onDesignDropped)="onDesignDropped($event)">
-      <ng-container *ngFor="let tools of RaDesignStageService.stageList">
+    <div class="stage-bar" designDrop (onDesignDropped)="onDesignDropped($event)" (wheel)="onMouseWheel($event)">
+      <ng-container *ngFor="let stageTab of RaDesignStageService.stageList">
         <!-- TODO cdkDragBoundary=".stage-bar" 限制移动元素 -->
-        <li class="stage-bar-item" [class.is-select]="tools.select" (click)="select(tools)"
-            [style.order]="tools.order" designDrag="stage-bar-item">
-          <i nz-icon [type]="tools.icon" theme="outline"></i>
-          <span>{{tools.title}}</span>
-          <i nz-icon type="close" theme="outline"></i>
+        <li class="stage-bar-item" [class.is-select]="stageTab.select" (click)="select(stageTab)"
+            [style.order]="stageTab.order" designDrag="stage-bar-item">
+          <i nz-icon [type]="stageTab.icon"></i>
+          <span>{{stageTab.title}}</span>
+          <i nz-icon type="close" theme="outline" (click)="close($event,stageTab)"></i>
         </li>
       </ng-container>
     </div>
@@ -57,5 +57,20 @@ export class RaDesignStageComponent implements OnInit {
 
   onDesignDropped($event: DesignDragDrop<any>) {
     moveItemInArray(this.RaDesignStageService.stageList, $event.currentIndex, $event.previousIndex);
+  }
+
+  close($event: MouseEvent, stageTab: StageTabModel) {
+    if (stageTab.select && this.RaDesignStageService.stageList.length > 1) {
+      const index = this.RaDesignStageService.stageList.indexOf(stageTab);
+      const nextStageTab = this.RaDesignStageService.stageList[index + 1] || this.RaDesignStageService.stageList[index - 1];
+      this.RaDesignStageService.openStage(nextStageTab.id);
+    } else if (this.RaDesignStageService.stageList.length === 1) {
+      this.main.clear();
+    }
+    this.RaDesignStageService.deleteStage(stageTab.id);
+  }
+
+  onMouseWheel() {
+
   }
 }

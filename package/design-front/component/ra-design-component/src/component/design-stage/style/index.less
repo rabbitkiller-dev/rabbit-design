@@ -2,15 +2,18 @@
 
 @stage-name: ~'@{ra-prefix}-stage';
 
-@{stage-name}{
+ra-design-stage{
   display: flex;
-  flex-direction: column;
   height: 100%;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
   [nz-icon]{
     font-size: 20px;
   }
   // stage的上方上任务栏
   .stage-bar{
+    display: flex;
     position: relative;
     height: 32px;
     background: @back-extra-color;
@@ -117,9 +120,6 @@
 }
 // 舞台(编辑器)
 .editor-stage{
-  flex: 1;
-  display: flex;
-  flex-direction: column;
   background: @back-color;
   .editor-stage-footer{
     height: 26px;
