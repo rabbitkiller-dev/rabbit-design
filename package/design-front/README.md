@@ -10,6 +10,7 @@ page.interface.ts
 菜单样式
 弹窗拖拽移动还有关闭按钮
 tools拖拽的排序
+tools展开折叠
 查找图标,实现icon/input
 ## 设计平台相关
  - 尽量不停止冒泡功能,导致父节点无法触发事件.采用判断target和$event记录事件确认是否无视该事件,

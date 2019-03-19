@@ -21,33 +21,31 @@ export const PageContextMenu: {
 } = {
   Page: {
     label: 'Page',
-    icon: 'fa-file',
+    icon: 'rabbit-design:icon-page',
     key: PageContextMenuKey.New.Page
   },
   Dir: {
     label: 'Dir',
-    icon: 'fa-file',
+    icon: 'rabbit-design:icon-folder',
     key: PageContextMenuKey.New.Dir
   },
   Router2Dir: {
     label: 'Router 2level Dir',
-    icon: 'fa-file',
+    icon: 'rabbit-design:icon-router',
     key: PageContextMenuKey.New.Router2Dir
   },
   ComponentDir: {
     label: 'Components Dir',
-    icon: 'fa-file',
+    icon: 'rabbit-design:icon-component',
     key: PageContextMenuKey.New.ComponentDir
   },
   Copy: {
     label: 'Copy',
-    icon: 'fa-file',
     shortcut: 'Ctrl+c',
     key: PageContextMenuKey.Copy
   },
   Delete: {
     label: 'Delete',
-    icon: 'fa-file',
     shortcut: 'Delete',
     key: PageContextMenuKey.Delete
   },
@@ -107,7 +105,6 @@ export class PageService {
         return [
           {
             label: 'New',
-            icon: 'fa-file',
             items: [
               PageContextMenu.Page,
               PageContextMenu.Dir,
@@ -119,7 +116,6 @@ export class PageService {
         return [
           {
             label: 'New',
-            icon: 'fa-file',
             items: [
               PageContextMenu.Page,
               PageContextMenu.Dir,
@@ -131,7 +127,6 @@ export class PageService {
         return [
           {
             label: 'New',
-            icon: 'fa-file',
             items: [
               PageContextMenu.Page,
               PageContextMenu.Dir,
@@ -143,7 +138,6 @@ export class PageService {
         return [
           {
             label: 'New',
-            icon: 'fa-file',
             items: [
               PageContextMenu.Page,
               PageContextMenu.Dir,

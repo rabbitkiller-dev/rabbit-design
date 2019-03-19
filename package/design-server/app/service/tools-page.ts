@@ -75,7 +75,7 @@ export default class ToolsPageService extends Service {
           case PageType.dir:
             return 'rabbit-design:icon-folder';
           case PageType.router2:
-            return 'rabbit-design:icon-route';
+            return 'rabbit-design:icon-router';
           case PageType.component:
             return 'rabbit-design:icon-component';
           default:
