@@ -5,20 +5,27 @@ import {parse, stringify} from '../lib/himalaya';
  * 工具栏-页面管理 Service
  */
 export default class ToolsPageService extends Service {
-  async fetchIconfont(scriptUrl: string): Promise<Array<{ name: string, symbol: string }>> {
+  async fetchIconfont(scriptUrl: string): Promise<Array<{ name: string, symbol: string, viewBox: string }>> {
     const result = await this.ctx.curl(scriptUrl, {dataType: 'text'});
     const scriptContext: string = result.data;
     const svgText = scriptContext.match('\\<svg>.*\\</svg>');
-    const icons: Array<{ name: string, symbol: string }> = [];
+    const icons: Array<{ name: string, viewBox: string, symbol: string }> = [];
     if (svgText) {
       const json = parse(svgText.toString())[0];
+      if (!json.children) {
+        return [];
+      }
       json.children.forEach((symbol) => {
-        const name = symbol.attributes.find((attr) => {
+        const name = symbol.attributes ? symbol.attributes.find((attr) => {
           return attr.key === 'id';
-        })!.value;
+        })!.value : '';
+        const viewBox = symbol.attributes ? symbol.attributes.find((attr) => {
+          return attr.key === 'viewBox';
+        })!.value : '';
         icons.push({
           name: name,
-          symbol: stringify([symbol]),
+          viewBox: viewBox,
+          symbol: stringify(symbol.children),
         });
       });
     }
@@ -30,15 +37,7 @@ export default class ToolsPageService extends Service {
       data: icons,
       ctx: this.ctx,
     });
-    this.logger.info(code);
     return code;
-    // const literal: string[] = [];
-    // const ts: string[] = [];
-    // icons.forEach((icon) => {
-    //   literal.push(`const rabbitDesign${this.toCamelCase(icon.name)}Literal = '${icon.symbol}';`);
-    //   ts.push(`this.NzIconService.addIconLiteral('rabbit-design:${icon.name}', rabbitDesign${this.toCamelCase(icon.name)}Literal);`);
-    // });
-    // return `${literal.join('\n')}\naddIcons(){\n  ${ts.join('\n')}\n}`;
   }
 
   // a-b这种类型的字符串转换成驼峰

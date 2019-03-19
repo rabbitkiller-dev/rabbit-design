@@ -1,8 +1,8 @@
 <% for (let i = 0; i < data.length; i++) { _%>
-<%# class="icon"  %>
+<%# class="icon"  _%>
 const RaDesign<%=ctx.service.toolsIcon.toCamelCase(data[i].name)_%>
-Literal = '<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1127" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200"><defs><style type="text/css"></style></defs><%-data[i].symbol%></svg>'
-<% } _%>
+Literal = '<svg viewBox="<%=data[i].viewBox%>" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1127" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200"><defs><style type="text/css"></style></defs><%-data[i].symbol%></svg>'
+<%_ } _%>
 <% for (let i = 0; i < data.length; i++) { _%>
 this.NzIconService.addIconLiteral('rabbit-design:<%=data[i].name%>', RaDesign<%=ctx.service.toolsIcon.toCamelCase(data[i].name)%>Literal);
 <% } _%>

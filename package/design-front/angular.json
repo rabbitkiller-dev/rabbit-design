@@ -23,7 +23,9 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
+              "src/favicon-rabbit-design.png",
               "src/favicon.ico",
+              "src/favicon.png",
               "src/assets",
               {
                 "glob": "**/*",
@@ -95,6 +97,7 @@
             ],
             "scripts": [],
             "assets": [
+              "src/favicon-rabbit-design.png",
               "src/favicon.ico",
               "src/assets"
             ]

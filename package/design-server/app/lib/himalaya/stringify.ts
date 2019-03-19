@@ -20,7 +20,7 @@ export function toHTML (tree, options) {
     if (node.type === 'comment') {
       return `<!--${node.content}-->`
     }
-    const {tagName, attributes, children} = node
+    const {tagName, attributes, children} = node;
     const isSelfClosing = arrayIncludes(options.voidTags, tagName.toLowerCase())
     return isSelfClosing
       ? `<${tagName}${formatAttributes(attributes)}>`

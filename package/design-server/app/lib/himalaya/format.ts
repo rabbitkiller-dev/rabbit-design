@@ -14,11 +14,16 @@ export function unquote(str) {
   return str
 }
 
+export interface Attributes {
+  key: string;
+  value: string;
+}
+
 export interface HtmlJson {
   type: string;
   tagName?: string;
   children?: HtmlJson[];
-  attributes?: [];
+  attributes?: Attributes[];
   content?: string;
   position?: string;
 }

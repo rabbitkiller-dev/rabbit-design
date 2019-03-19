@@ -1,12 +1,12 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {NzFormatEmitEvent} from '../../design-tree';
+import {NzFormatEmitEvent, NzTreeNodeOptions, TreeNodeModel} from '../../design-tree';
 
 @Component({
   selector: 'ra-design-component-interface',
   templateUrl: './component.interface.html',
 })
 export class ComponentInterface implements OnInit {
-  nzData = [];
+  nzData: NzTreeNodeOptions[] = [];
   enterPredicate = () => false;
 
   constructor() {
@@ -15,20 +15,21 @@ export class ComponentInterface implements OnInit {
   ngOnInit() {
     this.nzData = [
       {
-        'key': 'forms',
-        'title': 'forms',
+        key: 'forms',
+        title: 'forms',
         // 'icon': 'fa-file',
-        'children': [
+        children: [
           {
-            'key': 'icon',
-            'title': 'icon',
-            'isLeaf': true,
-            // 'icon': 'fa-file'
+            key: 'icon',
+            title: 'icon',
+            isLeaf: true,
+            icon: 'rabbit-design:icon-iconfont'
           },
           {
-            'key': 'input',
-            'title': 'input',
-            'isLeaf': true,
+            key: 'input',
+            title: 'input',
+            isLeaf: true,
+            icon: 'rabbit-design:icon-input'
           }
         ]
       },
