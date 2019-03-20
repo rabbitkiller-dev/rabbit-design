@@ -80,7 +80,7 @@ export class FlowDragRef<T = any> implements DragRefInterface {
    * Reference to the element that comes after the draggable in the DOM, at the time
    * it was picked up. Used for restoring its initial position when it's dropped.
    */
-  private _nextSibling: Node | null;
+  protected _nextSibling: Node | null;
 
   /** Element that will be used as a template to create the draggable item's preview. */
   private _previewTemplate: DragHelperTemplate | null;
@@ -238,8 +238,8 @@ export class FlowDragRef<T = any> implements DragRefInterface {
   protected _startDragSequence(event: MouseEvent | TouchEvent) {
     const element = this._rootElement;
 
-    const preview = this._preview = this._createPreviewElement();
-    const placeholder = this._placeholder = this._createPlaceholderElement();
+    const preview = this._preview = this._createPreviewElement(event);
+    const placeholder = this._placeholder = this._createPlaceholderElement(event);
 
     this._nextSibling = element.nextSibling;
     // We move the element out at the end of the body and we make it hidden, because keeping it in
@@ -267,7 +267,7 @@ export class FlowDragRef<T = any> implements DragRefInterface {
    * Creates the element that will be rendered next to the user's pointer
    * and will be used as a preview of the element that is being dragged.
    */
-  protected _createPreviewElement(): HTMLElement {
+  protected _createPreviewElement(event: MouseEvent | TouchEvent): HTMLElement {
     let preview: HTMLElement;
 
     if (this._previewTemplate) {
@@ -307,7 +307,7 @@ export class FlowDragRef<T = any> implements DragRefInterface {
   }
 
   /** Creates an element that will be shown instead of the current element while dragging. */
-  protected _createPlaceholderElement(): HTMLElement {
+  protected _createPlaceholderElement(event: MouseEvent | TouchEvent): HTMLElement {
     let placeholder: HTMLElement;
 
     if (this._placeholderTemplate) {

@@ -10,7 +10,7 @@
 
 //.antCheckboxFn(@checkbox-prefix-cls: ~'@{ant-prefix}-tree-checkbox');
 
-.@{ui-design-tree} {
+.ra-design-tree {
   .reset-component;
   user-select: none;
 
@@ -27,7 +27,7 @@
     list-style: none;
     outline: 0;
     // 内容区
-    .@{ui-design-tree}-node-content-wrapper {
+    .ra-design-tree-node-content-wrapper {
       display: inline-block;
       height: @tree-title-height;
       margin: 0;
@@ -37,18 +37,18 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    &.@{ui-design-tree}-treenode-selected {
+    &.ra-design-tree-treenode-selected {
       background-color: @primary-color;
       color: @white;
       transition: all 0.3s;
     }
     // 展开折叠按钮
     span {
-      &.@{ui-design-tree}-checkbox {
+      &.ra-design-tree-checkbox {
         margin: 4px 4px 0 2px;
       }
-      &.@{ui-design-tree}-switcher,
-      &.@{ui-design-tree}-iconEle {
+      &.ra-design-tree-switcher,
+      &.ra-design-tree-iconEle {
         display: inline-block;
         width: 26px;
         height: 26px;
@@ -60,18 +60,18 @@
         outline: none;
       }
 
-      &.@{ui-design-tree}-switcher {
+      &.ra-design-tree-switcher {
         position: relative;
 
-        &.@{ui-design-tree}-switcher-noop {
+        &.ra-design-tree-switcher-noop {
           cursor: default;
         }
-        &.@{ui-design-tree}-switcher_open {
+        &.ra-design-tree-switcher_open {
           .antTreeSwitcherIcon();
         }
-        &.@{ui-design-tree}-switcher_close {
+        &.ra-design-tree-switcher_close {
           .antTreeSwitcherIcon();
-          .@{ui-design-tree}-switcher-icon {
+          .ra-design-tree-switcher-icon {
             svg {
               transform: rotate(-90deg);
             }
@@ -82,7 +82,7 @@
   }
 }
 .antTreeSwitcherIcon(@type: 'tree-default-open-icon') {
-  .@{ui-design-tree}-switcher-icon,
+  .ra-design-tree-switcher-icon,
   .ra-design-select-switcher-icon {
     .iconfont-size-under-12px(12px);
     display: inline-block;

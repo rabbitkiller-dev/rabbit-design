@@ -6,6 +6,7 @@ import {RaDesignDragDropModule} from '../design-drag-drop';
 import {RaDesignStageComponent} from './ra-design-stage.component';
 import {RaDesignStageService} from './ra-design-stage.service';
 import {PageEditorInterface} from './page-editor/page-editor.interface';
+import {RaDesignDynamicDirective} from './page-editor/dynamic-component/ra-design-dynamic.directive';
 
 @NgModule({
   imports: [
@@ -18,6 +19,7 @@ import {PageEditorInterface} from './page-editor/page-editor.interface';
     RaDesignStageComponent,
     // page
     PageEditorInterface,
+    RaDesignDynamicDirective,
   ],
   exports: [
     RaDesignStageComponent,

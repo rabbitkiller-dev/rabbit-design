@@ -27,3 +27,11 @@ import {AppComponent} from './app.component';
 })
 export class AppModule {
 }
+
+// import {JitCompilerFactory} from '@angular/platform-browser-dynamic';
+// export function createJitCompiler() {
+//   return new JitCompilerFactory().createCompiler([{
+//     useJit: true
+//   }]);
+// }
+// [{provide: Compiler, useFactory: createJitCompiler}]

@@ -18,6 +18,7 @@ export class ComponentInterface implements OnInit {
         key: 'forms',
         title: 'forms',
         // 'icon': 'fa-file',
+        expanded: true,
         children: [
           {
             key: 'icon',

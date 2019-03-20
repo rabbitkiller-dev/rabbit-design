@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HtmlJson, parse} from 'himalaya';
+import {HtmlJson, parse, stringify} from 'himalaya';
 import {PageEditorInterface} from './page-editor.interface';
 
 @Injectable({providedIn: 'root'})
@@ -19,6 +19,7 @@ export class PageEditorService {
       add.push(htmlJson);
     }
     this.PageEditorInterface.htmlJson.push(...add);
-    this.PageEditorInterface.createModule();
+    this.PageEditorInterface.html = stringify(this.PageEditorInterface.htmlJson);
+    // this.PageEditorInterface.createModule();
   }
 }

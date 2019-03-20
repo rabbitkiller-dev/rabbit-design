@@ -1,0 +1,57 @@
+ra-design-tree-node.cdk-drag-preview {
+  display: flex;
+  margin: 0;
+  white-space: nowrap;
+  list-style: none;
+  outline: 0;
+  background-color: @primary-color;
+  color: @white;
+  // 内容区
+  .ra-design-tree-node-content-wrapper {
+    display: inline-block;
+    height: @tree-title-height;
+    margin: 0;
+    line-height: @tree-title-height;
+    text-decoration: none;
+    vertical-align: top;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  // 展开折叠按钮
+  span {
+    &.ra-design-tree-checkbox {
+      margin: 4px 4px 0 2px;
+    }
+    &.ra-design-tree-switcher,
+    &.ra-design-tree-iconEle {
+      display: inline-block;
+      width: 26px;
+      height: 26px;
+      margin: 0;
+      line-height: @tree-title-height;
+      text-align: center;
+      vertical-align: top;
+      border: 0 none;
+      outline: none;
+    }
+
+    &.ra-design-tree-switcher {
+      position: relative;
+
+      &.ra-design-tree-switcher-noop {
+        cursor: default;
+      }
+      &.ra-design-tree-switcher_open {
+        .antTreeSwitcherIcon();
+      }
+      &.ra-design-tree-switcher_close {
+        .antTreeSwitcherIcon();
+        .ra-design-tree-switcher-icon {
+          svg {
+            transform: rotate(-90deg);
+          }
+        }
+      }
+    }
+  }
+}
