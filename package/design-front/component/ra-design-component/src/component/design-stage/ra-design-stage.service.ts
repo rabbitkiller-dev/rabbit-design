@@ -1,7 +1,14 @@
-import {ComponentFactory, ComponentFactoryResolver, Injectable, ViewContainerRef} from '@angular/core';
+import {
+  ChangeDetectorRef,
+  ComponentFactory,
+  ComponentFactoryResolver,
+  Injectable,
+  ViewContainerRef
+} from '@angular/core';
 import {StageTabModel, StageTabServerModel} from './interface';
 import {RaDesignStageComponent} from './ra-design-stage.component';
 import {PageEditorInterface} from './page-editor/page-editor.interface';
+import {moveItemInArray} from '../cdk-drag-drop';
 
 export enum StageFactory {
   PageEditor = 'pageEditor',
@@ -63,5 +70,10 @@ export class RaDesignStageService {
     this.stageList.forEach(stage => stage.select = false);
     stage.select = true;
     this.RaDesignStageComponent.showTools(this.factory.get(stage.factory));
+  }
+
+  moveItemInArray(fromIndex: number, toIndex: number): void {
+    moveItemInArray(this.stageList, fromIndex, toIndex);
+    this.RaDesignStageComponent.ChangeDetectorRef.markForCheck();
   }
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from '../cdk-drag-drop';
 import {RaDesignStageService} from './ra-design-stage.service';
 import {RaDesignDragDirective, RaDesignDropDirective, DesignDragDrop} from '../design-drag-drop';
@@ -31,7 +31,9 @@ export class RaDesignStageComponent implements OnInit {
 
   @ViewChild('main', {read: ViewContainerRef}) main: ViewContainerRef;
 
-  constructor(public RaDesignStageService: RaDesignStageService) {
+  constructor(
+    public RaDesignStageService: RaDesignStageService,
+    public ChangeDetectorRef: ChangeDetectorRef) {
     this.RaDesignStageService.init(this);
   }
 

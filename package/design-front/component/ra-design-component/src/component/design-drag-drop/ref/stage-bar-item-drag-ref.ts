@@ -1,8 +1,10 @@
 import {RaDesignDragDirective} from '../ra-design-drag.directive';
 import {FlowDragRef} from './flow-drag-ref';
 import {Point} from './interface/point';
+import {RaDesignStageService} from '../../design-stage/ra-design-stage.service';
 
 export class StageBarItemDragRef extends FlowDragRef {
+  newIndex: number;
   constructor(public DesignDragDirective: RaDesignDragDirective) {
     super(DesignDragDirective);
   }
@@ -25,7 +27,16 @@ export class StageBarItemDragRef extends FlowDragRef {
       } else {
         target.nextSibling ? target.parentNode.insertBefore(this._placeholder, target.nextSibling) : target.parentNode.appendChild(this._placeholder);
       }
+      this.newIndex = Array.prototype.indexOf.call(this._placeholder.parentNode.children, this._placeholder);
     }
     super._updateActiveDropContainer(event, {x, y});
+  }
+
+  _cleanupDragArtifacts(event: MouseEvent | TouchEvent) {
+    super._cleanupDragArtifacts(event);
+    this.NgZone.run(() => {
+      const currentIndex = Array.prototype.indexOf.call(this._rootElement.parentNode.children, this._rootElement);
+      this.Injector.get(RaDesignStageService).moveItemInArray(currentIndex, this.newIndex);
+    });
   }
 }
