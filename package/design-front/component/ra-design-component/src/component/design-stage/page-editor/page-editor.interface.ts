@@ -1,7 +1,7 @@
 import {
   ChangeDetectorRef,
   Compiler,
-  Component,
+  Component, ComponentRef,
   ElementRef,
   ModuleWithComponentFactories,
   NgModule,
@@ -21,8 +21,8 @@ import {PageEditorService} from './page-editor.service';
   selector: 'ra-design-page-editor',
   template: `
     <div class="page-editor" style="">
-      <div class="page-editor__form" designDrop>
-        <ng-template #dynamic></ng-template>
+      <div class="page-editor__form" designDrop="page-editor">
+        <ng-template #dynamicTemplate></ng-template>
       </div>
       <div class="editor-stage-footer">
       </div>
@@ -31,17 +31,15 @@ import {PageEditorService} from './page-editor.service';
   styles: []
 })
 export class PageEditorInterface implements OnInit {
-  @ViewChild('dynamic', {read: ViewContainerRef}) dynamic: ViewContainerRef;
+  @ViewChild('.page-editor__form', {read: ViewContainerRef}) editor: ViewContainerRef;
+  @ViewChild('dynamicTemplate', {read: ViewContainerRef}) dynamicTemplate: ViewContainerRef;
   htmlJson: HtmlJson[] = [];
-// ,
-// {
-//   "glob": "**/*",
-//   "input": "component/ra-design-component/src/assets",
-//   "output": "/ra-design-component/assets"
-// }
+  dynamicComponent: ComponentRef<any>;
+
   constructor(private compiler: Compiler,
               private ChangeDetectorRef: ChangeDetectorRef,
               public PageEditorService: PageEditorService) {
+    this.PageEditorService.PageEditorInterface = this;
   }
 
   ngOnInit() {
@@ -50,6 +48,10 @@ export class PageEditorInterface implements OnInit {
 
 
   createModule() {
+    if (this.dynamicComponent) {
+      this.compiler.clearCache();
+      // this.compiler.getModuleId(DynamicModule);
+    }
     const __this = this;
 
     const master = __this.createComponent('ra-design-dynamic', stringify(__this.htmlJson));
@@ -61,14 +63,13 @@ export class PageEditorInterface implements OnInit {
     })
     class DynamicModule {
     }
-
     this.compiler.compileModuleAndAllComponentsAsync(DynamicModule)
       .then((compiled: ModuleWithComponentFactories<any>) => {
         const factory = compiled.componentFactories.find(x =>
           x.componentType === master);
         return factory;
       }).then((factory) => {
-      this.dynamic.createComponent(factory);
+      this.dynamicComponent = this.dynamicTemplate.createComponent(factory);
       this.ChangeDetectorRef.markForCheck();
     });
   }

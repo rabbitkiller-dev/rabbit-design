@@ -56,9 +56,13 @@ import {
 })
 export class RaDesignDropDirective<T = any> implements OnDestroy {
 
-  @Input() designDropType: string;
+  @Input('designDrop') type: string;
 
-  constructor() {
+  constructor(
+    public ElementRef: ElementRef,
+    public Renderer2: Renderer2,
+  ) {
+    this.Renderer2.setProperty(ElementRef.nativeElement, 'designDragDrop', this);
   }
 
   ngOnDestroy() {

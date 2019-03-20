@@ -2,7 +2,7 @@ import {
   AfterViewInit,
   Directive,
   OnDestroy,
-  OnChanges, Input, OnInit, ElementRef, NgZone, ViewContainerRef, Inject, Renderer2,
+  OnChanges, Input, OnInit, ElementRef, NgZone, ViewContainerRef, Inject, Renderer2, Injector,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {DOCUMENT} from '@angular/common';
@@ -43,6 +43,7 @@ export class RaDesignDragDirective<T = any> implements AfterViewInit, OnChanges,
 
   constructor(public DragDropRegistry: DragDropRegistry<DragRefInterface>,
               public ElementRef: ElementRef,
+              public Injector: Injector,
               public NgZone: NgZone,
               public Directionality: Directionality,
               public ViewContainerRef: ViewContainerRef,
@@ -50,7 +51,7 @@ export class RaDesignDragDirective<T = any> implements AfterViewInit, OnChanges,
               public Renderer2: Renderer2,
               @Inject(DOCUMENT) public Document: Document
   ) {
-    this.Renderer2.setProperty(ElementRef.nativeElement, 'designDrag', this);
+    this.Renderer2.setProperty(ElementRef.nativeElement, 'designDragDrop', this);
   }
 
   ngOnInit() {

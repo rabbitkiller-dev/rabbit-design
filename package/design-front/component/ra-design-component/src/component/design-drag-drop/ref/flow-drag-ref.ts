@@ -1,4 +1,4 @@
-import {ElementRef, EmbeddedViewRef, NgZone, TemplateRef, ViewContainerRef} from '@angular/core';
+import {ElementRef, EmbeddedViewRef, Injector, NgZone, TemplateRef, ViewContainerRef} from '@angular/core';
 import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
 import {Directionality} from '@angular/cdk/bidi';
 import {ViewportRuler} from '@angular/cdk/overlay';
@@ -47,6 +47,7 @@ export class FlowDragRef<T = any> implements DragRefInterface {
   Document: Document;
   Directionality: Directionality;
   ViewportRuler: ViewportRuler;
+  Injector: Injector;
 
   _rootElement: HTMLElement;
 
@@ -108,6 +109,7 @@ export class FlowDragRef<T = any> implements DragRefInterface {
     this.Document = this.RaDesignDragDirective.Document;
     this.Directionality = this.RaDesignDragDirective.Directionality;
     this.ViewportRuler = this.RaDesignDragDirective.ViewportRuler;
+    this.Injector = this.RaDesignDragDirective.Injector;
     this.data = this.RaDesignDragDirective.data;
   }
 
@@ -432,33 +434,58 @@ export class FlowDragRef<T = any> implements DragRefInterface {
   }
 
   protected findDrag(eventTarget: MouseEvent | TouchEvent, type: string): DragRefInterface {
-    const element: HTMLElement & { designDrag?: RaDesignDragDirective } = this.findElementUp(eventTarget, 'cdk-drag');
-    if (element && element.designDrag && !!type && element.designDrag.type === type) {
-      return element.designDrag.dragRef;
+    const element = this.findElementUp(eventTarget);
+    if (element && element.type === 'drag' && !!type && element.dragDrop.type === type) {
+      const drag: RaDesignDragDirective = element.dragDrop as any;
+      return drag.dragRef;
     } else {
       return null;
     }
   }
 
-  protected findDrop(eventTarget: MouseEvent | TouchEvent, type?: string) {
-    const element: HTMLElement & { designDrag?: RaDesignDropDirective } = this.findElementUp(eventTarget, 'cdk-drop-list');
-    // if (element.designDrag && !!type && element.designDrag.type === type) {
-    //   return element.designDrag.dragRef;
-    // } else {
-    //   return null;
-    // }
+  protected findDrop(eventTarget: MouseEvent | TouchEvent, type?: string): RaDesignDropDirective {
+    const element = this.findElementUp(eventTarget);
+    if (element && element.type === 'drop' && !!type && element.dragDrop.type === type) {
+      const drag: RaDesignDropDirective = element.dragDrop as any;
+      return drag;
+    } else {
+      return null;
+    }
   }
 
   /** Find element up */
-  protected findElementUp(eventTarget: MouseEvent | TouchEvent, className = 'cdk-drop-list'): HTMLElement {
-    let currentElement: HTMLElement = event.target as HTMLElement;
+  protected findElementUp(eventTarget: MouseEvent | TouchEvent): {
+    type: 'drop' | 'drag',
+    dragDrop: RaDesignDropDirective | RaDesignDragDirective
+  } {
+    let currentElement: HTMLElement = eventTarget.target as HTMLElement;
     do {
-      if (currentElement.classList.contains(className)) {
-        return currentElement;
+      const dragDrop = this.filterElementUp(currentElement);
+      if (dragDrop) {
+        return dragDrop;
       }
       currentElement = currentElement.parentElement;
     } while (currentElement);
     return null;
+  }
+
+  protected filterElementUp(currentElement: HTMLElement & any): {
+    type: 'drop' | 'drag',
+    dragDrop: RaDesignDropDirective | RaDesignDragDirective
+  } {
+    if (currentElement.classList.contains('cdk-drop-list') && currentElement.designDragDrop) {
+      const drop: RaDesignDropDirective = currentElement.designDragDrop;
+      return {
+        type: 'drop',
+        dragDrop: drop,
+      };
+    } else if (currentElement.classList.contains('cdk-drag') && currentElement.designDragDrop) {
+      const drag: RaDesignDragDirective = currentElement.designDragDrop;
+      return {
+        type: 'drag',
+        dragDrop: drag,
+      };
+    }
   }
 }
 
