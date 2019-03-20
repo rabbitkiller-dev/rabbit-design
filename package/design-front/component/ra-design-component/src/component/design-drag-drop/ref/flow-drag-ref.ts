@@ -11,6 +11,7 @@ import {extendStyles, toggleNativeDragInteractions} from '../../cdk-drag-drop/dr
 import {DragRefInterface} from './interface/drag-ref.interface';
 import {Point} from './interface/point';
 import {RaDesignDropDirective} from 'ra-design-component';
+import {getTransformTransitionDurationInMs} from '../../cdk-drag-drop/transition-duration';
 
 /** Options that can be used to bind a passive event listener. */
 const passiveEventListenerOptions = normalizePassiveListenerOptions({passive: true});
@@ -221,7 +222,6 @@ export class FlowDragRef<T = any> implements DragRefInterface {
       return;
     }
     const constrainedPointerPosition = this._getConstrainedPointerPosition(event);
-
     this._updateActiveDropContainer(event, constrainedPointerPosition);
   };
 
@@ -347,11 +347,57 @@ export class FlowDragRef<T = any> implements DragRefInterface {
       return;
     }
 
-    // this._animatePreviewToPlaceholder().then(() => {
+    this._animatePreviewToPlaceholder().then(() => {
     this._cleanupDragArtifacts(event);
     this.DragDropRegistry.stopDragging(this);
-    // });
+    });
   };
+  /**
+   * Animates the preview element from its current position to the location of the drop placeholder.
+   * @returns Promise that resolves when the animation completes.
+   */
+  private _animatePreviewToPlaceholder(): Promise<void> {
+    // If the user hasn't moved yet, the transitionend event won't fire.
+    if (!this._hasStartedDragging) {
+      return Promise.resolve();
+    }
+
+    const placeholderRect = this._placeholder.getBoundingClientRect();
+
+    // Apply the class that adds a transition to the preview.
+    this._preview.classList.add('cdk-drag-animating');
+
+    // Move the preview to the placeholder position.
+    this._preview.style.transform = getTransform(placeholderRect.left, placeholderRect.top);
+
+    // If the element doesn't have a `transition`, the `transitionend` event won't fire. Since
+    // we need to trigger a style recalculation in order for the `cdk-drag-animating` class to
+    // apply its style, we take advantage of the available info to figure out whether we need to
+    // bind the event in the first place.
+    const duration = getTransformTransitionDurationInMs(this._preview);
+
+    if (duration === 0) {
+      return Promise.resolve();
+    }
+
+    return this.NgZone.runOutsideAngular(() => {
+      return new Promise(resolve => {
+        const handler = ((event: TransitionEvent) => {
+          if (!event || (event.target === this._preview && event.propertyName === 'transform')) {
+            this._preview.removeEventListener('transitionend', handler);
+            resolve();
+            clearTimeout(timeout);
+          }
+        }) as EventListenerOrEventListenerObject;
+
+        // If a transition is short enough, the browser might not fire the `transitionend` event.
+        // Since we know how long it's supposed to take, add a timeout with a 50% buffer that'll
+        // fire if the transition hasn't completed when it was supposed to.
+        const timeout = setTimeout(handler as Function, duration * 1.5);
+        this._preview.addEventListener('transitionend', handler);
+      });
+    });
+  }
 
   /** Cleans up the DOM artifacts that were added to facilitate the element being dragged. */
   protected _cleanupDragArtifacts(event: MouseEvent | TouchEvent) {

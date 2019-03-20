@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   OnInit,
   ViewChild,
@@ -12,7 +13,7 @@ import {PageEditorService} from './page-editor.service';
   template: `
     <div class="page-editor" style="">
       <div class="page-editor__form" designDrop="page-editor">
-        <ng-template [ra-design-dynamic]="html"></ng-template>
+        <ng-template [design-dynamic]="html"></ng-template>
       </div>
       <div class="editor-stage-footer">
       </div>
@@ -24,7 +25,10 @@ export class PageEditorInterface implements OnInit {
   htmlJson: HtmlJson[] = [];
   html: string;
 
-  constructor(public PageEditorService: PageEditorService) {
+  constructor(
+    public PageEditorService: PageEditorService,
+    public ChangeDetectorRef: ChangeDetectorRef,
+    ) {
     this.PageEditorService.PageEditorInterface = this;
   }
 

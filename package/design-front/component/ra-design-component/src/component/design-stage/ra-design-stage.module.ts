@@ -6,12 +6,13 @@ import {RaDesignDragDropModule} from '../design-drag-drop';
 import {RaDesignStageComponent} from './ra-design-stage.component';
 import {RaDesignStageService} from './ra-design-stage.service';
 import {PageEditorInterface} from './page-editor/page-editor.interface';
-import {RaDesignDynamicDirective} from './page-editor/dynamic-component/ra-design-dynamic.directive';
+import {RaDesignDynamicModule} from '../design-dynamic/ra-design-dynamic.module';
 
 @NgModule({
   imports: [
     CommonModule,
     // DragDropModule,
+    RaDesignDynamicModule,
     RaDesignDragDropModule,
     NzIconModule,
   ],
@@ -19,7 +20,6 @@ import {RaDesignDynamicDirective} from './page-editor/dynamic-component/ra-desig
     RaDesignStageComponent,
     // page
     PageEditorInterface,
-    RaDesignDynamicDirective,
   ],
   exports: [
     RaDesignStageComponent,

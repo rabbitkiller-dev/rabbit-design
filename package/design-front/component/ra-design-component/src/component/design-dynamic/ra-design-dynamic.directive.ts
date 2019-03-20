@@ -1,7 +1,7 @@
 import {
   Input, Directive, OnInit, Compiler, Component,
   ModuleWithComponentFactories, NgModule, ReflectiveInjector, ViewContainerRef, ComponentRef, ErrorHandler, ElementRef,
-  ViewEncapsulation,
+  ViewEncapsulation, ChangeDetectorRef,
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
@@ -9,10 +9,10 @@ import {RouterModule} from '@angular/router';
 // Rendering ElComponent dependence
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Throttle} from './throttle';
-
+import {NzIconModule} from './icon';
 
 @Directive({
-  selector: '[ra-design-dynamic]',
+  selector: '[design-dynamic]',
 })
 export class RaDesignDynamicDirective implements OnInit {
   _ordDynamicHtml: string;
@@ -22,7 +22,7 @@ export class RaDesignDynamicDirective implements OnInit {
 
   dynamicChange: Throttle = new Throttle(1000);
 
-  @Input('ra-design-dynamic') set dynamicHtml(html: string) {
+  @Input('design-dynamic') set dynamicHtml(html: string) {
 
     this.dynamicChange.destroy();
     this.dynamicChange.execute(() => {
@@ -41,11 +41,12 @@ export class RaDesignDynamicDirective implements OnInit {
     return this._dynamicHtml || '';
   }
 
-  @Input() dynamicTime: number = 1000;
+  @Input() dynamicTime: number = 100;
   comRef: ComponentRef<any>;
 
   constructor(
     private vcRef: ViewContainerRef,
+    private cdr: ChangeDetectorRef,
     private compiler: Compiler,
   ) {
   }
@@ -57,7 +58,7 @@ export class RaDesignDynamicDirective implements OnInit {
   createModule() {
     const master = this.createComponent('ra-design-dynamic', this._dynamicHtml);
     @NgModule({
-      imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule,],
+      imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule, NzIconModule],
       declarations: [master],
       // declarations: [master, __this.createComponent('page-cccc', '<div>嵌套页面</div>')],
     })
@@ -75,6 +76,7 @@ export class RaDesignDynamicDirective implements OnInit {
         this.vcRef.clear();
         const injector = ReflectiveInjector.fromResolvedProviders([], this.vcRef.parentInjector);
         this.comRef = this.vcRef.createComponent(factory, 0, injector);
+        this.cdr.markForCheck();
       });
 
   }

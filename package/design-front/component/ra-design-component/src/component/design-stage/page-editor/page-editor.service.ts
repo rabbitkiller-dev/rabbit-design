@@ -20,6 +20,7 @@ export class PageEditorService {
     }
     this.PageEditorInterface.htmlJson.push(...add);
     this.PageEditorInterface.html = stringify(this.PageEditorInterface.htmlJson);
+    this.PageEditorInterface.ChangeDetectorRef.markForCheck();
     // this.PageEditorInterface.createModule();
   }
 }
