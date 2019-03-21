@@ -13,7 +13,7 @@
 
 <div class="side-bar left">
   <ng-container *ngFor="let tools of RaDesignToolsService.left">
-    <div class="side-bar-label" [class.is-select]="tools.select" (click)="RaDesignToolsService.showTools(tools.factory)" [style.order]="tools.order">
+    <div class="side-bar-label" [class.is-select]="tools.select" (click)="onClickTools(tools)" [style.order]="tools.order">
       <div class="side-bar-label-container">
         <div class="side-bar-label-content">
           <i nz-icon [type]="tools.icon" theme="outline"></i>
@@ -21,13 +21,10 @@
         </div>
       </div>
     </div>
-    <div style="flex: 1;"></div>
   </ng-container>
-  <!--<li class="editor-tools-center">
-  </li>-->
+  <div style="flex: 1;order: 100;"></div>
 </div>
 <div class="ra-design-tools-interface" style="min-width:350px">
-  <!--<ra-design-tools-interface position="left"></ra-design-tools-interface>-->
   <ng-template #left></ng-template>
 </div>
 
@@ -35,7 +32,18 @@
 <ng-content></ng-content>
 <!--右侧工具栏-->
 <div class="ra-design-tools-interface" style="min-width:350px">
-  <!--<ra-design-tools-interface position="right"></ra-design-tools-interface>-->
+  <ng-template #right></ng-template>
 </div>
 <div class="side-bar right" >
+  <ng-container *ngFor="let tools of RaDesignToolsService.right">
+    <div class="side-bar-label" [class.is-select]="tools.select" (click)="onClickTools(tools)" [style.order]="tools.order">
+      <div class="side-bar-label-container">
+        <div class="side-bar-label-content">
+          <i nz-icon [type]="tools.icon" theme="outline"></i>
+          <span>{{tools.label}}</span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <div style="flex: 1;order: 100;"></div>
 </div>

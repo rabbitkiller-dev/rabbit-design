@@ -1,0 +1,70 @@
+.side-bar {
+  width: @toolsWidth;
+  min-width: @toolsWidth;
+  background: @back-extra-color;
+  color: @primary-extra;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  &.left {
+    border-right: 2px solid @back-color;
+    [nz-icon] {
+      margin-right: 4px;
+    }
+    .side-bar-label {
+      border-left: 2px solid transparent;
+    }
+    .is-select {
+      &.side-bar-label {
+        color: @primary-color;
+        background: @back-color;
+        border-left: 2px solid @primary-color;
+      }
+    }
+  }
+  &.right {
+    border-left: 2px solid @back-color;
+    [nz-icon] {
+      margin-right: 4px;
+    }
+    .side-bar-label {
+      border-right: 2px solid transparent;
+      .side-bar-label-container{
+        transform: translate(1em, -1em) rotate(90deg);
+      }
+      .side-bar-label-content {
+        transform: rotate(0deg);
+      }
+    }
+    .is-select {
+      &.side-bar-label {
+        color: @primary-color;
+        background: @back-color;
+        border-right: 2px solid @primary-color;
+      }
+    }
+  }
+}
+.side-bar-label {
+  padding: 10px 5px;
+  &:hover {
+    background: @back-light-color;
+  }
+  .side-bar-label-container {
+    display: inline-block;
+    white-space: nowrap;
+    transform: translate(0.8em, -0.5em) rotate(90deg);
+    transform-origin: 0 0.5em;
+    &:before {
+      content: "";
+      float: right;
+      margin-bottom: 100%;
+    }
+  }
+  .side-bar-label-content {
+    display: flex;
+    line-height: 1;
+    align-items: center;
+    transform: rotate(180deg);
+  }
+}

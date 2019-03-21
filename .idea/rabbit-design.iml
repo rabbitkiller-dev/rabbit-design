@@ -5,6 +5,7 @@
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />
       <excludeFolder url="file://$MODULE_DIR$/nginx/design-front" />
       <excludeFolder url="file://$MODULE_DIR$/package/design-server/logs" />
+      <excludeFolder url="file://$MODULE_DIR$/package/design-server/run" />
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
     </content>

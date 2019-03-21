@@ -1,75 +1,14 @@
 @import "../../design-style/themes/default";
 @import "./component";
+
 @tools-name: ~'@{ra-prefix}-tools';
 @toolsWidth: 34px;
 
 ra-design-tools{
   display: flex;
   flex: 1;
+  @import "./side-bar";
   //工具栏
-  .side-bar {
-    width: @toolsWidth;
-    min-width: @toolsWidth;
-    background: @back-extra-color;
-    color: @primary-extra;
-    user-select: none;
-    &.left {
-      border-right: 2px solid @back-color;
-      [nz-icon] {
-        margin-right: 4px;
-      }
-      .side-bar-label {
-        border-left: 2px solid transparent;
-      }
-      .is-select {
-        &.side-bar-label {
-          color: @primary-color;
-          background: @back-color;
-          border-left: 2px solid @primary-color;
-        }
-      }
-    }
-    &.right {
-      border-left: 2px solid @back-color;
-      [nz-icon] {
-        margin-right: 4px;
-      }
-      .side-bar-label {
-        border-right: 2px solid transparent;
-      }
-      .is-select {
-        &.side-bar-label {
-          color: @primary-color;
-          background: @back-color;
-          border-right: 2px solid @primary-color;
-        }
-      }
-    }
-  }
-  .side-bar-label {
-    padding: 10px 5px;
-    &:hover {
-      background: @back-light-color;
-    }
-    .side-bar-label-container {
-      display: inline-block;
-      white-space: nowrap;
-      transform: translate(0.8em, -0.5em) rotate(90deg);
-      transform-origin: 0 0.5em;
-      &:before {
-        content: "";
-        float: right;
-        margin-bottom: 100%;
-      }
-    }
-    .side-bar-label-content {
-      display: flex;
-      line-height: 1;
-      align-items: center;
-      transform: rotate(180deg);
-    }
-  }
-
   //工具栏界面
   .ra-design-tools-interface {
     background: #1c2b36;

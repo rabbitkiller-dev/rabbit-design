@@ -17,6 +17,11 @@ const routes: Routes = [
     loadChildren: './home/home.module#HomeModule',
     canActivate: [],
   },
+  {
+    path: 'select-project',
+    loadChildren: './select-project/select-project.module#SelectProjectModule',
+    canActivate: [],
+  },
 ];
 
 @NgModule({
