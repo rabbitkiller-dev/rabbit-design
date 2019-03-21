@@ -1,7 +1,6 @@
 preview http://47.105.84.128/design/
 
 计划
-page.interface.ts
 右键新增的弹窗出现在鼠标附近而不是屏幕中间
 快捷键功能
 复制/剪切
@@ -9,9 +8,12 @@ page.interface.ts
 动态切换语言(jhipster)
 菜单样式
 弹窗拖拽移动还有关闭按钮
-tools拖拽的排序
-tools展开折叠
 查找图标,实现icon/input
+tools拖拽的排序
+tools拖拽拉大拉小
+ToolsTabModel改名为sideBar
+保存ToolsTabLocalModel,并获取ToolsTabLocalModel
+tools运行中变量,
 ## 设计平台相关
  - 尽量不停止冒泡功能,导致父节点无法触发事件.采用判断target和$event记录事件确认是否无视该事件,
  - 按功能实现service,全部都是全局服务.就算远在异乡的组件也能操作彼此的组件

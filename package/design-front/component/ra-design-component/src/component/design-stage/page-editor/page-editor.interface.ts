@@ -28,6 +28,7 @@ export class PageEditorInterface implements OnInit {
     public PageEditorService: PageEditorService,
     public ChangeDetectorRef: ChangeDetectorRef,
   ) {
+    // aaa
     this.PageEditorService.PageEditorInterface = this;
     this.PageEditorService.subscribe((event) => {
       switch (event.type) {
