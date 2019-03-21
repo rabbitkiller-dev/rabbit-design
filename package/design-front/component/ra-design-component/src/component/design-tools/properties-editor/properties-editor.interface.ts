@@ -1,70 +1,53 @@
 import {
-  Input, Directive, OnInit, Compiler, Component,
-  ModuleWithComponentFactories, NgModule, ReflectiveInjector, ViewContainerRef, ComponentRef, ErrorHandler, ElementRef,
-  ViewEncapsulation, ChangeDetectorRef,
+  ChangeDetectorRef,
+  Compiler,
+  Component,
+  ComponentRef, ElementRef, ModuleWithComponentFactories,
+  NgModule,
+  OnDestroy,
+  OnInit,
+  ViewContainerRef
 } from '@angular/core';
+import {Throttle} from '../../design-dynamic/throttle';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
-
-// Rendering ElComponent dependence
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {Throttle} from './throttle';
-import {NzIconModule} from './icon';
-import {NzInputModule} from './input';
-import {RaDesignDynamicUnitModule} from './ra-design-dynamic-unit.module';
+import {RaDesignDynamicUnitModule} from '../../design-dynamic/ra-design-dynamic-unit.module';
+import {NzIconModule, NzInputModule} from 'ng-zorro-antd';
+import {PropertiesEditorService} from './properties-editor.service';
 
-@Directive({
-  selector: '[design-dynamic]',
+@Component({
+  template: `
+    <div class="ra-design-tools-title">
+      <i class="fa fa-first-order"></i>
+      <label>属性管理</label>
+    </div>
+  `,
+  styles: []
 })
-export class RaDesignDynamicDirective implements OnInit {
-  _ordDynamicHtml: string;
-  _dynamicHtml: string;
-  _dynamicScss: string;
-  _dynamicFormData: any;
-
-  dynamicChange: Throttle = new Throttle(1000);
-
-  @Input('design-dynamic') set dynamicHtml(html: string) {
-
-    this.dynamicChange.destroy();
-    this.dynamicChange.execute(() => {
-      try {
-        this._dynamicHtml = html || ' ';
-        this.createModule();
-        this._ordDynamicHtml = this.dynamicHtml;
-      } catch (e) {
-        console.error(e);
-        this.dynamicHtml = this._ordDynamicHtml;
-      }
-    });
-  }
-
-  get dynamicHtml(): string {
-    return this._dynamicHtml || '';
-  }
-
-  @Input() dynamicTime: number = 100;
+export class PropertiesEditorInterface implements OnInit {
+  panel: string;
   comRef: ComponentRef<any>;
 
   constructor(
     private vcRef: ViewContainerRef,
     private cdr: ChangeDetectorRef,
     private compiler: Compiler,
+    private PropertiesEditorService: PropertiesEditorService,
   ) {
+    this.PropertiesEditorService.PropertiesEditorInterface = this;
   }
 
   ngOnInit(): void {
-    this.dynamicChange = new Throttle(this.dynamicTime);
   }
 
   createModule() {
-    const master = this.createComponent('ra-design-dynamic', this._dynamicHtml);
-    const pageCCC = this.createComponent('page-cccc', '<div>嵌套页面</div>');
+    const master = this.createComponent('ra-design-properties-editor', this.panel);
 
     @NgModule({
       imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule, RaDesignDynamicUnitModule,
         NzIconModule, NzInputModule],
-      declarations: [master, pageCCC],
+      declarations: [master],
       // declarations: [master, __this.createComponent('page-cccc', '<div>嵌套页面</div>')],
     })
     class DynamicModule {

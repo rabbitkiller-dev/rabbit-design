@@ -13,6 +13,7 @@ import {RaDesignDragDropModule} from '../design-drag-drop';
 import {RaDesignWidgetModule} from '../design-widget/ra-design-widget.module';
 import {FormsModule} from '@angular/forms';
 import {IconInterface} from './icon/icon.interface';
+import {PropertiesEditorInterface} from './properties-editor/properties-editor.interface';
 
 @NgModule({
   imports: [
@@ -34,6 +35,7 @@ import {IconInterface} from './icon/icon.interface';
     IconInterface,
     ComponentInterface,
     PageInterface,
+    PropertiesEditorInterface,
   ],
   exports: [
     RaDesignToolsComponent,
@@ -48,6 +50,7 @@ import {IconInterface} from './icon/icon.interface';
     IconInterface,
     ComponentInterface,
     PageInterface,
+    PropertiesEditorInterface,
   ]
 })
 

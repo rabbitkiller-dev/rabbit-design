@@ -53,10 +53,6 @@ export class RaDesignStageComponent implements OnInit {
     moveItemInArray(this.RaDesignStageService.stageList, event.previousIndex, event.currentIndex);
   }
 
-  // enterPredicate(drag: RaDesignDragDirective<any>, drop: RaDesignDropDirective<any>) {
-  //   return drag.designDragType === 'stage-task';
-  // }
-
   onDesignDropped($event: DesignDragDrop<any>) {
     moveItemInArray(this.RaDesignStageService.stageList, $event.currentIndex, $event.previousIndex);
   }

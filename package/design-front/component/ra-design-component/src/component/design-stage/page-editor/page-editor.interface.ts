@@ -22,14 +22,20 @@ import {PageEditorService} from './page-editor.service';
   styles: []
 })
 export class PageEditorInterface implements OnInit {
-  htmlJson: HtmlJson[] = [];
   html: string;
 
   constructor(
     public PageEditorService: PageEditorService,
     public ChangeDetectorRef: ChangeDetectorRef,
-    ) {
+  ) {
     this.PageEditorService.PageEditorInterface = this;
+    this.PageEditorService.subscribe((event) => {
+      switch (event.type) {
+        case 'html':
+          this.html = event.data;
+          break;
+      }
+    });
   }
 
   ngOnInit() {

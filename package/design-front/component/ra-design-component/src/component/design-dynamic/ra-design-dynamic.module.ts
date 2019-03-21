@@ -7,13 +7,12 @@ import {RaDesignDynamicDirective} from './ra-design-dynamic.directive';
     CommonModule,
   ],
   declarations: [
-    RaDesignDynamicDirective
+    RaDesignDynamicDirective,
   ],
   exports: [
-    RaDesignDynamicDirective
+    RaDesignDynamicDirective,
   ],
   providers: [],
-  entryComponents: []
 })
 
 export class RaDesignDynamicModule {

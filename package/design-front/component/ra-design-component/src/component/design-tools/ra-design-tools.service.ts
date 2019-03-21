@@ -5,12 +5,14 @@ import {DataSourceInterface} from './data-source/data-source.interface';
 import {ComponentInterface} from './component/component.interface';
 import {PageInterface} from './page/page.interface';
 import {IconInterface} from './icon/icon.interface';
+import {PropertiesEditorInterface} from './properties-editor/properties-editor.interface';
 
 export enum ToolsFactory {
   DataSource = 'dataSource',
   Page = 'page',
   Component = 'component',
   Icon = 'icon',
+  propertiesEditor = 'propertiesEditor',
 }
 
 @Injectable()
@@ -53,7 +55,7 @@ export class RaDesignToolsService {
       select: false,
     });
     this.factory.set(ToolsFactory.Component, this.ComponentFactoryResolver.resolveComponentFactory(ComponentInterface));
-    // 组件列表
+    // 图标
     this.toolsList.push({
       factory: ToolsFactory.Icon,
       label: 'icons',
@@ -62,6 +64,16 @@ export class RaDesignToolsService {
       select: false,
     });
     this.factory.set(ToolsFactory.Icon, this.ComponentFactoryResolver.resolveComponentFactory(IconInterface));
+
+    // 属性面板
+    this.toolsList.push({
+      factory: ToolsFactory.propertiesEditor,
+      label: 'properties',
+      position: 'left-top',
+      order: 5,
+      select: false,
+    });
+    this.factory.set(ToolsFactory.propertiesEditor, this.ComponentFactoryResolver.resolveComponentFactory(PropertiesEditorInterface));
 
     this.toolsList.forEach((tools) => {
       this.toolsMap.set(tools.factory, tools);
