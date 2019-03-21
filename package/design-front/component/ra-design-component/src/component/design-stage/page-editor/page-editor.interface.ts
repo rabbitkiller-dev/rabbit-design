@@ -28,7 +28,7 @@ export class PageEditorInterface implements OnInit {
     public PageEditorService: PageEditorService,
     public ChangeDetectorRef: ChangeDetectorRef,
   ) {
-    this.PageEditorService.PageEditorInterface = this;
+    this.PageEditorService.ImageDetailInterface = this;
     this.PageEditorService.subscribe((event) => {
       switch (event.type) {
         case 'html':

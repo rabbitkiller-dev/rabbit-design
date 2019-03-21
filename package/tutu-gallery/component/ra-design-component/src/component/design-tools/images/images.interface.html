@@ -1,0 +1,7 @@
+<div class="ra-design-tools-title">
+  <i class="fa fa-first-order"></i>
+  <label>图片列表</label>
+</div>
+<div class="image-list">
+    <div *ngFor="let image of images" class="image-list__item" (click)="onClickImage(image)"><img [src]="image"></div>
+</div>

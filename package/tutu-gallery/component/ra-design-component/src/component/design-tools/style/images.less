@@ -1,0 +1,22 @@
+ra-design-component-interface{
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+  .image-list{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+  }
+  .image-list__item{
+    width: 33.3%;
+    padding: 10px;
+    overflow: auto;
+    img{
+      width: 100%;
+    }
+    &:hover{
+      background: @back-color;
+    }
+  }
+}

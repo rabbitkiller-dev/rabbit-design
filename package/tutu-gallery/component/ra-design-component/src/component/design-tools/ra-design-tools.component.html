@@ -1,0 +1,32 @@
+<!--<li class="editor-tools-home"
+    (click)="toggleEnlarge()"><i class="fa fa-home"></i></li>
+<ng-container *ngFor="let tools of toolsList">
+  <li class="editor-tools-item" [class.is-select]="tools.select" (click)="clickTools(tools)"
+      [style.order]="tools.order">
+    <i class="fa {{tools.icon}}"></i>
+    <span>{{tools.label}}</span>
+  </li>
+</ng-container>
+<li class="editor-tools-center">
+</li>-->
+
+
+<div class="side-bar left">
+  <ng-container *ngFor="let tools of RaDesignToolsService.left">
+    <div class="side-bar-label" [class.is-select]="tools.select" (click)="onClickTools(tools)" [style.order]="tools.order">
+      <div class="side-bar-label-container">
+        <div class="side-bar-label-content">
+          <i nz-icon [type]="tools.icon" theme="outline"></i>
+          <span>{{tools.label}}</span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <div style="flex: 1;order: 100;"></div>
+</div>
+<div class="ra-design-tools-interface" style="min-width:350px;max-width: 350px;">
+  <ng-template #left></ng-template>
+</div>
+
+<!--中间区域 (舞台)-->
+<ng-content></ng-content>

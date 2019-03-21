@@ -1,0 +1,130 @@
+@import '../../design-style/themes/default';
+@import '../../design-style/mixins/index';
+//@import '../../checkbox/style/mixin';
+//@import './mixin';
+//@import './directory';
+
+@ui-design-tree: ~'@{ra-prefix}-tree';
+//@tree-showline-icon-color: @text-color-secondary;
+@tree-node-padding: 4px;
+
+//.antCheckboxFn(@checkbox-prefix-cls: ~'@{ant-prefix}-tree-checkbox');
+
+.ra-design-tree {
+  .reset-component;
+  user-select: none;
+
+  ol,
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  li{
+    display: flex;
+    margin: 0;
+    white-space: nowrap;
+    list-style: none;
+    outline: 0;
+    // 内容区
+    .ra-design-tree-node-content-wrapper {
+      display: inline-block;
+      height: @tree-title-height;
+      margin: 0;
+      line-height: @tree-title-height;
+      text-decoration: none;
+      vertical-align: top;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    &.ra-design-tree-treenode-selected {
+      background-color: @primary-color;
+      color: @white;
+      transition: all 0.3s;
+    }
+    // 展开折叠按钮
+    span {
+      &.ra-design-tree-checkbox {
+        margin: 4px 4px 0 2px;
+      }
+      &.ra-design-tree-switcher,
+      &.ra-design-tree-iconEle {
+        display: inline-block;
+        width: 26px;
+        height: 26px;
+        margin: 0;
+        line-height: @tree-title-height;
+        text-align: center;
+        vertical-align: top;
+        border: 0 none;
+        outline: none;
+      }
+
+      &.ra-design-tree-switcher {
+        position: relative;
+
+        &.ra-design-tree-switcher-noop {
+          cursor: default;
+        }
+        &.ra-design-tree-switcher_open {
+          .antTreeSwitcherIcon();
+        }
+        &.ra-design-tree-switcher_close {
+          .antTreeSwitcherIcon();
+          .ra-design-tree-switcher-icon {
+            svg {
+              transform: rotate(-90deg);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.antTreeSwitcherIcon(@type: 'tree-default-open-icon') {
+  .ra-design-tree-switcher-icon,
+  .ra-design-select-switcher-icon {
+    .iconfont-size-under-12px(12px);
+    display: inline-block;
+    font-weight: bold;
+    svg {
+      transition: transform 0.3s;
+    }
+  }
+}
+//.ra-design-tree {
+//  overflow: auto;
+//  .ra-design-tree-node {
+//    .ra-design-tree-node__content {
+//      display: flex;
+//      align-items: center;
+//      height: 26px;
+//      line-height: 26px;
+//      &.is-drop{
+//        .ra-design-tree-node_icon{
+//          border: 1px solid red;
+//          border-right: none;
+//          height: 28px;
+//        }
+//        .ra-design-tree-node_label{
+//          border: 1px solid red;
+//          border-left: none;
+//        }
+//      }
+//      &.is-context {
+//        background: $ra-hover;
+//      }
+//      .is-leaf {
+//        color: transparent;
+//      }
+//      .ra-design-tree-node_icon,.ra-design-tree-node_expand-icon {
+//        font-weight: bold;
+//        padding: 6px;
+//        min-width: 26px;
+//        height: 26px;
+//        text-align: center;
+//      }
+//    }
+//  }
+//@include ra-design-scrollbar;
+//}

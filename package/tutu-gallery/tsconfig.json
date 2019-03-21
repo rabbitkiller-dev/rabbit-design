@@ -1,0 +1,47 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "module": "es2015",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es5",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "paths": {
+      "himalaya": [
+        "../design-server/app/lib/himalaya/index"
+      ],
+      "ra-component": [
+        "component/ra-component/src/public_api",
+        "dist/ra-component"
+      ],
+      "ra-component/*": [
+        "component/ra-component/src/public_api",
+        "dist/ra-component/*"
+      ],
+      "ra-design-component": [
+        "component/ra-design-component/src/public_api",
+        "dist/ra-design-component"
+      ],
+      "ra-design-component/*": [
+        "component/ra-design-component/src/public_api",
+        "dist/ra-design-component/*"
+      ],
+      "ra-design-component/testing": [
+        "component/ra-design-component/src/component/design-testing/public_api",
+        "dist/ra-design-component/testing"
+      ]
+    }
+  }
+}

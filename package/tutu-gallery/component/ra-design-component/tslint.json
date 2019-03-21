@@ -1,0 +1,28 @@
+{
+  "extends": "../../tslint.json",
+  "rules": {
+    "directive-selector": [
+      true,
+      "attribute",
+      "design",
+      "kebab-case"
+    ],
+    "component-selector": [
+      true,
+      "element",
+      "ra-design",
+      "kebab-case"
+    ],
+    "no-shadowed-variable": [
+      false
+    ],
+    "no-inferrable-types": [
+      false
+    ],
+    "max-line-length": [
+      true,
+      180
+    ],
+    "component-class-suffix": false
+  }
+}
