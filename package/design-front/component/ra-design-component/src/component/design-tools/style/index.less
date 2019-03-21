@@ -7,18 +7,10 @@
 ra-design-tools{
   display: flex;
   flex: 1;
+  //侧边栏
   @import "./side-bar";
-  //工具栏
-  //工具栏界面
-  .ra-design-tools-interface {
-    background: #1c2b36;
-    &:nth-child(2) {
-      border-right: @defulatBorder;
-    }
-    &:nth-last-child(2) {
-      border-left: @defulatBorder;
-    }
-  }
+  //侧边栏界面
+  @import "./side-bar-interface";
 
 }
 .ra-design-tools-title{

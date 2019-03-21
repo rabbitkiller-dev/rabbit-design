@@ -30,8 +30,14 @@ const RaDesignIconInputLiteral = '<svg viewBox="0 0 1024 1024" version="1.1" xml
   styles: []
 })
 export class RaDesignToolsComponent implements AfterViewInit {
-  @ViewChild('left', {read: ViewContainerRef}) left: ViewContainerRef;
-  @ViewChild('right', {read: ViewContainerRef}) right: ViewContainerRef;
+  @ViewChild('leftTop', {read: ViewContainerRef}) leftTop: ViewContainerRef;
+  @ViewChild('leftBottom', {read: ViewContainerRef}) leftBottom: ViewContainerRef;
+  @ViewChild('rightTop', {read: ViewContainerRef}) rightTop: ViewContainerRef;
+  @ViewChild('rightBottom', {read: ViewContainerRef}) rightBottom: ViewContainerRef;
+  rightTopToolsTabModel: ToolsTabModel;
+  leftBottomToolsTabModel: ToolsTabModel;
+  rightBottomToolsTabModel: ToolsTabModel;
+  leftTopToolsTabModel: ToolsTabModel;
 
   constructor(public ComponentFactoryResolver: ComponentFactoryResolver,
               public NzIconService: NzIconService,
@@ -59,9 +65,63 @@ export class RaDesignToolsComponent implements AfterViewInit {
     this.RaDesignToolsService.showTools(tools);
   }
 
-  showTools(componentFactory: ComponentFactory<any>) {
-    this.left.clear();
-    this.left.createComponent(componentFactory);
+  showTools() {
+    let leftTopToolsTabModel: ToolsTabModel = null;
+    let leftBottomToolsTabModel: ToolsTabModel = null;
+    let rightTopToolsTabModel = null;
+    let rightBottomToolsTabModel = null;
+    this.RaDesignToolsService.forEach((sideBar) => {
+      if (sideBar.select) {
+        switch (sideBar.position) {
+          case 'left-top':
+            if (this.leftTopToolsTabModel !== sideBar) {
+              this.leftTopToolsTabModel = sideBar;
+              this.leftTop.clear();
+              this.leftTop.createComponent(this.RaDesignToolsService.getFactory(sideBar.factory));
+            }
+            leftTopToolsTabModel = this.leftTopToolsTabModel;
+            break;
+          case 'left-bottom':
+            if (this.leftBottomToolsTabModel !== sideBar) {
+              this.leftBottomToolsTabModel = sideBar;
+              this.leftBottom.clear();
+              this.leftBottom.createComponent(this.RaDesignToolsService.getFactory(sideBar.factory));
+            }
+            leftBottomToolsTabModel = this.leftBottomToolsTabModel;
+            break;
+          case 'right-top':
+            if (this.rightTopToolsTabModel !== sideBar) {
+              rightTopToolsTabModel = this.rightTopToolsTabModel = sideBar;
+              this.rightTop.clear();
+              this.rightTop.createComponent(this.RaDesignToolsService.getFactory(sideBar.factory));
+            }
+            break;
+          case 'right-bottom':
+            if (this.rightBottomToolsTabModel !== sideBar) {
+              rightBottomToolsTabModel = this.rightBottomToolsTabModel = sideBar;
+              this.rightBottom.clear();
+              this.rightBottom.createComponent(this.RaDesignToolsService.getFactory(sideBar.factory));
+            }
+            break;
+        }
+      }
+    });
+    if (!leftTopToolsTabModel) {
+      this.leftTopToolsTabModel = null;
+      this.leftTop.clear();
+    }
+    if (!leftBottomToolsTabModel) {
+      this.leftBottomToolsTabModel = null;
+      this.leftBottom.clear();
+    }
+    if (!rightTopToolsTabModel) {
+      this.rightTopToolsTabModel = null;
+      this.rightTop.clear();
+    }
+    if (!rightBottomToolsTabModel) {
+      this.rightBottomToolsTabModel = null;
+      this.rightBottom.clear();
+    }
   }
 
   hiddenTools() {

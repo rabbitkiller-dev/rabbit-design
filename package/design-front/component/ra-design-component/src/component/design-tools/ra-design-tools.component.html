@@ -24,15 +24,17 @@
   </ng-container>
   <div style="flex: 1;order: 100;"></div>
 </div>
-<div class="ra-design-tools-interface" style="min-width:350px">
-  <ng-template #left></ng-template>
+<div class="ra-design-side-bar-interface">
+  <ng-template #leftTop></ng-template>
+  <ng-template #leftBottom></ng-template>
 </div>
 
 <!--中间区域 (舞台)-->
 <ng-content></ng-content>
 <!--右侧工具栏-->
-<div class="ra-design-tools-interface" style="min-width:350px">
-  <ng-template #right></ng-template>
+<div class="ra-design-side-bar-interface">
+  <ng-template #rightTop></ng-template>
+  <ng-template #rightBottom></ng-template>
 </div>
 <div class="side-bar right" >
   <ng-container *ngFor="let tools of RaDesignToolsService.right">

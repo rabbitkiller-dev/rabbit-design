@@ -107,23 +107,20 @@ export class RaDesignToolsService {
 
   showTools(tools: ToolsTabModel) {
     // 获取相同位置的工具栏
-    const eqPosition = this.toolsList.filter((_tools) => {
-      const o1 = tools.position === _tools.position;
-      const o2 = !!_tools.select;
-      const o3 = _tools !== tools;
-      let o4 = false;
-      if (tools.order - 100 < 0) {
-        o4 = tools.order - 100 > 0;
-      } else {
-        o4 = tools.order - 100 < 0;
+    this.toolsList.forEach((_tools) => {
+      if (_tools.position === tools.position && _tools !== tools) {
+        _tools.select = false;
       }
-      return o1 && o2 && o3 && o4;
-    })[0];
-    this.toolsList.forEach((tools) => {
-      tools.select = false;
     });
-    console.log(eqPosition);
-    this.toolsMap.get(tools.factory).select = true;
-    this.RaDesignToolsComponent.showTools(this.factory.get(tools.factory));
+    tools.select = !tools.select;
+    this.RaDesignToolsComponent.showTools();
+  }
+
+  getFactory(tools: ToolsFactory) {
+    return this.factory.get(tools);
+  }
+
+  forEach(call: (tools: ToolsTabModel) => void) {
+    this.toolsList.forEach(call);
   }
 }
