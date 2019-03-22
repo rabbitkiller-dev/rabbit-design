@@ -35,7 +35,7 @@ export class RaDesignToolsService extends Subject<SideBarServiceEvent> {
       factory: ToolsFactory.DataSource,
       label: 'dataSource',
       position: 'left-top',
-      icon: ''
+      icon: 'rabbit-design:icon-database'
     });
     this.factory.set(ToolsFactory.DataSource, this.ComponentFactoryResolver.resolveComponentFactory(DataSourceInterface));
     // 页面列表
@@ -71,12 +71,9 @@ export class RaDesignToolsService extends Subject<SideBarServiceEvent> {
       label: 'properties',
       position: 'right-top',
       select: false,
-      icon: '',
+      icon: 'rabbit-design:icon-properties',
     });
     this.factory.set(ToolsFactory.propertiesEditor, this.ComponentFactoryResolver.resolveComponentFactory(PropertiesEditorInterface));
-    // this.toolsList.sort((tools1, tools2) => {
-    //
-    // });
     // 先初始化toolsMap优化查询
     this.toolsList.forEach((tools) => {
       this.toolsMap.set(tools.factory, tools);

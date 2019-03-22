@@ -17,6 +17,6 @@ export interface StageTabLocalModel {
 }
 
 export interface StageServiceEvent {
-  type: 'open' | 'markForCheck';
+  type: 'open';
   data?: StageTabModel;
 }

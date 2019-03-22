@@ -1,15 +1,14 @@
 import {
   AfterViewInit,
-  ChangeDetectorRef,
   Component,
   ComponentFactory,
   OnInit,
   ViewChild,
-  ViewContainerRef
+  ViewContainerRef, ViewRef
 } from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from '../cdk-drag-drop';
 import {RaDesignStageService} from './ra-design-stage.service';
-import {RaDesignDragDirective, RaDesignDropDirective, DesignDragDrop} from '../design-drag-drop';
+import {DesignDragDrop} from '../design-drag-drop';
 import {StageTabModel} from './interface';
 
 
@@ -38,32 +37,38 @@ import {StageTabModel} from './interface';
 export class RaDesignStageComponent implements OnInit, AfterViewInit {
 
   @ViewChild('main', {read: ViewContainerRef}) main: ViewContainerRef;
+  componentRefMap: Map<string, ViewRef> = new Map();
 
   constructor(
     public RaDesignStageService: RaDesignStageService,
-    public ChangeDetectorRef: ChangeDetectorRef) {
+  ) {
     this.RaDesignStageService.subscribe((event) => {
       if (event.type === 'open') {
         this.reviewInterface();
-      }
-      if (event.type === 'markForCheck') {
-        this.ChangeDetectorRef.markForCheck();
       }
     });
   }
 
   ngOnInit() {
+    this.reviewInterface();
   }
 
   ngAfterViewInit() {
-    this.reviewInterface();
   }
 
   reviewInterface() {
     this.RaDesignStageService.map((stage) => {
       if (stage.select) {
-        this.main.clear();
-        this.main.createComponent(this.RaDesignStageService.getFactory(stage.factory));
+        const viewRef = this.componentRefMap.get(stage.id);
+        if (viewRef) {
+          this.main.detach(0);
+          this.main.insert(viewRef);
+        } else {
+          this.main.detach(0);
+          const a = this.main.createComponent(this.RaDesignStageService.getFactory(stage.factory));
+          a.instance.stageID = stage.id;
+          this.componentRefMap.set(stage.id, this.main.get(0));
+        }
       }
     });
   }
@@ -88,6 +93,11 @@ export class RaDesignStageComponent implements OnInit, AfterViewInit {
     } else if (this.RaDesignStageService.stageList.length === 1) {
       this.main.clear();
     }
+    const viewRef = this.componentRefMap.get(stageTab.id);
+    if (viewRef) {
+      viewRef.destroy();
+    }
+    this.componentRefMap.delete(stageTab.id);
     this.RaDesignStageService.deleteStage(stageTab.id);
   }
 

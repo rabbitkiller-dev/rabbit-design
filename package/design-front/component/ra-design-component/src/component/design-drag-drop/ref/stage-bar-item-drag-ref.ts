@@ -5,6 +5,7 @@ import {RaDesignStageService} from '../../design-stage/ra-design-stage.service';
 
 export class StageBarItemDragRef extends FlowDragRef {
   newIndex: number;
+
   constructor(public DesignDragDirective: RaDesignDragDirective) {
     super(DesignDragDirective);
   }
@@ -36,6 +37,10 @@ export class StageBarItemDragRef extends FlowDragRef {
     super._cleanupDragArtifacts(event);
     this.NgZone.run(() => {
       const currentIndex = Array.prototype.indexOf.call(this._rootElement.parentNode.children, this._rootElement);
+      // 没有新位置或就在原位置就跳过
+      if (!this.newIndex || this.newIndex === currentIndex) {
+        return;
+      }
       this.Injector.get(RaDesignStageService).moveItemInArray(currentIndex, this.newIndex);
     });
   }

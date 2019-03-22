@@ -1,7 +1,6 @@
 import {
   Input, Directive, OnInit, Compiler, Component,
   ModuleWithComponentFactories, NgModule, ReflectiveInjector, ViewContainerRef, ComponentRef, ErrorHandler, ElementRef,
-  ViewEncapsulation, ChangeDetectorRef,
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
@@ -48,13 +47,12 @@ export class RaDesignDynamicDirective implements OnInit {
 
   constructor(
     private vcRef: ViewContainerRef,
-    private cdr: ChangeDetectorRef,
     private compiler: Compiler,
   ) {
   }
 
   ngOnInit(): void {
-    this.dynamicChange = new Throttle(this.dynamicTime);
+    this.dynamicChange.time = this.dynamicTime;
   }
 
   createModule() {
@@ -79,9 +77,7 @@ export class RaDesignDynamicDirective implements OnInit {
         this.comRef.destroy();
       }
       this.vcRef.clear();
-      // const injector = ReflectiveInjector.fromResolvedProviders([], this.vcRef.parentInjector);
       this.comRef = this.vcRef.createComponent(factory, 0);
-      this.cdr.markForCheck();
     });
   }
 

@@ -1,4 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import {DataSourceService} from './data-source.service';
 
 @Component({
   template: `
@@ -42,11 +43,13 @@ export class DataSourceInterface {
       'title': 'Cut',
       // 'icon': 'fa-file',
       'shortcut': 'ctrl+x',
-      'children': [
-      ]
+      'children': []
     }
   ];
 
-  constructor() {
+  constructor(public DataSourceService: DataSourceService) {
+    this.DataSourceService.index().subscribe((data: any[]) => {
+      this.data = data;
+    });
   }
 }

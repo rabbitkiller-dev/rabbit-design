@@ -57,6 +57,7 @@ import {
 export class RaDesignDropDirective<T = any> implements OnDestroy {
 
   @Input('designDrop') type: string;
+  @Input('designData') data: T;
 
   constructor(
     public ElementRef: ElementRef,

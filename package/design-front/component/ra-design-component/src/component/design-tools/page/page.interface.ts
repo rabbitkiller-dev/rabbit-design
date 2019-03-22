@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {RaDesignStageService, StageFactory} from '../../design-stage';
 import {NzFormatEmitEvent, TreeNodeModel} from '../../design-tree';
 import {RaDesignMenuService} from '../../design-menu/ra-design-menu.service';
@@ -41,10 +41,9 @@ export class PageInterface {
   constructor(public RaDesignStageService: RaDesignStageService,
               public RaDesignMenuService: RaDesignMenuService,
               public PageService: PageService,
-              public ChangeDetectorRef: ChangeDetectorRef) {
+             ) {
     this.PageService.index().subscribe((result) => {
       this.data = result;
-      this.ChangeDetectorRef.markForCheck();
     });
   }
 
@@ -66,31 +65,30 @@ export class PageInterface {
         case PageContextMenuKey.New.Page:
           this.newFileOption.visible = true;
           this.newFileOption.header = 'Page';
-          this.newFileOption.parentPageID = node.key;
+          this.newFileOption.parentPageID = node.origin.pageType ? node.key : undefined;
           this.newFileOption.pageType = PageType.page;
           break;
         case PageContextMenuKey.New.Dir:
           this.newFileOption.visible = true;
           this.newFileOption.header = 'Directory';
-          this.newFileOption.parentPageID = node.key;
+          this.newFileOption.parentPageID = node.origin.pageType ? node.key : undefined;
           this.newFileOption.pageType = PageType.dir;
           break;
         case PageContextMenuKey.New.Router2Dir:
           this.newFileOption.visible = true;
           this.newFileOption.header = '2Level Router Directory';
-          this.newFileOption.parentPageID = node.key;
+          this.newFileOption.parentPageID = node.origin.pageType ? node.key : undefined;
           this.newFileOption.pageType = PageType.router2;
           break;
         case PageContextMenuKey.New.ComponentDir:
           this.newFileOption.visible = true;
           this.newFileOption.header = 'Components Directory';
-          this.newFileOption.parentPageID = node.key;
+          this.newFileOption.parentPageID = node.origin.pageType ? node.key : undefined;
           this.newFileOption.pageType = PageType.component;
           break;
         case PageContextMenuKey.Delete:
           this.PageService.delete(node.key).subscribe(() => {
             node.parentNode.children.splice(node.parentNode.children.indexOf(node), 1);
-            this.ChangeDetectorRef.markForCheck();
           });
           break;
         default:
@@ -109,7 +107,6 @@ export class PageInterface {
       }).subscribe((result) => {
         option.node.addChildren([result]);
         option.node.children.sort(this.PageService.sort);
-        this.ChangeDetectorRef.markForCheck();
         this.newHidden();
       });
     }

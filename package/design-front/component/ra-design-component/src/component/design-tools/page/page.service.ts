@@ -58,7 +58,6 @@ export class PageService {
   }
 
   init() {
-    console.log('a');
   }
 
   /**

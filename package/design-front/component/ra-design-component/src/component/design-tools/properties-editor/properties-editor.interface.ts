@@ -1,14 +1,11 @@
 import {
-  ChangeDetectorRef,
   Compiler,
   Component,
   ComponentRef, ElementRef, ModuleWithComponentFactories,
   NgModule,
-  OnDestroy,
   OnInit,
   ViewContainerRef
 } from '@angular/core';
-import {Throttle} from '../../design-dynamic/throttle';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -31,7 +28,6 @@ export class PropertiesEditorInterface implements OnInit {
 
   constructor(
     private vcRef: ViewContainerRef,
-    private cdr: ChangeDetectorRef,
     private compiler: Compiler,
     private PropertiesEditorService: PropertiesEditorService,
   ) {
@@ -62,9 +58,7 @@ export class PropertiesEditorInterface implements OnInit {
         this.comRef.destroy();
       }
       this.vcRef.clear();
-      // const injector = ReflectiveInjector.fromResolvedProviders([], this.vcRef.parentInjector);
       this.comRef = this.vcRef.createComponent(factory, 0);
-      this.cdr.markForCheck();
     });
   }
 

@@ -1,9 +1,7 @@
 import {
-  ChangeDetectorRef,
   ComponentFactory,
   ComponentFactoryResolver,
   Injectable,
-  ViewContainerRef
 } from '@angular/core';
 import {StageServiceEvent, StageTabModel, StageTabServerModel} from './interface';
 import {PageEditorInterface} from './page-editor/page-editor.interface';
@@ -89,7 +87,6 @@ export class RaDesignStageService extends Subject<StageServiceEvent> {
 
   moveItemInArray(fromIndex: number, toIndex: number): void {
     moveItemInArray(this.stageList, fromIndex, toIndex);
-    this.next({type: 'markForCheck'});
     this.saveLocalModel();
   }
 

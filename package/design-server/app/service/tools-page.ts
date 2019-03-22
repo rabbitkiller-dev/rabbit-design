@@ -1,12 +1,13 @@
 import {Service} from 'egg';
 import {EntityManager} from 'typeorm';
-import {QueryToolsPageTreeDto, QueryToolsPageTreeNodeDto} from '../dto/tools-page.dto';
+import {QueryPageInfo, QueryToolsPageTreeDto, QueryToolsPageTreeNodeDto} from '../dto/tools-page.dto';
 import {Page, PageType} from '../entity/page';
 import {Project} from '../entity/project';
 import {ErrorService} from '../lib';
 import {TreeUtil} from '../lib/web/tree-util';
 
 import * as uuidv1 from 'uuid/v1';
+import {PageInfo} from '../entity/page-info';
 
 /**
  * 工具栏-页面管理 Service
@@ -42,7 +43,7 @@ export default class ToolsPageService extends Service {
 
     page.pageID = uuidv1();
     if (page.parentPageID && !parentPage) { // 没找到父节点
-      ErrorService.RuntimeErrorNotFind();
+      throw ErrorService.RuntimeErrorNotFind();
     } else if (parentPage) {
       page.pagePath = `${parentPage.pagePath}/${page.pageID}`;
     } else {
@@ -52,7 +53,26 @@ export default class ToolsPageService extends Service {
     page.enable = true;
     page.author = this.config.user.userID;
     page.projectID = this.config.user.projectID;
+
+    await entityManager.getRepository(PageInfo).save(page);
     return this.formatPageToTree(await pageRepo.save(page));
+  }
+
+  public async findOne(entityManager: EntityManager, id: string): Promise<QueryPageInfo> {
+    const pageInfoRepo = entityManager.getRepository(PageInfo);
+    const parentPage = await pageInfoRepo.findOne({
+      pageID: id,
+      enable: true,
+    });
+    if (parentPage) {
+      return parentPage;
+    }
+    throw ErrorService.RuntimeErrorNotFind();
+  }
+
+  public async pageInfoModify(entityManager: EntityManager, pageInfo: PageInfo): Promise<QueryPageInfo> {
+    pageInfo = await entityManager.getRepository(PageInfo).save(pageInfo);
+    return pageInfo;
   }
 
   public async deletePage(entityManager: EntityManager, id: string) {

@@ -15,6 +15,12 @@ export default (app: Application) => {
   router.get('/api/tools-page', controller.toolsPage.index); // 注册
   router.post('/api/tools-page', controller.toolsPage.add); // 注册
   router.delete('/api/tools-page', controller.toolsPage.delete); // 注册
+  router.get('/api/tools-page/page-info/:pageID', controller.toolsPage.findOne); // 注册
+  router.put('/api/tools-page/page-info', controller.toolsPage.pageInfoModify); // 注册
+  /**
+   * tools-data-source
+   */
+  router.get('/api/data-source', controller.dataSource.index);
   /**
    * tools-icon
    */

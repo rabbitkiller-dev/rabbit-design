@@ -1,7 +1,9 @@
 import {RaDesignDragDirective} from '../ra-design-drag.directive';
 import {FlowDragRef} from './flow-drag-ref';
 import {Point} from './interface/point';
-import {RaDesignDropDirective, TreeNodeModel} from 'ra-design-component';
+import {TreeNodeModel} from '../../design-tree';
+import {RaDesignDropDirective} from '../ra-design-drop.directive';
+import {RaDesignStageService} from '../../design-stage/ra-design-stage.service';
 import {PageEditorService} from '../../design-stage/page-editor/page-editor.service';
 import {extendStyles, toggleNativeDragInteractions} from '../../cdk-drag-drop/drag-styling';
 
@@ -125,7 +127,9 @@ const ComponentDragRefUtil = new (class {
 
   pageEditor_mouseUp(this: ComponentDragRef) {
     const pageEditorService: PageEditorService = this.Injector.get(PageEditorService);
-    pageEditorService.addRoot(ComponentDragRefUtil.getHtmlJson(this.data.key));
+    const raDesignStageService: RaDesignStageService = this.Injector.get(RaDesignStageService);
+    const a = raDesignStageService.stageList.find(stage => stage.select);
+    pageEditorService.addRoot(a.id, ComponentDragRefUtil.getHtmlJson(this.data.key));
   }
 
   getPlaceholder(key: string): HTMLElement {

@@ -10,7 +10,7 @@ import {RaDesignDragDirective} from '../ra-design-drag.directive';
 import {extendStyles, toggleNativeDragInteractions} from '../../cdk-drag-drop/drag-styling';
 import {DragRefInterface} from './interface/drag-ref.interface';
 import {Point} from './interface/point';
-import {RaDesignDropDirective} from 'ra-design-component';
+import {RaDesignDropDirective} from '../ra-design-drop.directive';
 import {getTransformTransitionDurationInMs} from '../../cdk-drag-drop/transition-duration';
 
 /** Options that can be used to bind a passive event listener. */

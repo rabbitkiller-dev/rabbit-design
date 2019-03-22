@@ -13,6 +13,7 @@ import {PropertiesEditorService} from '../design-tools/properties-editor/propert
   selector: '[design-dynamic-unit]',
 })
 export class RaDesignDynamicUnitDirective implements OnInit {
+  @Input('design-stage-id') stageID: string;
   @Input('design-dynamic-unit') path: string;
   htmlJson: HtmlJson;
 
