@@ -10,4 +10,9 @@ export interface ToolsTabLocalModel {
   position?: 'left-top' | 'right-top' | 'left-bottom' | 'right-bottom';
   order?: number;
   select?: boolean;
+  minHeight?: number;
 }
+
+export type StoreSideBarLocalModel = {
+  [index in ToolsFactory]: ToolsTabLocalModel;
+};

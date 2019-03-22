@@ -6,6 +6,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RaComponentModule} from 'ra-component';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
+import {NgxWebstorageModule} from 'ngx-webstorage';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import {AppComponent} from './app.component';
       cookieName: 'csrfToken',
       headerName: 'x-csrf-token',
     }),
+    NgxWebstorageModule.forRoot(),
     RaComponentModule,
   ],
   providers: [],

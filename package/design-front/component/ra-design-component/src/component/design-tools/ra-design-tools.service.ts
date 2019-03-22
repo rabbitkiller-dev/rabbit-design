@@ -1,11 +1,12 @@
 import {ComponentFactory, ComponentFactoryResolver, Injectable, ViewContainerRef} from '@angular/core';
-import {ToolsTabModel} from './interface';
+import {StoreSideBarLocalModel, ToolsTabModel} from './interface';
 import {RaDesignToolsComponent} from './ra-design-tools.component';
 import {DataSourceInterface} from './data-source/data-source.interface';
 import {ComponentInterface} from './component/component.interface';
 import {PageInterface} from './page/page.interface';
 import {IconInterface} from './icon/icon.interface';
 import {PropertiesEditorInterface} from './properties-editor/properties-editor.interface';
+import {LocalStorageService} from 'ngx-webstorage';
 
 export enum ToolsFactory {
   DataSource = 'dataSource',
@@ -24,7 +25,7 @@ export class RaDesignToolsService {
   left: ToolsTabModel[] = [];
   right: ToolsTabModel[] = [];
 
-  constructor(public ComponentFactoryResolver: ComponentFactoryResolver) {
+  constructor(public ComponentFactoryResolver: ComponentFactoryResolver, public LocalStorageService: LocalStorageService) {
   }
 
   init(RaDesignToolsComponent: RaDesignToolsComponent) {
@@ -34,8 +35,6 @@ export class RaDesignToolsService {
       factory: ToolsFactory.DataSource,
       label: 'dataSource',
       position: 'left-top',
-      order: 1,
-      select: true,
       icon: ''
     });
     this.factory.set(ToolsFactory.DataSource, this.ComponentFactoryResolver.resolveComponentFactory(DataSourceInterface));
@@ -44,8 +43,7 @@ export class RaDesignToolsService {
       factory: ToolsFactory.Page,
       label: '页面管理',
       position: 'left-top',
-      order: 2,
-      select: false,
+      select: true,
       icon: 'rabbit-design:icon-page'
     });
     this.factory.set(ToolsFactory.Page, this.ComponentFactoryResolver.resolveComponentFactory(PageInterface));
@@ -54,7 +52,6 @@ export class RaDesignToolsService {
       factory: ToolsFactory.Component,
       label: 'component',
       position: 'left-top',
-      order: 3,
       select: false,
       icon: 'rabbit-design:icon-component'
     });
@@ -64,26 +61,41 @@ export class RaDesignToolsService {
       factory: ToolsFactory.Icon,
       label: 'icons',
       position: 'left-bottom',
-      order: 4,
       select: false,
       icon: 'rabbit-design:icon-iconfont',
     });
     this.factory.set(ToolsFactory.Icon, this.ComponentFactoryResolver.resolveComponentFactory(IconInterface));
-
     // 属性面板
     this.toolsList.push({
       factory: ToolsFactory.propertiesEditor,
       label: 'properties',
       position: 'right-top',
-      order: 1,
       select: false,
       icon: '',
     });
     this.factory.set(ToolsFactory.propertiesEditor, this.ComponentFactoryResolver.resolveComponentFactory(PropertiesEditorInterface));
-
+    // this.toolsList.sort((tools1, tools2) => {
+    //
+    // });
+    // 先初始化toolsMap优化查询
     this.toolsList.forEach((tools) => {
       this.toolsMap.set(tools.factory, tools);
-
+    });
+    // 和本地数据合并
+    const localModel = this.getLocalModel();
+    if (localModel) {
+      for (const key of Object.keys(ToolsFactory)) {
+        const factory = ToolsFactory[key];
+        Object.assign(this.toolsMap.get(factory), localModel[factory]);
+      }
+    }
+    // 排序tools
+    this.sort();
+    // 重算order
+    const indexs = {};
+    this.toolsList.forEach((tools) => {
+      const index = indexs[tools.position] || 0;
+      indexs[tools.position] = tools.order = index + 1;
       switch (tools.position) {
         case 'left-top':
           this.left.push(tools);
@@ -103,9 +115,16 @@ export class RaDesignToolsService {
           throw new Error('NotPosition');
       }
     });
+    // 保存本地数据
+    this.saveLocalModel();
   }
 
-  showTools(tools: ToolsTabModel) {
+  showTools(tools: ToolsFactory);
+  showTools(tools: ToolsTabModel);
+  showTools(tools: any) {
+    if (typeof tools === 'string') {
+      tools = this.toolsMap.get(tools as any);
+    }
     // 获取相同位置的工具栏
     this.toolsList.forEach((_tools) => {
       if (_tools.position === tools.position && _tools !== tools) {
@@ -113,7 +132,8 @@ export class RaDesignToolsService {
       }
     });
     tools.select = !tools.select;
-    this.RaDesignToolsComponent.showTools();
+    this.RaDesignToolsComponent.reviewInterface();
+    this.saveLocalModel();
   }
 
   getFactory(tools: ToolsFactory) {
@@ -122,5 +142,42 @@ export class RaDesignToolsService {
 
   forEach(call: (tools: ToolsTabModel) => void) {
     this.toolsList.forEach(call);
+  }
+
+  saveLocalModel() {
+    const store: StoreSideBarLocalModel = {} as any;
+    this.toolsList.forEach((sideBar) => {
+      store[sideBar.factory] = {
+        position: sideBar.position,
+        order: sideBar.order,
+        select: sideBar.select,
+        minHeight: sideBar.minHeight,
+      };
+    });
+    this.LocalStorageService.store('side-bar-local', store);
+  }
+
+  getLocalModel(): StoreSideBarLocalModel {
+    return this.LocalStorageService.retrieve('side-bar-local');
+  }
+  // 排序
+  sort() {
+    this.toolsList.sort((tools1, tools2) => {
+      if (tools1.position === tools2.position) {
+        return tools1.order - tools2.order;
+      }
+      if (tools1.position === 'left-top') {
+        return -1;
+      }
+      if (tools1.position === 'left-bottom') {
+        return tools2.position === 'left-top' ? 1 : -1;
+      }
+      if (tools1.position === 'right-top') {
+        return (tools2.position === 'left-top' || tools2.position === 'left-bottom') ? 1 : -1;
+      }
+      if (tools1.position === 'right-bottom') {
+        return (tools2.position === 'left-top' || tools2.position === 'left-bottom' || tools2.position === 'right-top') ? 1 : -1;
+      }
+    });
   }
 }

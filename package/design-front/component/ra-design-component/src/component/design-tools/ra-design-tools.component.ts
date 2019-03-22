@@ -59,13 +59,14 @@ export class RaDesignToolsComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.reviewInterface();
   }
 
   onClickTools(tools: ToolsTabModel) {
     this.RaDesignToolsService.showTools(tools);
   }
 
-  showTools() {
+  reviewInterface() {
     let leftTopToolsTabModel: ToolsTabModel = null;
     let leftBottomToolsTabModel: ToolsTabModel = null;
     let rightTopToolsTabModel = null;
@@ -122,9 +123,5 @@ export class RaDesignToolsComponent implements AfterViewInit {
       this.rightBottomToolsTabModel = null;
       this.rightBottom.clear();
     }
-  }
-
-  hiddenTools() {
-
   }
 }
