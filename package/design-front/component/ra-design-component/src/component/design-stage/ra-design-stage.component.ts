@@ -1,4 +1,12 @@
-import {ChangeDetectorRef, Component, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ComponentFactory,
+  OnInit,
+  ViewChild,
+  ViewContainerRef
+} from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from '../cdk-drag-drop';
 import {RaDesignStageService} from './ra-design-stage.service';
 import {RaDesignDragDirective, RaDesignDropDirective, DesignDragDrop} from '../design-drag-drop';
@@ -27,26 +35,41 @@ import {StageTabModel} from './interface';
   `,
   styles: []
 })
-export class RaDesignStageComponent implements OnInit {
+export class RaDesignStageComponent implements OnInit, AfterViewInit {
 
   @ViewChild('main', {read: ViewContainerRef}) main: ViewContainerRef;
 
   constructor(
     public RaDesignStageService: RaDesignStageService,
     public ChangeDetectorRef: ChangeDetectorRef) {
-    this.RaDesignStageService.init(this);
+    this.RaDesignStageService.subscribe((event) => {
+      if (event.type === 'open') {
+        this.reviewInterface();
+      }
+      if (event.type === 'markForCheck') {
+        this.ChangeDetectorRef.markForCheck();
+      }
+    });
   }
 
   ngOnInit() {
   }
 
-  showTools(componentFactory) {
-    this.main.clear();
-    this.main.createComponent(componentFactory);
+  ngAfterViewInit() {
+    this.reviewInterface();
+  }
+
+  reviewInterface() {
+    this.RaDesignStageService.map((stage) => {
+      if (stage.select) {
+        this.main.clear();
+        this.main.createComponent(this.RaDesignStageService.getFactory(stage.factory));
+      }
+    });
   }
 
   select(tools: StageTabModel) {
-    this.RaDesignStageService.openStage(tools.id);
+    this.RaDesignStageService.showStage(tools.id);
   }
 
   drop(event: CdkDragDrop<string[]>) {
@@ -61,7 +84,7 @@ export class RaDesignStageComponent implements OnInit {
     if (stageTab.select && this.RaDesignStageService.stageList.length > 1) {
       const index = this.RaDesignStageService.stageList.indexOf(stageTab);
       const nextStageTab = this.RaDesignStageService.stageList[index + 1] || this.RaDesignStageService.stageList[index - 1];
-      this.RaDesignStageService.openStage(nextStageTab.id);
+      this.RaDesignStageService.showStage(nextStageTab.id);
     } else if (this.RaDesignStageService.stageList.length === 1) {
       this.main.clear();
     }
