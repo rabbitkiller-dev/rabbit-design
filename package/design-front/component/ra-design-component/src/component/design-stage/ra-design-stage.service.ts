@@ -34,7 +34,7 @@ export class RaDesignStageService extends Subject<StageServiceEvent> {
 
   init() {
     this.factory.set(StageFactory.PageEditor, this.ComponentFactoryResolver.resolveComponentFactory(PageEditorInterface));
-    this.stageList = this.getLocalModel();
+    this.stageList = this.getLocalModel() || [];
     this.stageList.forEach((stage) => {
       this.stageMap.set(stage.id, stage);
     });
