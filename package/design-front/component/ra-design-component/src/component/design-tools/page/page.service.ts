@@ -4,7 +4,7 @@ import {DesignMenuModel} from '../../design-menu/interface';
 import {map} from 'rxjs/operators';
 import {PageModel, PageType, QueryToolsPageTreeDto, QueryToolsPageTreeNodeDto, Result} from './interface';
 import {Observable} from 'rxjs';
-import {TreeNodeModel} from 'ra-design-component';
+import {TreeNodeModel} from '../../design-tree';
 
 export const PageContextMenuKey = {
   New: {
@@ -54,7 +54,11 @@ export const PageContextMenu: {
 @Injectable({providedIn: 'root'})
 export class PageService {
   constructor(public HttpClient: HttpClient) {
+    this.init();
+  }
 
+  init() {
+    console.log('a');
   }
 
   /**

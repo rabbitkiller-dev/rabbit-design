@@ -16,3 +16,8 @@ export interface ToolsTabLocalModel {
 export type StoreSideBarLocalModel = {
   [index in ToolsFactory]: ToolsTabLocalModel;
 };
+
+export interface SideBarServiceEvent {
+  type: 'review';
+  data?: any;
+}

@@ -1,12 +1,12 @@
-import {ComponentFactory, ComponentFactoryResolver, Injectable, ViewContainerRef} from '@angular/core';
-import {StoreSideBarLocalModel, ToolsTabModel} from './interface';
-import {RaDesignToolsComponent} from './ra-design-tools.component';
+import {ComponentFactory, ComponentFactoryResolver, Injectable} from '@angular/core';
+import {SideBarServiceEvent, StoreSideBarLocalModel, ToolsTabModel} from './interface';
 import {DataSourceInterface} from './data-source/data-source.interface';
 import {ComponentInterface} from './component/component.interface';
 import {PageInterface} from './page/page.interface';
 import {IconInterface} from './icon/icon.interface';
 import {PropertiesEditorInterface} from './properties-editor/properties-editor.interface';
 import {LocalStorageService} from 'ngx-webstorage';
+import {Subject} from 'rxjs';
 
 export enum ToolsFactory {
   DataSource = 'dataSource',
@@ -17,19 +17,19 @@ export enum ToolsFactory {
 }
 
 @Injectable()
-export class RaDesignToolsService {
+export class RaDesignToolsService extends Subject<SideBarServiceEvent> {
   private toolsMap: Map<ToolsFactory, ToolsTabModel> = new Map();
   private toolsList: ToolsTabModel[] = [];
   private factory: Map<String, ComponentFactory<any>> = new Map();
-  private RaDesignToolsComponent: RaDesignToolsComponent;
   left: ToolsTabModel[] = [];
   right: ToolsTabModel[] = [];
 
   constructor(public ComponentFactoryResolver: ComponentFactoryResolver, public LocalStorageService: LocalStorageService) {
+    super();
+    this.init();
   }
 
-  init(RaDesignToolsComponent: RaDesignToolsComponent) {
-    this.RaDesignToolsComponent = RaDesignToolsComponent;
+  private init() {
     // 数据源管理
     this.toolsList.push({
       factory: ToolsFactory.DataSource,
@@ -132,7 +132,7 @@ export class RaDesignToolsService {
       }
     });
     tools.select = !tools.select;
-    this.RaDesignToolsComponent.reviewInterface();
+    this.next({type: 'review'});
     this.saveLocalModel();
   }
 
@@ -140,8 +140,8 @@ export class RaDesignToolsService {
     return this.factory.get(tools);
   }
 
-  forEach(call: (tools: ToolsTabModel) => void) {
-    this.toolsList.forEach(call);
+  map(call: (tools: ToolsTabModel) => void): void {
+    this.toolsList.map(call);
   }
 
   saveLocalModel() {
@@ -160,6 +160,7 @@ export class RaDesignToolsService {
   getLocalModel(): StoreSideBarLocalModel {
     return this.LocalStorageService.retrieve('side-bar-local');
   }
+
   // 排序
   sort() {
     this.toolsList.sort((tools1, tools2) => {

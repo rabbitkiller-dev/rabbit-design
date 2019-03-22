@@ -12,8 +12,7 @@ preview http://47.105.84.128/design/
 tools拖拽的排序
 tools拖拽拉大拉小
 ToolsTabModel改名为sideBar
-保存ToolsTabLocalModel,并获取ToolsTabLocalModel
-tools运行中变量,
+
 ## 设计平台相关
  - 尽量不停止冒泡功能,导致父节点无法触发事件.采用判断target和$event记录事件确认是否无视该事件,
  - 按功能实现service,全部都是全局服务.就算远在异乡的组件也能操作彼此的组件
