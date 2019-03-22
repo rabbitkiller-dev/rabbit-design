@@ -100,7 +100,7 @@ export class RaDesignToolsComponent implements AfterViewInit {
           case 'left-bottom':
             if (this.leftBottomToolsTabModel !== sideBar) {
               this.leftBottomToolsTabModel = sideBar;
-              this.leftTop.detach(0);
+              this.leftBottom.detach(0);
               this.leftBottom.insert(this.componentRefMap.get(sideBar.factory));
             }
             leftBottomToolsTabModel = this.leftBottomToolsTabModel;
@@ -108,14 +108,14 @@ export class RaDesignToolsComponent implements AfterViewInit {
           case 'right-top':
             if (this.rightTopToolsTabModel !== sideBar) {
               rightTopToolsTabModel = this.rightTopToolsTabModel = sideBar;
-              this.leftTop.detach(0);
+              this.rightTop.detach(0);
               this.rightTop.insert(this.componentRefMap.get(sideBar.factory));
             }
             break;
           case 'right-bottom':
             if (this.rightBottomToolsTabModel !== sideBar) {
               rightBottomToolsTabModel = this.rightBottomToolsTabModel = sideBar;
-              this.leftTop.detach(0);
+              this.rightBottom.detach(0);
               this.rightBottom.insert(this.componentRefMap.get(sideBar.factory));
             }
             break;
