@@ -3,8 +3,8 @@ import {AfterViewInit, ChangeDetectionStrategy, Component, Input} from '@angular
 @Component({
   selector: 'design-editor',
   templateUrl: './editor.component.html',
-  styles:[
-    ``
+  styles: [
+      ``
   ]
 })
 export class EditorComponent implements AfterViewInit {
@@ -14,4 +14,7 @@ export class EditorComponent implements AfterViewInit {
   ngAfterViewInit() {
   }
 
+  aaa() {
+    alert('aa');
+  }
 }
