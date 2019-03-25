@@ -141,6 +141,7 @@ export class RaDesignTreeComponent implements OnInit, OnChanges, OnDestroy {
 
   @Output() readonly nzClick: EventEmitter<NzFormatEmitEvent> = new EventEmitter();
   @Output() readonly nzDblClick: EventEmitter<NzFormatEmitEvent> = new EventEmitter();
+  @Output() readonly nzTouch: EventEmitter<NzFormatEmitEvent> = new EventEmitter();
   @Output() readonly nzContextMenu: EventEmitter<NzFormatEmitEvent> = new EventEmitter();
   @Output() readonly nzCheckBoxChange: EventEmitter<NzFormatEmitEvent> = new EventEmitter();
   @Output() readonly nzExpandChange: EventEmitter<NzFormatEmitEvent> = new EventEmitter();

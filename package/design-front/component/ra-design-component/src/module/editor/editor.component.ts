@@ -13,8 +13,4 @@ export class EditorComponent implements AfterViewInit {
 
   ngAfterViewInit() {
   }
-
-  aaa() {
-    alert('aa');
-  }
 }

@@ -12,6 +12,7 @@ import {PageModel, PageType} from './interface';
       <label>页面管理</label>
     </div>
     <ra-design-tree [nzData]="data" (nzDblClick)="onDblclick($event)" (nzContextMenu)="onContextMenu($event)"
+                    (nzTouch)="onTouch($event)"
                     [cdkDrag]="true"></ra-design-tree>
     <ra-design-dialog header="New {{newFileOption.header}} name" *ngIf="newFileOption.visible">
       <nz-form-item>
@@ -41,13 +42,23 @@ export class PageInterface {
   constructor(public RaDesignStageService: RaDesignStageService,
               public RaDesignMenuService: RaDesignMenuService,
               public PageService: PageService,
-             ) {
+  ) {
     this.PageService.index().subscribe((result) => {
       this.data = result;
     });
   }
 
   onDblclick($event: NzFormatEmitEvent) {
+    const node = $event.node;
+    const page: PageModel = $event.node.origin;
+    if (page.pageType === PageType.page) {
+      this.RaDesignStageService.putStage(StageFactory.PageEditor, {id: node.key, title: node.title});
+    } else {
+      node.setExpanded(!node.isExpanded);
+    }
+  }
+
+  onTouch($event) {
     const node = $event.node;
     const page: PageModel = $event.node.origin;
     if (page.pageType === PageType.page) {
