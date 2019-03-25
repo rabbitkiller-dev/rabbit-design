@@ -295,7 +295,7 @@ export class FlowDragRef<T = any> implements DragRefInterface {
       position: 'fixed',
       top: '0',
       left: '0',
-      zIndex: '1000'
+      zIndex: '1000',
     });
 
     toggleNativeDragInteractions(preview, false);
@@ -380,6 +380,7 @@ export class FlowDragRef<T = any> implements DragRefInterface {
       return Promise.resolve();
     }
 
+    console.log('工;');
     return this.NgZone.runOutsideAngular(() => {
       return new Promise(resolve => {
         const handler = ((event: TransitionEvent) => {

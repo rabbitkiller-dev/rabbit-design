@@ -111,7 +111,6 @@ ra-design-stage {
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
   }
 }
-
 .stage-bar.cdk-drop-list-dragging .stage-bar-item:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
@@ -131,20 +130,4 @@ ra-design-stage {
   background: @back-light-color;
 }
 
-.page-editor {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.page-editor__form {
-  flex: 1;
-  //background: #999;
-  //background-image: linear-gradient(45deg, #666 25%, transparent 0, transparent 75%, #666 0), linear-gradient(45deg, #666 25%, transparent 0, transparent 75%, #666 0);
-  //background-position: 0 0, 15px 15px;
-  //background-size: 30px 30px;
-  background-color: transparent;
-  background-image: url("../../../../assets/images/transparent-square-tiles.png");
-  background-repeat: repeat;
-  background-size: 130px;
-}
+@import "./page-editor";
