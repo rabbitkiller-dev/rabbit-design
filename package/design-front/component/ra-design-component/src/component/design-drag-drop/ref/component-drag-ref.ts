@@ -3,11 +3,15 @@ import {FlowDragRef} from './flow-drag-ref';
 import {Point} from './interface/point';
 import {TreeNodeModel} from '../../design-tree';
 import {RaDesignDropDirective} from '../ra-design-drop.directive';
-import {RaDesignStageService} from '../../design-stage/ra-design-stage.service';
 import {PageEditorService} from '../../design-stage/page-editor/page-editor.service';
 import {extendStyles, toggleNativeDragInteractions} from '../../cdk-drag-drop/drag-styling';
+import {RaDesignDynamicUnitDirective} from '../../design-dynamic/ra-design-dynamic-unit.directive';
 
 export class ComponentDragRef extends FlowDragRef<TreeNodeModel> {
+  lastType: 'page-editor' | 'dynamic-unit' = null;
+  targetDrag: RaDesignDragDirective;
+  targetDrop: RaDesignDropDirective;
+  isInsertBefore: boolean;
   constructor(public DesignDragDirective: RaDesignDragDirective) {
     super(DesignDragDirective);
   }
@@ -21,16 +25,23 @@ export class ComponentDragRef extends FlowDragRef<TreeNodeModel> {
   }
 
   _updateActiveDropContainer(event: MouseEvent | TouchEvent, {x, y}: Point) {
-    const drag = this.findElementUp(event);
-    if (!drag) {
+    const target = this.findElementUp(event);
+    if (!target) {
+      this.lastType = null;
       if (this._placeholder.parentNode) {
         this._placeholder.parentNode.removeChild(this._placeholder);
       }
       super._updateActiveDropContainer(event, {x, y});
       return;
     }
-    if (drag.dragDrop.type === 'page-editor') {
-      ComponentDragRefUtil.pageEditor_mouseMove.call(this, drag.dragDrop, event, {x, y});
+    if (target.dragDrop.type === 'page-editor') {
+      ComponentDragRefUtil.pageEditor_mouseMove.call(this, target.dragDrop, event, {x, y});
+      this.lastType = target.dragDrop.type;
+      this.targetDrop = target.dragDrop;
+    } else if (target.dragDrop.type === 'dynamic-unit') {
+      ComponentDragRefUtil.dynamicUnit_mouseMove.call(this, target.dragDrop, event, {x, y});
+      this.lastType = target.dragDrop.type;
+      this.targetDrag = target.dragDrop as RaDesignDragDirective<any>;
     }
     super._updateActiveDropContainer(event, {x, y});
   }
@@ -46,7 +57,7 @@ export class ComponentDragRef extends FlowDragRef<TreeNodeModel> {
       }
     } else if (currentElement.classList.contains('cdk-drag') && currentElement.designDragDrop) {
       const drag: RaDesignDragDirective = currentElement.designDragDrop;
-      if (drag.type === 'dynamic-component') {
+      if (drag.type === 'dynamic-unit') {
         return {
           type: 'drag',
           dragDrop: drag,
@@ -111,7 +122,15 @@ export class ComponentDragRef extends FlowDragRef<TreeNodeModel> {
     this._destroyPreview();
     this._destroyPlaceholder();
     this.NgZone.run(() => {
-      ComponentDragRefUtil.pageEditor_mouseUp.call(this);
+      switch (this.lastType) {
+        case 'page-editor':
+          ComponentDragRefUtil.pageEditor_mouseUp.call(this);
+          break;
+        case 'dynamic-unit':
+          ComponentDragRefUtil.dynamicUnit_mouseUp.call(this);
+          break;
+        default:
+      }
     });
   }
 }
@@ -127,9 +146,35 @@ const ComponentDragRefUtil = new (class {
 
   pageEditor_mouseUp(this: ComponentDragRef) {
     const pageEditorService: PageEditorService = this.Injector.get(PageEditorService);
-    const raDesignStageService: RaDesignStageService = this.Injector.get(RaDesignStageService);
-    const a = raDesignStageService.stageList.find(stage => stage.select);
-    pageEditorService.addRoot(a.id, ComponentDragRefUtil.getHtmlJson(this.data.key));
+    pageEditorService.addRoot(this.targetDrop.data, ComponentDragRefUtil.getHtmlJson(this.data.key));
+  }
+
+  dynamicUnit_mouseMove(this: ComponentDragRef, drop: RaDesignDropDirective, event: MouseEvent | TouchEvent, {x, y}: Point) {
+    const target: HTMLElement = drop.ElementRef.nativeElement;
+    const parent: HTMLElement = target.parentElement;
+    const clientRect = target.getBoundingClientRect();
+    const isHorizontal = false; // this._orientation === 'horizontal';
+    const index = isHorizontal ?
+      // Round these down since most browsers report client rects with
+      // sub-pixel precision, whereas the pointer coordinates are rounded to pixels.
+      x >= Math.floor(clientRect.left - (clientRect.width / 2)) && x <= Math.floor(clientRect.right - (clientRect.width / 2)) :
+      y >= Math.floor(clientRect.top - (clientRect.height / 2)) && y <= Math.floor(clientRect.bottom - (clientRect.height / 2));
+    if (index) {
+      parent.insertBefore(this._placeholder, target);
+    } else {
+      target.nextSibling ? parent.insertBefore(this._placeholder, target.nextSibling) : parent.appendChild(this._placeholder);
+    }
+    this.isInsertBefore = index;
+      // target.appendChild(this._placeholder);
+  }
+  dynamicUnit_mouseUp(this: ComponentDragRef) {
+    const pageEditorService: PageEditorService = this.Injector.get(PageEditorService);
+    const targetDrag: RaDesignDynamicUnitDirective = this.targetDrag as any;
+    if (this.isInsertBefore) {
+      pageEditorService.insertBefore(targetDrag.path, ComponentDragRefUtil.getHtmlJson(this.data.key));
+    } else {
+      pageEditorService.insertAfter(targetDrag.path, ComponentDragRefUtil.getHtmlJson(this.data.key));
+    }
   }
 
   getPlaceholder(key: string): HTMLElement {
@@ -153,7 +198,7 @@ const ComponentDragRefUtil = new (class {
   getHtmlJson(key): string {
     switch (key) {
       case 'icon':
-        return '<i nz-icon type="rabbit-design:icon-iconfont"></i>';
+        return '<i nz-icon type="rabbit-design:icon-iconfont"><i  type="rabbit-design:icon-iconfont"></i></i>';
         break;
       case 'input':
         return '<input nz-input>';

@@ -12,33 +12,35 @@
  *    console.log("nice");
  * })
  */
-export class Throttle{
-  index:number;  //setTimeout的序号
-  private _last:number;
-  time:number;  //多久执行一次
-  force:boolean;//是不是时间到了，就强行执行一次
-  constructor(time:number = 300,force?:boolean){
-    this._last = + new Date();
+export class Throttle {
+  index: any;  // setTimeout的序号
+  private _last: number;
+  time: number;  // 多久执行一次
+  force: boolean; // 是不是时间到了，就强行执行一次
+  constructor(time: number = 300, force?: boolean) {
+    this._last = +new Date();
     this.time = time;
     this.force = force;
   }
-  execute(handler:Function){
+
+  execute(handler: Function) {
     let current;
-    //强制执行 而且时间到了，强制执行一下
-    if(this.force && (current = +new Date()) - this._last > this.time){
+    // 强制执行 而且时间到了，强制执行一下
+    if (this.force && (current = +new Date()) - this._last > this.time) {
       this._last = current;
       handler();
       this._last = current;
     }
-    //不管怎么样都会延迟的
+    // 不管怎么样都会延迟的
     this._doExecute(handler);
   }
-  private _doExecute(handler){
+
+  private _doExecute(handler) {
     clearTimeout(this.index);
-    this.index = setTimeout(handler,this.time);
+    this.index = setTimeout(handler, this.time);
   }
 
-  destroy(){
+  destroy() {
     clearTimeout(this.index);
   }
 }

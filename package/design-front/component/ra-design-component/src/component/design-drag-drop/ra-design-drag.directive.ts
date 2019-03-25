@@ -9,11 +9,11 @@ import {DOCUMENT} from '@angular/common';
 import {ViewportRuler} from '@angular/cdk/overlay';
 
 import {DragDropRegistry} from './drag-drop-registry';
-import {ComponentDragRef, DragRefInterface, RelativeDragRef, FlowDragRef} from './ref/index';
+import {ComponentDragRef, DragRefInterface, RelativeDragRef, FlowDragRef, DynamicUnitDragRef} from './ref/index';
 import {StageBarItemDragRef} from './ref/stage-bar-item-drag-ref';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {DesignDragType} from './interface';
 
-type DesignDragType = 'relative' | 'stage-bar-item' | string;
 
 /** Element that can be moved inside a CdkDropList container. */
 @Directive({
@@ -64,6 +64,9 @@ export class RaDesignDragDirective<T = any> implements AfterViewInit, OnChanges,
         break;
       case 'component':
         this.dragRef = new ComponentDragRef(this);
+        break;
+      case 'dynamic-unit':
+        this.dragRef = new DynamicUnitDragRef(this);
         break;
       default :
         this.dragRef = new FlowDragRef(this);

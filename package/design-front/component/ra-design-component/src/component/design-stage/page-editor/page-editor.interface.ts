@@ -11,7 +11,7 @@ import {HtmlJson, parse, stringify} from 'himalaya';
   selector: 'ra-design-page-editor',
   template: `
     <div class="page-editor" style="">
-      <div class="page-editor__form" designDrop="page-editor" [designData]="htmlJson">
+      <div class="page-editor__form" designDrop="page-editor" [designData]="stageID">
         <ng-template [design-dynamic]="dynamicHtml"></ng-template>
       </div>
       <div class="editor-stage-footer">
@@ -23,7 +23,6 @@ import {HtmlJson, parse, stringify} from 'himalaya';
 export class PageEditorInterface implements OnInit, AfterViewInit, OnDestroy, OnChanges {
   pageInfo: PageInfoModel;
   stageID: string;
-  htmlJson: HtmlJson[];
   private dynamicHtml: string;
 
   constructor(
@@ -60,6 +59,8 @@ export class PageEditorInterface implements OnInit, AfterViewInit, OnDestroy, On
   }
 
   ngOnDestroy() {
-
+    this.PageEditorService.modify(this.pageInfo).subscribe(() => {
+    });
+    this.PageEditorService.deleteHtmlJson(this.stageID);
   }
 }

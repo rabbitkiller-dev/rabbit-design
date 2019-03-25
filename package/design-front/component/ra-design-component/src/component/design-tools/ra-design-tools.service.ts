@@ -7,7 +7,6 @@ import {IconInterface} from './icon/icon.interface';
 import {PropertiesEditorInterface} from './properties-editor/properties-editor.interface';
 import {LocalStorageService} from 'ngx-webstorage';
 import {Subject} from 'rxjs';
-
 export enum ToolsFactory {
   DataSource = 'dataSource',
   Page = 'page',

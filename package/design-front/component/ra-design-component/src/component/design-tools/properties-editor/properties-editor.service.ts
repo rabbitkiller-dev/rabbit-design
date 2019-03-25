@@ -1,33 +1,29 @@
 import {Injectable} from '@angular/core';
 import {HtmlJson} from 'himalaya';
 import {PropertiesEditorInterface} from './properties-editor.interface';
+import {parserDirective} from '../../design-dynamic/parser-directive';
 
 @Injectable({providedIn: 'root'})
 export class PropertiesEditorService {
   PropertiesEditorInterface: PropertiesEditorInterface;
+
   openPropertiePanel(htmlJson: HtmlJson, instan?: any) {
     this.PropertiesEditorInterface.panel = getDirective(htmlJson).join();
     this.PropertiesEditorInterface.createModule();
   }
 }
 
-const DirectiveNames = ['nz-icon', 'nz-input'];
-
 function getDirective(htmlJson: HtmlJson) {
-  const directives = [];
-  htmlJson.attributes.forEach((attr) => {
-    if (DirectiveNames.indexOf(attr.key) !== -1) {
-      directives.push(getDirectiveProperties(attr.key));
-    }
+  return parserDirective(htmlJson).map((directiveName) => {
+    return getDirectiveProperties(directiveName);
   });
-  return directives;
 }
 
-function getDirectiveProperties(directiveName) {
+function getDirectiveProperties(directiveName): string {
   switch (directiveName) {
     case 'nz-icon':
       return 'a';
     case 'nz-input':
-      return 'a';
+      return 'b';
   }
 }

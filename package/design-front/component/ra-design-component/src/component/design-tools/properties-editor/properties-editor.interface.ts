@@ -3,7 +3,7 @@ import {
   Component,
   ComponentRef, ElementRef, ModuleWithComponentFactories,
   NgModule,
-  OnInit,
+  OnInit, ViewChild,
   ViewContainerRef
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
@@ -19,15 +19,16 @@ import {PropertiesEditorService} from './properties-editor.service';
       <i class="fa fa-first-order"></i>
       <label>属性管理</label>
     </div>
+    <ng-template #content></ng-template>
   `,
   styles: []
 })
 export class PropertiesEditorInterface implements OnInit {
   panel: string;
+  @ViewChild('content', {read: ViewContainerRef}) content: ViewContainerRef;
   comRef: ComponentRef<any>;
 
   constructor(
-    private vcRef: ViewContainerRef,
     private compiler: Compiler,
     private PropertiesEditorService: PropertiesEditorService,
   ) {
@@ -57,8 +58,8 @@ export class PropertiesEditorInterface implements OnInit {
       if (this.comRef) {
         this.comRef.destroy();
       }
-      this.vcRef.clear();
-      this.comRef = this.vcRef.createComponent(factory, 0);
+      this.content.clear();
+      this.comRef = this.content.createComponent(factory, 0);
     });
   }
 

@@ -33,8 +33,50 @@ export class PageEditorService {
     this.next(stageID, {type: 'update-dynamic-html', data: this.stringify(stageID, this.getHtmlJson(stageID))});
   }
 
+  insertBefore(path: string, htmlJson: string);
+  insertBefore(path: string, htmlJson: HtmlJson[]);
+  insertBefore(path: string, htmlJson: HtmlJson);
+  insertBefore(path: string, htmlJson: any) {
+    const add = [];
+    if (typeof htmlJson === 'string') {
+      add.push(...parse(htmlJson));
+    } else if (Array.isArray(htmlJson)) {
+      add.push(...htmlJson);
+    } else {
+      add.push(htmlJson);
+    }
+    const stageID: string = path.split('|')[0];
+    const targetNode = this.getNodeJson(path);
+    const targetParentNode = this.getParentNodeJson(path);
+    targetParentNode.children.splice(targetParentNode.children.indexOf(targetNode), 0, ...add);
+    this.next(stageID, {type: 'update-dynamic-html', data: this.stringify(stageID, this.getHtmlJson(stageID))});
+  }
+
+  insertAfter(path: string, htmlJson: string);
+  insertAfter(path: string, htmlJson: HtmlJson[]);
+  insertAfter(path: string, htmlJson: HtmlJson);
+  insertAfter(path: string, htmlJson: any) {
+    const add = [];
+    if (typeof htmlJson === 'string') {
+      add.push(...parse(htmlJson));
+    } else if (Array.isArray(htmlJson)) {
+      add.push(...htmlJson);
+    } else {
+      add.push(htmlJson);
+    }
+    const stageID: string = path.split('|')[0];
+    const targetNode = this.getNodeJson(path);
+    const targetParentNode = this.getParentNodeJson(path);
+    targetParentNode.children.splice(targetParentNode.children.indexOf(targetNode) + 1, 0, ...add);
+    this.next(stageID, {type: 'update-dynamic-html', data: this.stringify(stageID, this.getHtmlJson(stageID))});
+  }
+
   getHtmlJson(stageID: string) {
     return this.htmlJsons.get(stageID);
+  }
+
+  deleteHtmlJson(stageID: string) {
+    return this.htmlJsons.delete(stageID);
   }
 
   getNodeJson(path: string): HtmlJson {
@@ -42,6 +84,17 @@ export class PageEditorService {
     const paths: string[] = path.split('|')[1].split('/');
     let nodeJson: any = {children: this.getHtmlJson(stageID)};
     while (paths.length > 0) {
+      const index = paths.shift();
+      nodeJson = nodeJson.children[index];
+    }
+    return nodeJson;
+  }
+
+  getParentNodeJson(path: string): HtmlJson {
+    const stageID: string = path.split('|')[0];
+    const paths: string[] = path.split('|')[1].split('/');
+    let nodeJson: any = {children: this.getHtmlJson(stageID)};
+    while (paths.length > 1) {
       const index = paths.shift();
       nodeJson = nodeJson.children[index];
     }
@@ -69,7 +122,16 @@ export class PageEditorService {
         });
         node.attributes.push({
           key: 'design-stage-id',
+          value: stageID,
+        });
+      } else if (node.__designPath && node.type === 'element') {
+        node.attributes.push({
+          key: 'design-dynamic-unit',
           value: node.__designPath,
+        });
+        node.attributes.push({
+          key: 'design-stage-id',
+          value: stageID,
         });
       }
       node.children.forEach((childrenNode) => {

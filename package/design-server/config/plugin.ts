@@ -10,10 +10,10 @@ const plugin: EggPlugin = {
       enable: true,
       package: 'egg-validate',
     },
-    // io: {
-    //   enable: true,
-    //   package: 'egg-socket.io',
-    // },
+    io: {
+      enable: true,
+      package: 'egg-socket.io',
+    },
     ejs: {
       enable: true,
       package: 'egg-view-ejs',
