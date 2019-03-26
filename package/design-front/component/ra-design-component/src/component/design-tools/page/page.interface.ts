@@ -12,7 +12,7 @@ import {PageModel, PageType} from './interface';
       <label>页面管理</label>
     </div>
     <ra-design-tree [nzData]="data" (nzDblClick)="onDblclick($event)" (nzContextMenu)="onContextMenu($event)"
-                    (nzTouch)="onTouch($event)"
+                    (nzTouchStart)="onTouchStart($event)"
                     [cdkDrag]="true"></ra-design-tree>
     <ra-design-dialog header="New {{newFileOption.header}} name" *ngIf="newFileOption.visible">
       <nz-form-item>
@@ -58,13 +58,13 @@ export class PageInterface {
     }
   }
 
-  onTouch($event) {
+  onTouchStart($event) {
     const node = $event.node;
     const page: PageModel = $event.node.origin;
     if (page.pageType === PageType.page) {
       this.RaDesignStageService.putStage(StageFactory.PageEditor, {id: node.key, title: node.title});
     } else {
-      node.setExpanded(!node.isExpanded);
+      node.setExpanded(true);
     }
   }
 

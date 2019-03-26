@@ -380,7 +380,6 @@ export class FlowDragRef<T = any> implements DragRefInterface {
       return Promise.resolve();
     }
 
-    console.log('工;');
     return this.NgZone.runOutsideAngular(() => {
       return new Promise(resolve => {
         const handler = ((event: TransitionEvent) => {
@@ -473,7 +472,6 @@ export class FlowDragRef<T = any> implements DragRefInterface {
   protected _getPointerPositionOnPage(event: MouseEvent | TouchEvent): Point {
     // `touches` will be empty for start/end events so we have to fall back to `changedTouches`.
     const point = isTouchEvent(event) ? (event.touches[0] || event.changedTouches[0]) : event;
-
     return {
       x: point.pageX - this._scrollPosition.left,
       y: point.pageY - this._scrollPosition.top

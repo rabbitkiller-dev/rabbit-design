@@ -128,7 +128,7 @@ export class RaDesignTreeNodeComponent implements OnInit, OnChanges, OnDestroy {
   // Output
   @Output() readonly clickNode: EventEmitter<NzFormatEmitEvent> = new EventEmitter();
   @Output() readonly dblClick: EventEmitter<NzFormatEmitEvent> = new EventEmitter();
-  @Output() readonly touchNode: EventEmitter<NzFormatEmitEvent> = new EventEmitter();
+  @Output() readonly touchStartNode: EventEmitter<NzFormatEmitEvent> = new EventEmitter();
   @Output() readonly contextMenu: EventEmitter<NzFormatEmitEvent> = new EventEmitter();
   @Output() readonly clickCheckBox: EventEmitter<NzFormatEmitEvent> = new EventEmitter();
   @Output() readonly clickExpand: EventEmitter<NzFormatEmitEvent> = new EventEmitter();
@@ -232,11 +232,14 @@ export class RaDesignTreeNodeComponent implements OnInit, OnChanges, OnDestroy {
     this.dblClick.emit(this.RaDesignTreeService.formatEvent('dblclick', this.nzTreeNode, event));
   }
 
-  @HostListener('touch', ['$event'])
+  @HostListener('touchstart', ['$event'])
   nzTouch(event: MouseEvent): void {
     event.preventDefault();
     event.stopPropagation();
-    this.touchNode.emit(this.RaDesignTreeService.formatEvent('touch', this.nzTreeNode, event));
+    if (this.nzTreeNode.isSelectable) {
+      this.RaDesignTreeService.setNodeActive(this.nzTreeNode, this.nzMultiple);
+    }
+    this.touchStartNode.emit(this.RaDesignTreeService.formatEvent('touchstart', this.nzTreeNode, event));
   }
 
   /**

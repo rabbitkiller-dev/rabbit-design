@@ -500,6 +500,7 @@ export class RaDesignTreeService {
       case 'click':
       case 'dblclick':
       case 'contextmenu':
+      case 'touchstart':
         Object.assign(emitStructure, {'selectedKeys': this.getSelectedNodeList()});
         Object.assign(emitStructure, {'nodes': this.getSelectedNodeList()});
         Object.assign(emitStructure, {'keys': this.getSelectedNodeList().map(n => n.key)});
