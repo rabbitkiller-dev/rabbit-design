@@ -21,6 +21,15 @@
     page-editor: dynamic component drag style
                  动态组件拖拉拽样式
  */
+.page-editor{
+  .cdk-drag-placeholder{
+    box-shadow: 0 0 0 1px #51c1f8 !important;
+    background-color: rgba(81, 193, 248, 0.2);
+    > *{
+      opacity: 0;
+    }
+  }
+}
 .ant-input {
   &.cdk-drag-preview {
     transition: none;

@@ -36,15 +36,14 @@ import {DesignDragType} from '../design-drag-drop/interface';
     '[class.cdk-drag-dragging]': 'isDragging',
   }
 })
-export class RaDesignDynamicUnitDirective extends RaDesignDragDirective implements OnInit, AfterViewInit {
+export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson> implements OnInit, AfterViewInit {
   @Input('design-stage-id') stageID: string;
   @Input('design-dynamic-unit') path: string;
   type: DesignDragType = 'dynamic-unit';
-  htmlJson: HtmlJson;
   ref: any[] = [];
 
   @HostListener('click', ['$event']) onClick($event) {
-    this.PropertiesEditorService.openPropertiePanel(this.htmlJson);
+    this.PropertiesEditorService.openPropertiePanel(this.data);
   }
 
   constructor(
@@ -65,9 +64,9 @@ export class RaDesignDynamicUnitDirective extends RaDesignDragDirective implemen
   }
 
   ngOnInit(): void {
-    super.ngOnInit();
-    this.htmlJson = this.PageEditorService.getNodeJson(this.path);
+    this.data = this.PageEditorService.getNodeJson(this.path);
     this.getRef();
+    super.ngOnInit();
   }
 
   ngAfterViewInit() {
@@ -75,7 +74,7 @@ export class RaDesignDynamicUnitDirective extends RaDesignDragDirective implemen
   }
 
   getRef() {
-    const directives = parserDirective(this.htmlJson);
+    const directives = parserDirective(this.data);
     directives.forEach((directives) => {
       if (directives === 'nz-icon') {
         this.ref.push(this.Injector.get(NzIconDirective, null, InjectFlags.SkipSelf));

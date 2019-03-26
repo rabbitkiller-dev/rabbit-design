@@ -19,7 +19,7 @@ const activeCapturingEventOptions = normalizePassiveListenerOptions({
 });
 
 @Injectable({providedIn: 'root'})
-export class DragDropRegistry<I extends DragRefInterface> implements OnDestroy {
+export class DragDropRegistry<I extends DragRefInterface<any>> implements OnDestroy {
   private _document: Document;
 
   /** Registered drop container instances. */

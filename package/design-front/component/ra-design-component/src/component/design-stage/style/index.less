@@ -9,74 +9,7 @@ ra-design-stage {
   flex-direction: column;
   overflow: hidden;
   // stage的上方上任务栏
-  .stage-bar {
-    display: flex;
-    position: relative;
-    height: 32px;
-    background: @back-extra-color;
-    user-select: none;
-    border-bottom: 2px solid @back-color;
-    box-shadow: 0px 2px 5px #000;
-    &:before {
-      content: '';
-      position: absolute;
-      top: 26px;
-      left: 0;
-      width: 100%;
-      background: @back-light-color;
-      height: 4px;
-      z-index: 4;
-      pointer-events: none;
-    }
-    &:after {
-      content: '';
-      position: absolute;
-      top: 24px;
-      left: 0;
-      width: 100%;
-      border-top: 2px solid @back-color;
-    }
-  }
-  .stage-bar-item {
-    position: relative;
-    top: 3px;
-    z-index: 2;
-    display: inline-block;
-    min-width: 140px;
-    height: 29px;
-    text-align: center;
-    color: @text-color;
-    padding-left: 15px;
-    padding-right: 15px;
-    margin-left: -10px;
-    font-size: 16px;
-    border: 2px solid @back-color;
-    border-top-left-radius: 50px 60px;
-    border-top-right-radius: 50px 60px;
-    background: @back-extra-color;
-    span {
-      padding-left: 5px;
-      padding-right: 5px;
-    }
-    [nz-icon] {
-      font-size: 16px;
-    }
-    [nz-icon][type="close"] {
-      font-size: 16px;
-      color: @text-light-color;
-    }
-    [nz-icon][type="close"]:hover {
-      color: @primary-extra;
-    }
-    &.is-select {
-      color: @primary-extra;
-      background: @back-light-color;
-      z-index: 3;
-    }
-    &:first-of-type {
-      margin-left: 10px;
-    }
-  }
+  @import "./stage-bar";
 }
 
 // stage 拖拉拽样式

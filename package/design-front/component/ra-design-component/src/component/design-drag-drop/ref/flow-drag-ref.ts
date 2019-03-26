@@ -72,7 +72,7 @@ export class FlowDragRef<T = any> implements DragRefInterface {
   private _pointerUpSubscription = Subscription.EMPTY;
 
   /** Coordinates within the element at which the user picked up the element. */
-  private _pickupPositionInElement: Point;
+  protected _pickupPositionInElement: Point;
 
   /** Coordinates on the page at which the user picked up the element. */
   private _pickupPositionOnPage: Point;
@@ -95,7 +95,7 @@ export class FlowDragRef<T = any> implements DragRefInterface {
   private _initialTransform?: string;
 
   /** Cached scroll position on the page when the element was picked up. */
-  private _scrollPosition: { top: number, left: number };
+  protected _scrollPosition: { top: number, left: number };
 
   /** Whether starting to drag this element is disabled. */
   get disabled(): boolean {
@@ -478,11 +478,11 @@ export class FlowDragRef<T = any> implements DragRefInterface {
     };
   }
 
-  protected findDrag(eventTarget: MouseEvent | TouchEvent, type: string): DragRefInterface {
+  protected findDrag(eventTarget: MouseEvent | TouchEvent, type: string): RaDesignDragDirective {
     const element = this.findElementUp(eventTarget);
     if (element && element.type === 'drag' && !!type && element.dragDrop.type === type) {
       const drag: RaDesignDragDirective = element.dragDrop as any;
-      return drag.dragRef;
+      return drag;
     } else {
       return null;
     }

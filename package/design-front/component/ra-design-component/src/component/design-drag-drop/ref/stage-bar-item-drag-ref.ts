@@ -13,8 +13,7 @@ export class StageBarItemDragRef extends FlowDragRef {
   _updateActiveDropContainer(event: MouseEvent | TouchEvent, {x, y}: Point) {
     const drag = this.findDrag(event, 'stage-bar-item');
     if (drag) {
-      // console.log(drag);
-      const target = drag.getRootElement();
+      const target = drag.dragRef.getRootElement();
       const clientRect = target.getBoundingClientRect();
 
       const isHorizontal = true; // this._orientation === 'horizontal';

@@ -35,14 +35,18 @@ export class PageEditorService {
 
   insertBefore(path: string, htmlJson: string);
   insertBefore(path: string, htmlJson: HtmlJson[]);
-  insertBefore(path: string, htmlJson: HtmlJson);
-  insertBefore(path: string, htmlJson: any) {
+  insertBefore(path: string, htmlJson: HtmlJson, origin?: string);
+  insertBefore(path: string, htmlJson: any, origin?: string) {
     const add = [];
     if (typeof htmlJson === 'string') {
       add.push(...parse(htmlJson));
     } else if (Array.isArray(htmlJson)) {
       add.push(...htmlJson);
     } else {
+      if (origin) {
+        const originParentNode = this.getParentNodeJson(path);
+        originParentNode.children.splice(originParentNode.children.indexOf(htmlJson), 1);
+      }
       add.push(htmlJson);
     }
     const stageID: string = path.split('|')[0];
@@ -54,14 +58,18 @@ export class PageEditorService {
 
   insertAfter(path: string, htmlJson: string);
   insertAfter(path: string, htmlJson: HtmlJson[]);
-  insertAfter(path: string, htmlJson: HtmlJson);
-  insertAfter(path: string, htmlJson: any) {
+  insertAfter(path: string, htmlJson: HtmlJson, origin: string);
+  insertAfter(path: string, htmlJson: any, origin?: string) {
     const add = [];
     if (typeof htmlJson === 'string') {
       add.push(...parse(htmlJson));
     } else if (Array.isArray(htmlJson)) {
       add.push(...htmlJson);
     } else {
+      if (origin) {
+        const originParentNode = this.getParentNodeJson(path);
+        originParentNode.children.splice(originParentNode.children.indexOf(htmlJson), 1);
+      }
       add.push(htmlJson);
     }
     const stageID: string = path.split('|')[0];
