@@ -14,6 +14,7 @@ export const PageContextMenuKey = {
     ComponentDir: 'ComponentDir',
   },
   Copy: 'Copy',
+  Cut: 'Cut',
   Delete: 'Delete',
 };
 export const PageContextMenu: {
@@ -41,11 +42,19 @@ export const PageContextMenu: {
   },
   Copy: {
     label: 'Copy',
+    icon: 'rabbit-design:icon-copy',
     shortcut: 'Ctrl+c',
     key: PageContextMenuKey.Copy
   },
+  Cut: {
+    label: 'Copy',
+    icon: 'rabbit-design:icon-cut',
+    shortcut: 'Ctrl+c',
+    key: PageContextMenuKey.Cut
+  },
   Delete: {
     label: 'Delete',
+    icon: 'rabbit-design:icon-delete',
     shortcut: 'Delete',
     key: PageContextMenuKey.Delete
   },
@@ -102,6 +111,7 @@ export class PageService {
       case PageType.page:
         return [
           PageContextMenu.Copy,
+          PageContextMenu.Cut,
           PageContextMenu.Delete,
         ];
       case PageType.dir:
@@ -113,6 +123,8 @@ export class PageService {
               PageContextMenu.Dir,
             ]
           },
+          PageContextMenu.Copy,
+          PageContextMenu.Cut,
           PageContextMenu.Delete,
         ];
       case PageType.router2:
@@ -124,6 +136,8 @@ export class PageService {
               PageContextMenu.Dir,
             ]
           },
+          PageContextMenu.Copy,
+          PageContextMenu.Cut,
           PageContextMenu.Delete,
         ];
       case PageType.component:
@@ -148,6 +162,8 @@ export class PageService {
               PageContextMenu.ComponentDir,
             ]
           },
+          PageContextMenu.Copy,
+          PageContextMenu.Cut,
           PageContextMenu.Delete,
         ];
     }

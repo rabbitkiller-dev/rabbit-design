@@ -1,4 +1,4 @@
-import {Column, Entity, PrimaryColumn} from 'typeorm';
+import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import {Base} from './base';
 
 /**
@@ -8,7 +8,7 @@ import {Base} from './base';
 @Entity()
 export class Icon extends Base {
 
-  @PrimaryColumn('uuid')
+  @PrimaryGeneratedColumn('uuid')
   iconID: string; // 图标ID
 
   @Column()
@@ -17,7 +17,7 @@ export class Icon extends Base {
   @Column()
   fontClass: string; // 字体类名称
 
-  @Column()
+  @Column('longtext')
   svg: string; // svg图标
 
 }

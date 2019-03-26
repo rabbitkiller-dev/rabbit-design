@@ -8,7 +8,7 @@ declare module 'egg' {
       success: boolean,
       data: any,
       code?: string,
-    };
+    } | string;
     session: {
       token: string,
     };

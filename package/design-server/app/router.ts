@@ -24,5 +24,7 @@ export default (app: Application) => {
   /**
    * tools-icon
    */
-  router.get('/api/tools-icon/fetchIconfont', controller.toolsIcon.fetchIconfont); // 获取iconfont字体
+  router.get('/api/tools-icon', controller.toolsIcon.index); // 获取字体
+  router.get('/api/tools-icon/fetchIconfont', controller.toolsIcon.fetchIconfont); // 获取iconfont
+  router.get('/api/icons/assets/:namespace/:filename', controller.toolsIcon.getIcon);
 };

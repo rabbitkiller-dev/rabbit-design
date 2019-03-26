@@ -1,6 +1,7 @@
 import {Service} from 'egg';
 import {EntityManager} from 'typeorm';
 import {Icon} from '../entity/icon';
+import {ErrorService} from '../lib';
 import {parse, stringify} from '../lib/himalaya';
 
 /**
@@ -15,7 +16,7 @@ export default class ToolsPageService extends Service {
     return iconList;
   }
 
-  async fetchIconfont(entityManager: EntityManager, params: {scriptUrl: string, projectID: string}): Promise<Icon[]> {
+  async fetchIconfont(entityManager: EntityManager, params: { scriptUrl: string, projectID: string }): Promise<Icon[]> {
     const result = await this.ctx.curl(params.scriptUrl, {dataType: 'text'});
     const scriptContext: string = result.data;
     const svgText = scriptContext.match('\\<svg>.*\\</svg>');
@@ -48,11 +49,24 @@ export default class ToolsPageService extends Service {
         data: icon,
         ctx: this.ctx,
       });
+      iconEntity.author = this.config.user.userID;
       iconEntity.projectID = params.projectID;
       await iconRepo.save(iconEntity);
       iconList.push(iconEntity);
     }
     return iconList;
+  }
+
+  async getIcon(entityManager: EntityManager, params: { fontClass: string, namespace?: string, projectID: string }): Promise<Icon> {
+    const iconRepo = entityManager.getRepository(Icon);
+    const icon = await iconRepo.findOne({
+      projectID: params.projectID,
+      fontClass: params.fontClass,
+    });
+    if (!icon) {
+      throw ErrorService.RuntimeErrorNotFind();
+    }
+    return icon;
   }
 
   async generate(icons: Array<{ name: string, symbol: string }>): Promise<string> {

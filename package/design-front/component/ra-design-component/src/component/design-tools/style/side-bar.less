@@ -26,11 +26,12 @@
     border-left: 2px solid @back-color;
     [nz-icon] {
       margin-right: 4px;
+      margin-bottom: -4px; // 这个是没有对齐所以加这个属性
     }
     .side-bar-label {
       border-right: 2px solid transparent;
       .side-bar-label-container{
-        transform: translate(1em, -1em) rotate(90deg);
+        transform: translate(0.8em, -0.5em) rotate(90deg);
       }
       .side-bar-label-content {
         transform: rotate(0deg);

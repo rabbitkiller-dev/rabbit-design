@@ -18,7 +18,7 @@ import {PageModel, PageType} from './interface';
       <nz-form-item>
         <nz-form-label>enter a new {{newFileOption.header}} name</nz-form-label>
         <nz-form-control>
-          <input nz-input [(ngModel)]="newFileOption.filename" nzSize="small" autofocus="true"
+          <input design-input [(ngModel)]="newFileOption.filename" autofocus="true"
                  (keydown.enter)="newFile($event)"
                  (keydown.esc)="newHidden()">
         </nz-form-control>

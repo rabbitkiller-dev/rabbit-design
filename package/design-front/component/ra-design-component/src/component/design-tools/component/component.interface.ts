@@ -29,7 +29,7 @@ export class ComponentInterface implements OnInit {
             key: 'button',
             title: 'button',
             isLeaf: true,
-            // icon: 'rabbit-design:icon-iconfont'
+            icon: 'rabbit-design:icon-button'
           },
         ]
       },
