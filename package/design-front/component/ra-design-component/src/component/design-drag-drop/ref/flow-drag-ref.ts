@@ -348,10 +348,11 @@ export class FlowDragRef<T = any> implements DragRefInterface {
     }
 
     this._animatePreviewToPlaceholder().then(() => {
-    this._cleanupDragArtifacts(event);
-    this.DragDropRegistry.stopDragging(this);
+      this._cleanupDragArtifacts(event);
+      this.DragDropRegistry.stopDragging(this);
     });
   };
+
   /**
    * Animates the preview element from its current position to the location of the drop placeholder.
    * @returns Promise that resolves when the animation completes.
@@ -500,7 +501,7 @@ export class FlowDragRef<T = any> implements DragRefInterface {
 
   /** Find element up */
   protected findElementUp(eventTarget: MouseEvent | TouchEvent): {
-    type: 'drop' | 'drag',
+    type: 'drop' | 'drag' | 'placeholder',
     dragDrop: RaDesignDropDirective | RaDesignDragDirective
   } {
     let currentElement: HTMLElement = eventTarget.target as HTMLElement;
@@ -515,10 +516,15 @@ export class FlowDragRef<T = any> implements DragRefInterface {
   }
 
   protected filterElementUp(currentElement: HTMLElement & any): {
-    type: 'drop' | 'drag',
+    type: 'drop' | 'drag' | 'placeholder',
     dragDrop: RaDesignDropDirective | RaDesignDragDirective
   } {
-    if (currentElement.classList.contains('cdk-drop-list') && currentElement.designDragDrop) {
+    if (currentElement.classList.contains('cdk-drag-placeholder')) {
+      return {
+        type: 'placeholder',
+        dragDrop: null,
+      };
+    } else if (currentElement.classList.contains('cdk-drop-list') && currentElement.designDragDrop) {
       const drop: RaDesignDropDirective = currentElement.designDragDrop;
       return {
         type: 'drop',

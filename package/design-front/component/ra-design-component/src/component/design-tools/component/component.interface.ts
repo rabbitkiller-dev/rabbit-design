@@ -15,9 +15,8 @@ export class ComponentInterface implements OnInit {
   ngOnInit() {
     this.nzData = [
       {
-        key: 'forms',
-        title: 'forms',
-        // 'icon': 'fa-file',
+        key: 'general',
+        title: 'general',
         expanded: true,
         children: [
           {
@@ -26,6 +25,19 @@ export class ComponentInterface implements OnInit {
             isLeaf: true,
             icon: 'rabbit-design:icon-iconfont'
           },
+          {
+            key: 'button',
+            title: 'button',
+            isLeaf: true,
+            // icon: 'rabbit-design:icon-iconfont'
+          },
+        ]
+      },
+      {
+        key: 'forms',
+        title: 'forms',
+        expanded: true,
+        children: [
           {
             key: 'input',
             title: 'input',
