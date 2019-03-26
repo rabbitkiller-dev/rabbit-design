@@ -43,16 +43,16 @@ export class PageEditorService {
     } else if (Array.isArray(htmlJson)) {
       add.push(...htmlJson);
     } else {
-      if (origin) {
-        const originParentNode = this.getParentNodeJson(path);
-        originParentNode.children.splice(originParentNode.children.indexOf(htmlJson), 1);
-      }
       add.push(htmlJson);
     }
     const stageID: string = path.split('|')[0];
     const targetNode = this.getNodeJson(path);
     const targetParentNode = this.getParentNodeJson(path);
     targetParentNode.children.splice(targetParentNode.children.indexOf(targetNode), 0, ...add);
+    if (origin) {
+      const originParentNode = this.getParentNodeJson(path);
+      originParentNode.children.splice(originParentNode.children.indexOf(htmlJson), 1);
+    }
     this.next(stageID, {type: 'update-dynamic-html', data: this.stringify(stageID, this.getHtmlJson(stageID))});
   }
 
@@ -66,16 +66,16 @@ export class PageEditorService {
     } else if (Array.isArray(htmlJson)) {
       add.push(...htmlJson);
     } else {
-      if (origin) {
-        const originParentNode = this.getParentNodeJson(path);
-        originParentNode.children.splice(originParentNode.children.indexOf(htmlJson), 1);
-      }
       add.push(htmlJson);
     }
     const stageID: string = path.split('|')[0];
     const targetNode = this.getNodeJson(path);
     const targetParentNode = this.getParentNodeJson(path);
     targetParentNode.children.splice(targetParentNode.children.indexOf(targetNode) + 1, 0, ...add);
+    if (origin) {
+      const originParentNode = this.getParentNodeJson(path);
+      originParentNode.children.splice(originParentNode.children.indexOf(htmlJson), 1);
+    }
     this.next(stageID, {type: 'update-dynamic-html', data: this.stringify(stageID, this.getHtmlJson(stageID))});
   }
 

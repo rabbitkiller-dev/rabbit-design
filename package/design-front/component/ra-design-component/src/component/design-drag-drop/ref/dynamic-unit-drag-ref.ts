@@ -22,7 +22,7 @@ export class DynamicUnitDragRef<HtmlJson> extends FlowDragRef {
       const target = drag.dragRef.getRootElement();
       const clientRect = target.getBoundingClientRect();
 
-      const isHorizontal = true; // this._orientation === 'horizontal';
+      const isHorizontal = false; // this._orientation === 'horizontal';
       const index = isHorizontal ?
         // Round these down since most browsers report client rects with
         // sub-pixel precision, whereas the pointer coordinates are rounded to pixels.
