@@ -6,6 +6,7 @@ import {RaDesignDropDirective} from '../ra-design-drop.directive';
 import {PageEditorService} from '../../design-stage/page-editor/page-editor.service';
 import {extendStyles, toggleNativeDragInteractions} from '../../cdk-drag-drop/drag-styling';
 import {RaDesignDynamicUnitDirective} from '../../design-dynamic/ra-design-dynamic-unit.directive';
+import {ComponentService} from '../../design-tools/component/component.service';
 
 export class ComponentDragRef extends FlowDragRef<TreeNodeModel> {
   lastType: 'page-editor' | 'dynamic-unit' = null;
@@ -110,7 +111,8 @@ export class ComponentDragRef extends FlowDragRef<TreeNodeModel> {
   /** Creates an element that will be shown instead of the current element while dragging. */
   protected _createPlaceholderElement(event: MouseEvent | TouchEvent): HTMLElement {
     let placeholder: HTMLElement;
-    placeholder = ComponentDragRefUtil.getPlaceholder(this.data.key);
+    const componentService = this.Injector.get(ComponentService);
+    placeholder = componentService.getPlaceholder(this.data.key);
     placeholder.classList.add('cdk-drag-placeholder');
     return placeholder;
   }
@@ -145,7 +147,6 @@ export class ComponentDragRef extends FlowDragRef<TreeNodeModel> {
 }
 
 const ComponentDragRefUtil = new (class {
-  private placeholderTemp: Map<string, HTMLElement> = new Map<string, HTMLElement>();
 
   pageEditor_mouseMove(this: ComponentDragRef, drop: RaDesignDropDirective, event: MouseEvent | TouchEvent, {x, y}: Point) {
     const target: HTMLElement = drop.ElementRef.nativeElement;
@@ -155,7 +156,8 @@ const ComponentDragRefUtil = new (class {
 
   pageEditor_mouseUp(this: ComponentDragRef) {
     const pageEditorService: PageEditorService = this.Injector.get(PageEditorService);
-    pageEditorService.addRoot(this.targetDrop.data, ComponentDragRefUtil.getHtmlJson(this.data.key));
+    const componentService: ComponentService = this.Injector.get(ComponentService);
+    pageEditorService.addRoot(this.targetDrop.data, componentService.getHtmlJson(this.data.key));
   }
 
   dynamicUnit_mouseMove(this: ComponentDragRef, drop: RaDesignDropDirective, event: MouseEvent | TouchEvent, {x, y}: Point) {
@@ -177,46 +179,12 @@ const ComponentDragRefUtil = new (class {
   }
   dynamicUnit_mouseUp(this: ComponentDragRef) {
     const pageEditorService: PageEditorService = this.Injector.get(PageEditorService);
+    const componentService: ComponentService = this.Injector.get(ComponentService);
     const targetDrag: RaDesignDynamicUnitDirective = this.targetDrag as any;
     if (this.isInsertBefore) {
-      pageEditorService.insertBefore(targetDrag.path, ComponentDragRefUtil.getHtmlJson(this.data.key));
+      pageEditorService.insertBefore(targetDrag.path, componentService.getHtmlJson(this.data.key));
     } else {
-      pageEditorService.insertAfter(targetDrag.path, ComponentDragRefUtil.getHtmlJson(this.data.key));
-    }
-  }
-
-  getPlaceholder(key: string): HTMLElement {
-    if (this.placeholderTemp.get(key)) {
-      return this.placeholderTemp.get(key);
-    }
-
-    const div = document.createElement('div');
-    switch (key) {
-      case 'icon':
-        div.innerHTML = '<i class="anticon anticon-rabbit-design:icon-iconfont cdk-drag-placeholder"><svg viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1127" xmlns:xlink="http://www.w3.org/1999/xlink" width="1em" height="1em" fill="currentColor" class="ng-tns-c4-24" data-icon="rabbit-design:icon-iconfont" aria-hidden="true"><defs><style type="text/css"></style></defs><path d="M1.703827 0h1022.296173v1022.296173H1.703827z" fill="#E94618"></path><path d="M501.799188 865.690622c-38.777398-23.478735-30.512133-64.416586-55.495348-90.18356-45.955621-47.388539-126.495521-49.818196-173.427434-104.054416-157.356938-181.844339-6.25986-521.808932 291.356113-471.721531 173.442769 29.18826 305.577957 272.184652 187.299993 443.973005-50.872865 73.896679-148.708313 79.747621-208.112239 159.553171-17.406296 17.273398-8.592399 60.780619-41.621085 62.433331zM252.06416 470.276686c-6.982283 131.959694 180.363714 125.277285 180.363714 6.937983 0-60.245617-54.101617-108.603634-124.866663-83.245577-49.779008 17.835661-53.437125 37.388779-55.497051 76.307594z m381.53797 97.11984c158.950017 44.573817 162.964233-230.536306 0-173.427434-77.096466 27.017584-68.110483 154.329238 0 173.427434z m-159.551468 83.247281c25.407468 5.697597 32.996313-68.502363 6.93628-69.374722-14.470602 14.327481-48.605072 59.225025-6.93628 69.374722z m62.429924 0h13.879374c17.914037-28.413018-6.004286-65.42014-34.686509-69.374722 2.320612 27.740007-8.91783 69.037364 20.807135 69.374722z" fill="#FFFFFF"></path></svg></i>'
-        break;
-      case 'button':
-        div.innerHTML = '<button class="ant-btn ant-btn-primary cdk-drag-placeholder">Button</button>';
-        break;
-      case 'input':
-        div.innerHTML = '<input class="ant-input cdk-drag-placeholder">';
-        break;
-    }
-    this.placeholderTemp.set(key, div.children[0] as HTMLElement);
-    return div.children[0] as HTMLElement;
-  }
-
-  getHtmlJson(key): string {
-    switch (key) {
-      case 'icon':
-        return '<i nz-icon type="rabbit-design:icon-iconfont"><i  type="rabbit-design:icon-iconfont"></i></i>';
-        break;
-      case 'button':
-        return '<button nz-button nzType="primary">Button</button>';
-        break;
-      case 'input':
-        return '<input nz-input>';
-        break;
+      pageEditorService.insertAfter(targetDrag.path, componentService.getHtmlJson(this.data.key));
     }
   }
 })

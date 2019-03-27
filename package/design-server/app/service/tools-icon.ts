@@ -17,6 +17,8 @@ export default class ToolsPageService extends Service {
   }
 
   async fetchIconfont(entityManager: EntityManager, params: { scriptUrl: string, projectID: string }): Promise<Icon[]> {
+    const iconRepo = entityManager.getRepository(Icon);
+    // 获取icon并格式化 { name: string, viewBox: string, symbol: string }
     const result = await this.ctx.curl(params.scriptUrl, {dataType: 'text'});
     const scriptContext: string = result.data;
     const svgText = scriptContext.match('\\<svg>.*\\</svg>');
@@ -40,8 +42,12 @@ export default class ToolsPageService extends Service {
         });
       });
     }
+    // 删除现在的icon TODO 保存好版本
+    await iconRepo.delete({
+      projectID: params.projectID,
+    })
+    // 保存icon
     const iconList: Icon[] = [];
-    const iconRepo = entityManager.getRepository(Icon);
     for (const icon of icons) {
       const iconEntity = new Icon();
       iconEntity.fontClass = icon.name;

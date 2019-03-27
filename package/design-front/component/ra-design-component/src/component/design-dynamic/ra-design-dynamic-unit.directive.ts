@@ -12,14 +12,14 @@ import {
   Inject,
   InjectFlags,
   NgZone,
-  Renderer2, AfterViewInit
+  Renderer2, AfterViewInit, ChangeDetectorRef, HostBinding
 } from '@angular/core';
-import {NzIconDirective} from './icon';
+import {NzHeaderComponent, NzIconDirective} from 'ng-zorro-antd';
+import {NzInputDirective} from 'ng-zorro-antd';
 import {PageEditorService} from '../design-stage/page-editor/page-editor.service';
 import {HtmlJson} from 'himalaya';
 import {PropertiesEditorService} from '../design-tools/properties-editor/properties-editor.service';
 import {parserDirective} from './parser-directive';
-import {NzInputDirective} from './input';
 import {RaDesignDragDirective} from '../design-drag-drop/ra-design-drag.directive';
 import {DragDropRegistry} from '../design-drag-drop/drag-drop-registry';
 import {DragRefInterface} from '../design-drag-drop/ref';
@@ -39,6 +39,7 @@ import {DesignDragType} from '../design-drag-drop/interface';
 export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson> implements OnInit, AfterViewInit {
   @Input('design-stage-id') stageID: string;
   @Input('design-dynamic-unit') path: string;
+  @HostBinding('class.dynamic-blank') isBlank: boolean = false;
   type: DesignDragType = 'dynamic-unit';
   ref: any[] = [];
 
@@ -52,6 +53,7 @@ export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson
     public PageEditorService: PageEditorService,
     public PropertiesEditorService: PropertiesEditorService,
     public Injector: Injector,
+    public ChangeDetectorRef: ChangeDetectorRef,
     public DragDropRegistry: DragDropRegistry<DragRefInterface>,
     public NgZone: NgZone,
     public Directionality: Directionality,
@@ -65,12 +67,14 @@ export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson
 
   ngOnInit(): void {
     this.data = this.PageEditorService.getNodeJson(this.path);
+    this.isBlank = this.data.children.length < 1;
     this.getRef();
     super.ngOnInit();
   }
 
   ngAfterViewInit() {
     super.ngAfterViewInit();
+    this.ChangeDetectorRef.markForCheck();
   }
 
   getRef() {
@@ -78,8 +82,13 @@ export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson
     directives.forEach((directives) => {
       if (directives === 'nz-icon') {
         this.ref.push(this.Injector.get(NzIconDirective, null, InjectFlags.SkipSelf));
-      } else {
+      } else if (directives === 'nz-input') {
         this.ref.push(this.Injector.get(NzInputDirective, null, InjectFlags.SkipSelf));
+      } else if (directives === 'nz-header') {
+        this.ref.push(this.Injector.get(NzHeaderComponent, null, InjectFlags.SkipSelf));
+        if (this.isBlank) {
+          this.ElementRef.nativeElement.innerText = 'Header';
+        }
       }
     });
   }

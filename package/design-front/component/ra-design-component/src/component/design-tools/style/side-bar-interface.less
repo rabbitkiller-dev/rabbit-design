@@ -1,5 +1,6 @@
 //侧边栏界面
 .ra-design-side-bar-interface {
+  .reset-component;
   display: flex;
   flex-direction: column;
   background: #1c2b36;
@@ -12,9 +13,30 @@
 
   >*{
     min-width:350px;
+    max-width: 350px;
     display: flex;
     flex-direction: column;
     flex: 1;
     overflow: auto;
+  }
+}
+.ra-design-side-bar-interface-title{
+  height: 30px;
+  line-height: 30px;
+  color: #FFFFFF;
+  //background: @ra-back-extra-color;
+  //border-bottom:1px solid @ra-is-primary;
+  padding-left: 10px;
+  label{
+    margin-left: 3px;
+  }
+}
+.ra-design-side-bar-interface-content{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  [nz-icon]{
+    font-size: 24px;
+    margin: 10px;
   }
 }
