@@ -8,9 +8,8 @@ import {RouterModule} from '@angular/router';
 // Rendering ElComponent dependence
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Throttle} from './throttle';
-import {NzIconModule} from './icon';
-import {NzInputModule} from './input';
 import {RaDesignDynamicUnitModule} from './ra-design-dynamic-unit.module';
+import {NgZorroAntdModule} from 'ng-zorro-antd';
 
 @Directive({
   selector: '[design-dynamic]',
@@ -61,7 +60,7 @@ export class RaDesignDynamicDirective implements OnInit {
 
     @NgModule({
       imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule, RaDesignDynamicUnitModule,
-        NzIconModule, NzInputModule],
+        NgZorroAntdModule],
       declarations: [master, pageCCC],
       // declarations: [master, __this.createComponent('page-cccc', '<div>嵌套页面</div>')],
     })

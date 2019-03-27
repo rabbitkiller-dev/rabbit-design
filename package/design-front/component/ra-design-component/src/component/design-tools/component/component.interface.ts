@@ -34,6 +34,68 @@ export class ComponentInterface implements OnInit {
         ]
       },
       {
+        key: 'layout',
+        title: 'layout',
+        expanded: true,
+        children: [
+          {
+            key: 'grid',
+            title: 'grid',
+            isLeaf: true,
+            icon: 'rabbit-design:icon-iconfont'
+          },
+          {
+            key: 'layout',
+            title: 'layout',
+            isLeaf: true,
+            icon: 'rabbit-design:icon-button'
+          },
+        ]
+      },
+      {
+        key: 'navigation',
+        title: 'navigation',
+        expanded: true,
+        children: [
+          {
+            key: 'affix',
+            title: 'affix',
+            isLeaf: true,
+            icon: 'rabbit-design:icon-iconfont'
+          },
+          {
+            key: 'breadcrumb',
+            title: 'breadcrumb',
+            isLeaf: true,
+            icon: 'rabbit-design:icon-button'
+          },
+          {
+            key: 'dropdown',
+            title: 'dropdown',
+            isLeaf: true,
+            icon: 'rabbit-design:icon-button'
+          },
+          {
+            key: 'menu',
+            title: 'menu',
+            isLeaf: true,
+            icon: 'rabbit-design:icon-button'
+          },
+          {
+            key: 'pagination',
+            title: 'pagination',
+            isLeaf: true,
+            icon: 'rabbit-design:icon-button'
+          },
+          {
+            key: 'steps',
+            title: 'steps',
+            isLeaf: true,
+            icon: 'rabbit-design:icon-button'
+          },
+        ]
+      },
+      {
         key: 'forms',
         title: 'forms',
         expanded: true,

@@ -32,7 +32,6 @@ export class RaInputDirective {
   }
 
   constructor(@Optional() @Self() public ngControl: NgControl, renderer: Renderer2, elementRef: ElementRef) {
-    console.log('inp')
     renderer.addClass(elementRef.nativeElement, 'ant-input');
   }
 }

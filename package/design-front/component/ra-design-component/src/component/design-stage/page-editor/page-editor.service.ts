@@ -142,6 +142,9 @@ export class PageEditorService {
           value: stageID,
         });
       }
+      if (!node.children) {
+        return;
+      }
       node.children.forEach((childrenNode) => {
         childrenNode.__designPath = `${node.__designPath}/${node.children.indexOf(childrenNode)}`;
       });
