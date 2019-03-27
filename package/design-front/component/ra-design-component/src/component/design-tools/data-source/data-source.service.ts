@@ -11,7 +11,7 @@ export class DataSourceService {
   }
 
   index(): Observable<any> {
-    return this.HttpClient.get('/api/data-source').pipe(map((result: any) => {
+    return this.HttpClient.get('api/data-source').pipe(map((result: any) => {
       return result.data;
     }));
   }

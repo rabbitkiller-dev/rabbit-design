@@ -22,6 +22,7 @@ declare module 'egg' {
   // 扩展你的配置
   interface EggAppConfig {
     typeorm: ConnectionOptions;
+    apiPrefix: string;
     user: {
       userID: string,
       projectID: string,

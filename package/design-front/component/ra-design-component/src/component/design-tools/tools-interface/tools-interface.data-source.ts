@@ -132,7 +132,7 @@ export class ToolsInterfaceDataSource implements OnInit, OnDestroy {
               public TableObjectService: TableObjectService,
               public HttpClient: HttpClient) {
     this.toolsDatabaseData = this.RuntimeDataService.toolsDatabaseData;
-    this.HttpClient.get('/api/dataSource/findAll').subscribe((result: any) => {
+    this.HttpClient.get('api/dataSource/findAll').subscribe((result: any) => {
       this.toolsDatabaseData.tree = [result.data];
     });
   }
@@ -215,7 +215,7 @@ export class ToolsInterfaceDataSource implements OnInit, OnDestroy {
   handleNewConnectionOk() {
     this.newConnection.loading = true;
     this.newConnection.validateForm.value.type = 'mysql';
-    this.HttpClient.post('/api/dataSource/connection', this.newConnection.validateForm.value).subscribe((result: any) => {
+    this.HttpClient.post('api/dataSource/connection', this.newConnection.validateForm.value).subscribe((result: any) => {
       this.newConnection.loading = false;
       this.newConnection.visible = false;
       TreeHelper.forEach(this.toolsDatabaseData.tree, (node) => {
@@ -234,7 +234,7 @@ export class ToolsInterfaceDataSource implements OnInit, OnDestroy {
   handleNewTableOk() {
     this.newTable.loading = true;
     this.newTable.validateForm.value.connectionID = this.toolsDatabaseData.selection[0].connectionID;
-    this.HttpClient.post('/api/dataSource/table', this.newTable.validateForm.value).subscribe((result: any) => {
+    this.HttpClient.post('api/dataSource/table', this.newTable.validateForm.value).subscribe((result: any) => {
       this.newTable.loading = false;
       this.newTable.visible = false;
       TreeHelper.forEach(this.toolsDatabaseData.tree, (node) => {

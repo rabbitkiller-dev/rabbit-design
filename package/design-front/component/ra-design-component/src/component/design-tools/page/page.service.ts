@@ -73,7 +73,7 @@ export class PageService {
    * Http api
    */
   index(): Observable<QueryToolsPageTreeDto[]> {
-    return this.HttpClient.get('/api/tools-page', {}).pipe(map((result: Result<QueryToolsPageTreeDto[]>) => {
+    return this.HttpClient.get('api/tools-page', {}).pipe(map((result: Result<QueryToolsPageTreeDto[]>) => {
       const forEachTree = (node: any[], call) => {
         node.forEach((_n) => {
           if (call(_n)) {
@@ -95,13 +95,13 @@ export class PageService {
   }
 
   add(page: PageModel): Observable<QueryToolsPageTreeNodeDto> {
-    return this.HttpClient.post('/api/tools-page', page).pipe(map((result: Result<QueryToolsPageTreeNodeDto>) => {
+    return this.HttpClient.post('api/tools-page', page).pipe(map((result: Result<QueryToolsPageTreeNodeDto>) => {
       return result.data;
     }));
   }
 
   delete(pageID: string): Observable<void> {
-    return this.HttpClient.delete('/api/tools-page', {params: {pageID: pageID}}).pipe(map((result: Result<void>) => {
+    return this.HttpClient.delete('api/tools-page', {params: {pageID: pageID}}).pipe(map((result: Result<void>) => {
       return result.data;
     }));
   }

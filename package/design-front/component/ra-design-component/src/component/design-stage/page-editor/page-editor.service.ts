@@ -174,13 +174,13 @@ export class PageEditorService {
    */
 
   findOne(id: string): Observable<PageInfoModel> {
-    return this.HttpClient.get(`/api/tools-page/page-info/${id}`).pipe(map((result: any) => {
+    return this.HttpClient.get(`api/tools-page/page-info/${id}`).pipe(map((result: any) => {
       return result.data;
     }));
   }
 
   modify(page: PageInfoModel): Observable<PageInfoModel> {
-    return this.HttpClient.put(`/api/tools-page/page-info`, page).pipe(map((result: any) => {
+    return this.HttpClient.put(`api/tools-page/page-info`, page).pipe(map((result: any) => {
       return result.data;
     }));
   }

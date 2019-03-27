@@ -12,12 +12,12 @@ export class HomeComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit() {
-    this.HttpCliend.get('/api/auth').subscribe((result: any) => {
+    this.HttpCliend.get('api/auth').subscribe((result: any) => {
       if (result.code = 'sys.notLogin') {
-        this.HttpCliend.post('/api/auth/login', {account: 'rabbit@rabbit.com', password: 'rabbit'}).subscribe((_result: any) => {
+        this.HttpCliend.post('api/auth/login', {account: 'rabbit@rabbit.com', password: 'rabbit'}).subscribe((_result: any) => {
           this.user = _result.data;
         }, (_result) => {
-          this.HttpCliend.post('/api/auth/register', {userName: 'rabbit', email: 'rabbit@rabbit.com', password: 'rabbit'})
+          this.HttpCliend.post('api/auth/register', {userName: 'rabbit', email: 'rabbit@rabbit.com', password: 'rabbit'})
             .subscribe((__result: any) => {
               console.log(__result);
           });

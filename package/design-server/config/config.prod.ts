@@ -2,6 +2,7 @@ import { EggAppConfig, PowerPartial } from 'egg';
 
 export default () => {
   const config: PowerPartial<EggAppConfig> = {};
+  config.apiPrefix = '/design/';
   config.typeorm = {
     type: 'mysql',
     host: 'localhost',
