@@ -99,7 +99,7 @@ export class FlowDragRef<T = any> implements DragRefInterface {
 
   /** Whether starting to drag this element is disabled. */
   get disabled(): boolean {
-    return this.RaDesignDragDirective.disabled;
+    return this.RaDesignDragDirective.disabled && this.DragDropRegistry.isDragging(this);
   }
 
 

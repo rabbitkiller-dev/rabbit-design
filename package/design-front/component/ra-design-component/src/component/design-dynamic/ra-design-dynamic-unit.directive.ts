@@ -14,7 +14,7 @@ import {
   NgZone,
   Renderer2, AfterViewInit, ChangeDetectorRef, HostBinding
 } from '@angular/core';
-import {NzHeaderComponent, NzIconDirective} from 'ng-zorro-antd';
+import {NzHeaderComponent, NzIconDirective, NzLayoutComponent} from 'ng-zorro-antd';
 import {NzInputDirective} from 'ng-zorro-antd';
 import {PageEditorService} from '../design-stage/page-editor/page-editor.service';
 import {HtmlJson} from 'himalaya';
@@ -27,6 +27,7 @@ import {Directionality} from '@angular/cdk/bidi';
 import {ViewportRuler} from '@angular/cdk/overlay';
 import {DOCUMENT} from '@angular/common';
 import {DesignDragType} from '../design-drag-drop/interface';
+import {DynamicUnitInterface} from './interface';
 
 
 @Directive({
@@ -36,12 +37,17 @@ import {DesignDragType} from '../design-drag-drop/interface';
     '[class.cdk-drag-dragging]': 'isDragging',
   }
 })
-export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson> implements OnInit, AfterViewInit {
+export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson> implements OnInit, AfterViewInit, DynamicUnitInterface {
   @Input('design-stage-id') stageID: string;
   @Input('design-dynamic-unit') path: string;
   @HostBinding('class.dynamic-blank') isBlank: boolean = false;
   type: DesignDragType = 'dynamic-unit';
   ref: any[] = [];
+  lookUnit = false;
+  lookDrag = false;
+  lookDrop = false;
+  mergeParent = false;
+  isContainer = false;
 
   @HostListener('click', ['$event']) onClick($event) {
     this.PropertiesEditorService.openPropertiePanel(this.data);
@@ -89,6 +95,26 @@ export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson
         if (this.isBlank) {
           this.ElementRef.nativeElement.innerText = 'Header';
         }
+        this.mergeParent = true;
+        this.isContainer = true;
+      } else if (directives === 'nz-content') {
+        this.ref.push(this.Injector.get(NzHeaderComponent, null, InjectFlags.SkipSelf));
+        if (this.isBlank) {
+          this.ElementRef.nativeElement.innerText = 'Content';
+        }
+        this.mergeParent = true;
+        this.isContainer = true;
+      } else if (directives === 'nz-footer') {
+        this.ref.push(this.Injector.get(NzHeaderComponent, null, InjectFlags.SkipSelf));
+        if (this.isBlank) {
+          this.ElementRef.nativeElement.innerText = 'Footer';
+        }
+        this.mergeParent = true;
+        this.isContainer = true;
+      } else if (directives === 'nz-layout') {
+        this.ref.push(this.Injector.get(NzLayoutComponent, null, InjectFlags.SkipSelf));
+        this.lookDrop = true;
+        this.isContainer = true;
       }
     });
   }

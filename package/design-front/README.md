@@ -15,6 +15,8 @@ ToolsTabModel改名为sideBar
 拖拽
      组合
      拖拽容器
+     lookDrop bug 假设拖拽到lookDrop窗口下面的组件,就会变成排序,那就会无视lookDrop插入到lookDrop元素下
+     解决ng组件容器 找到容器append的目标元素
 滚动放大    transform: translate3d(0px, 0px, 0px) scale(5, 5);
         transform-origin: 0 0;
         display: block;

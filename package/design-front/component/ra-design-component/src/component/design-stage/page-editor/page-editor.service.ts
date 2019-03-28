@@ -5,13 +5,17 @@ import {HttpClient} from '@angular/common/http';
 import {DesignHtmlJson, PageEditorServiceEvent, PageInfoModel} from './interface';
 import {map} from 'rxjs/operators';
 import {RaDesignTreeService} from '../../design-tree/ra-design-tree.service';
+import {RaDesignKeyMapService} from '../../design-key-map/ra-design-key-map.service';
 
 @Injectable({providedIn: 'root'})
 export class PageEditorService {
   private subjects: Map<string, Subject<PageEditorServiceEvent>> = new Map();
   private htmlJsons: Map<string, HtmlJson[]> = new Map();
 
-  constructor(public HttpClient: HttpClient) {
+  constructor(
+    public HttpClient: HttpClient,
+    public RaDesignKeyMapService: RaDesignKeyMapService,
+  ) {
   }
 
   addRoot(stageID: string, htmlJson: string);

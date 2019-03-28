@@ -6,6 +6,7 @@ import {
 import {PageEditorService} from './page-editor.service';
 import {DesignHtmlJson, PageInfoModel} from './interface';
 import {HtmlJson, parse, stringify} from 'himalaya';
+import {RaDesignKeyMapService} from '../../design-key-map/ra-design-key-map.service';
 
 @Component({
   selector: 'ra-design-page-editor',
@@ -27,6 +28,7 @@ export class PageEditorInterface implements OnInit, AfterViewInit, OnDestroy, On
 
   constructor(
     public PageEditorService: PageEditorService,
+    public RaDesignKeyMapService: RaDesignKeyMapService,
   ) {
   }
 

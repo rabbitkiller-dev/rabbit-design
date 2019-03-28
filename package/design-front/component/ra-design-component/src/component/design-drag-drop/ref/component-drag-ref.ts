@@ -7,12 +7,14 @@ import {PageEditorService} from '../../design-stage/page-editor/page-editor.serv
 import {extendStyles, toggleNativeDragInteractions} from '../../cdk-drag-drop/drag-styling';
 import {RaDesignDynamicUnitDirective} from '../../design-dynamic/ra-design-dynamic-unit.directive';
 import {ComponentService} from '../../design-tools/component/component.service';
+import {DynamicUnitInterface} from '../../design-dynamic/interface';
 
 export class ComponentDragRef extends FlowDragRef<TreeNodeModel> {
   lastType: 'page-editor' | 'dynamic-unit' = null;
   targetDrag: RaDesignDragDirective;
   targetDrop: RaDesignDropDirective;
   isInsertBefore: boolean;
+
   constructor(public DesignDragDirective: RaDesignDragDirective) {
     super(DesignDragDirective);
   }
@@ -68,10 +70,13 @@ export class ComponentDragRef extends FlowDragRef<TreeNodeModel> {
     } else if (currentElement.classList.contains('cdk-drag') && currentElement.designDragDrop) {
       const drag: RaDesignDragDirective = currentElement.designDragDrop;
       if (drag.type === 'dynamic-unit') {
-        return {
-          type: 'drag',
-          dragDrop: drag,
-        };
+        const dynamicUnit: DynamicUnitInterface = drag as any;
+        if (!dynamicUnit.lookDrop) {
+          return {
+            type: 'drag',
+            dragDrop: drag,
+          };
+        }
       }
     }
   }
@@ -160,10 +165,15 @@ const ComponentDragRefUtil = new (class {
     pageEditorService.addRoot(this.targetDrop.data, componentService.getHtmlJson(this.data.key));
   }
 
-  dynamicUnit_mouseMove(this: ComponentDragRef, drop: RaDesignDropDirective, event: MouseEvent | TouchEvent, {x, y}: Point) {
+  dynamicUnit_mouseMove(this: ComponentDragRef, drop: DynamicUnitInterface, event: MouseEvent | TouchEvent, {x, y}: Point) {
     const target: HTMLElement = drop.ElementRef.nativeElement;
     const parent: HTMLElement = target.parentElement;
     const clientRect = target.getBoundingClientRect();
+    console.log(drop.isContainer, drop.data.tagName);
+    if (drop.isContainer) {
+      target.append(this._placeholder);
+      return;
+    }
     const isHorizontal = false; // this._orientation === 'horizontal';
     const index = isHorizontal ?
       // Round these down since most browsers report client rects with
@@ -177,6 +187,7 @@ const ComponentDragRefUtil = new (class {
     }
     this.isInsertBefore = index;
   }
+
   dynamicUnit_mouseUp(this: ComponentDragRef) {
     const pageEditorService: PageEditorService = this.Injector.get(PageEditorService);
     const componentService: ComponentService = this.Injector.get(ComponentService);

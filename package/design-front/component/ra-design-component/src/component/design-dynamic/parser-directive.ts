@@ -1,7 +1,7 @@
 import {HtmlJson} from 'himalaya';
 
 const DirectiveNames = ['nz-icon', 'nz-input'];
-const componentName = ['nz-header', 'nz-'];
+const componentName = ['nz-header', 'nz-content', 'nz-footer', 'nz-layout'];
 
 export function parserDirective(htmlJson: HtmlJson): string[] {
   const result = [];

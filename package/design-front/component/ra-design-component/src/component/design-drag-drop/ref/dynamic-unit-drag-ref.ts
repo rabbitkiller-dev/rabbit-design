@@ -3,14 +3,12 @@ import {FlowDragRef} from './flow-drag-ref';
 import {Point} from './interface/point';
 import {PageEditorService} from '../../design-stage/page-editor/page-editor.service';
 import {RaDesignDynamicUnitDirective} from '../../design-dynamic/ra-design-dynamic-unit.directive';
-import {DragRefInterface} from './interface/drag-ref.interface';
-import {HtmlJson} from 'himalaya';
 
 export class DynamicUnitDragRef<HtmlJson> extends FlowDragRef {
   targetDrag: RaDesignDynamicUnitDirective;
   isInsertBefore: boolean;
   RaDesignDynamicUnitDirective: RaDesignDynamicUnitDirective;
-
+  placeholderMask: HTMLElement;
   constructor(public DesignDragDirective: RaDesignDragDirective) {
     super(DesignDragDirective);
     this.RaDesignDynamicUnitDirective = DesignDragDirective as RaDesignDynamicUnitDirective;
@@ -42,19 +40,22 @@ export class DynamicUnitDragRef<HtmlJson> extends FlowDragRef {
 
   _createPlaceholderElement(event: MouseEvent | TouchEvent) {
     const placeholder: HTMLElement = super._createPlaceholderElement(event);
-    /*    const placeholderMask: HTMLElement = this.Document.createElement('div');
-        const rect: any = this._rootElement.getBoundingClientRect();
-        placeholderMask.classList.add('cdk-drag-placeholder-mask');
-        placeholder.getBoundingClientRect();
-        extendStyles(placeholderMask.style, {
-          // It's important that we disable the pointer events on the preview, because
-          // it can throw off the `document.elementFromPoint` calls in the `CdkDropList`.
-          pointerEvents: 'none',
-          position: 'fixed',
-          top: rect.top,
-          left: rect.left,
-          zIndex: '1000',
-        });*/
+    // const placeholderMask: HTMLElement = this.placeholderMask = this.Document.createElement('div');
+    // const rect: ClientRect = this._rootElement.getBoundingClientRect();
+    // placeholderMask.classList.add('cdk-drag-placeholder-mask');
+    // placeholder.getBoundingClientRect();
+    // extendStyles(placeholderMask.style, {
+    //   // It's important that we disable the pointer events on the preview, because
+    //   // it can throw off the `document.elementFromPoint` calls in the `CdkDropList`.
+    //   pointerEvents: 'none',
+    //   position: 'fixed',
+    //   top: rect.top + 'px',
+    //   left: rect.left + 'px',
+    //   bottom: rect.bottom + 'px',
+    //   right: window.screenX - rect.right + 'px',
+    //   zIndex: '1000',
+    // });
+    // this.Document.body.append(placeholderMask);
     return placeholder;
   }
 
