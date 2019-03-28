@@ -21,3 +21,10 @@ export interface SideBarServiceEvent {
   type: 'review';
   data?: any;
 }
+
+export interface RaShowInterface {
+  raShowInterface();
+}
+export interface RaHiddenInterface {
+  raHiddenInterface();
+}

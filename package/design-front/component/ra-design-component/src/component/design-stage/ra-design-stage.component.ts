@@ -43,7 +43,7 @@ export class RaDesignStageComponent implements OnInit, AfterViewInit {
     public RaDesignStageService: RaDesignStageService,
   ) {
     this.RaDesignStageService.subscribe((event) => {
-      if (event.type === 'open') {
+      if (event.type === 'put') {
         this.reviewInterface();
       }
     });
@@ -68,6 +68,7 @@ export class RaDesignStageComponent implements OnInit, AfterViewInit {
           const a = this.main.createComponent(this.RaDesignStageService.getFactory(stage.factory));
           a.instance.stageID = stage.id;
           this.componentRefMap.set(stage.id, this.main.get(0));
+          this.RaDesignStageService.next({type: 'open', data: stage});
         }
       }
     });

@@ -23,6 +23,17 @@ export class RaDesignTreeService {
   halfCheckedNodeList: TreeNodeModel[] = [];
   matchedNodeList: TreeNodeModel[] = [];
 
+  static forEachTree(node: any[], call) {
+      node.forEach((_n) => {
+        if (call(_n)) {
+          return true;
+        }
+        if (_n.children && _n.children.length > 0) {
+          RaDesignTreeService.forEachTree(_n.children, call);
+        }
+      });
+  }
+
   /**
    * reset tree nodes will clear default node list
    */

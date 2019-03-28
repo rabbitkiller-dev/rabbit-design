@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import {RaDesignToolsService, ToolsFactory} from './ra-design-tools.service';
 import {NzIconService} from 'ng-zorro-antd';
-import {ToolsTabModel} from './interface';
+import {RaHiddenInterface, RaShowInterface, ToolsTabModel} from './interface';
 
 @Component({
   selector: 'ra-design-tools',
@@ -24,13 +24,14 @@ export class RaDesignToolsComponent implements OnInit, AfterViewInit {
   leftBottomToolsTabModel: ToolsTabModel;
   rightBottomToolsTabModel: ToolsTabModel;
   leftTopToolsTabModel: ToolsTabModel;
-  componentRefMap: Map<ToolsFactory, ViewRef> = new Map();
+  viewRefMap: Map<ToolsFactory, ViewRef> = new Map();
+  componentRefMap: Map<ToolsFactory, ComponentRef<RaHiddenInterface & RaShowInterface>> = new Map();
 
   constructor(public ViewContainerRef: ViewContainerRef,
               public NzIconService: NzIconService,
               public RaDesignToolsService: RaDesignToolsService) {
     this.RaDesignToolsService.subscribe((event) => {
-      if (event.type) {
+      if (event.type === 'review') {
         this.reviewInterface();
       }
     });
@@ -54,7 +55,8 @@ export class RaDesignToolsComponent implements OnInit, AfterViewInit {
       const factoryName: ToolsFactory = ToolsFactory[key];
       const factory = this.RaDesignToolsService.getFactory(factoryName);
       const componentRef = this.ViewContainerRef.createComponent(factory);
-      this.componentRefMap.set(factoryName, this.ViewContainerRef.detach(0));
+      this.componentRefMap.set(factoryName, componentRef);
+      this.viewRefMap.set(factoryName, this.ViewContainerRef.detach(0));
     }
   }
 
@@ -69,8 +71,13 @@ export class RaDesignToolsComponent implements OnInit, AfterViewInit {
           case 'left-top':
             if (this.leftTopToolsTabModel !== sideBar) {
               this.leftTopToolsTabModel = sideBar;
-              this.leftTop.detach(0);
-              this.leftTop.insert(this.componentRefMap.get(sideBar.factory));
+              if (this.leftTop.detach(0) && this.componentRefMap.get(this.leftTopToolsTabModel.factory).instance.raHiddenInterface) {
+                this.componentRefMap.get(this.leftTopToolsTabModel.factory).instance.raHiddenInterface();
+              }
+              this.leftTop.insert(this.viewRefMap.get(sideBar.factory));
+              if (this.componentRefMap.get(sideBar.factory).instance.raShowInterface) {
+                this.componentRefMap.get(sideBar.factory).instance.raShowInterface();
+              }
             }
             leftTopToolsTabModel = this.leftTopToolsTabModel;
             break;
@@ -78,40 +85,68 @@ export class RaDesignToolsComponent implements OnInit, AfterViewInit {
             if (this.leftBottomToolsTabModel !== sideBar) {
               this.leftBottomToolsTabModel = sideBar;
               this.leftBottom.detach(0);
-              this.leftBottom.insert(this.componentRefMap.get(sideBar.factory));
+              if (this.leftBottom.detach(0) && this.componentRefMap.get(this.leftBottomToolsTabModel.factory).instance.raHiddenInterface) {
+                this.componentRefMap.get(this.leftBottomToolsTabModel.factory).instance.raHiddenInterface();
+              }
+              this.leftBottom.insert(this.viewRefMap.get(sideBar.factory));
+              if (this.componentRefMap.get(sideBar.factory).instance.raShowInterface) {
+                this.componentRefMap.get(sideBar.factory).instance.raShowInterface();
+              }
             }
             leftBottomToolsTabModel = this.leftBottomToolsTabModel;
             break;
           case 'right-top':
             if (this.rightTopToolsTabModel !== sideBar) {
               rightTopToolsTabModel = this.rightTopToolsTabModel = sideBar;
-              this.rightTop.detach(0);
-              this.rightTop.insert(this.componentRefMap.get(sideBar.factory));
+              if (this.rightTop.detach(0) && this.componentRefMap.get(this.rightTopToolsTabModel.factory).instance.raHiddenInterface) {
+                this.componentRefMap.get(this.rightTopToolsTabModel.factory).instance.raHiddenInterface();
+              }
+              this.rightTop.insert(this.viewRefMap.get(sideBar.factory));
+              if (this.componentRefMap.get(sideBar.factory).instance.raShowInterface) {
+                this.componentRefMap.get(sideBar.factory).instance.raShowInterface();
+              }
             }
             break;
           case 'right-bottom':
             if (this.rightBottomToolsTabModel !== sideBar) {
               rightBottomToolsTabModel = this.rightBottomToolsTabModel = sideBar;
-              this.rightBottom.detach(0);
-              this.rightBottom.insert(this.componentRefMap.get(sideBar.factory));
+              if (this.rightBottom.detach(0) && this.componentRefMap.get(this.rightBottomToolsTabModel.factory).instance.raHiddenInterface) {
+                this.componentRefMap.get(this.rightBottomToolsTabModel.factory).instance.raHiddenInterface();
+              }
+              this.rightBottom.insert(this.viewRefMap.get(sideBar.factory));
+              if (this.componentRefMap.get(sideBar.factory).instance.raShowInterface) {
+                this.componentRefMap.get(sideBar.factory).instance.raShowInterface();
+              }
             }
             break;
         }
       }
     });
-    if (!leftTopToolsTabModel) {
+    if (!leftTopToolsTabModel && this.leftTopToolsTabModel) {
+      if (this.componentRefMap.get(this.leftTopToolsTabModel.factory).instance.raHiddenInterface) {
+        this.componentRefMap.get(this.leftTopToolsTabModel.factory).instance.raHiddenInterface();
+      }
       this.leftTopToolsTabModel = null;
       this.leftTop.detach(0);
     }
-    if (!leftBottomToolsTabModel) {
+    if (!leftBottomToolsTabModel && this.leftBottomToolsTabModel) {
+      if (this.componentRefMap.get(this.leftBottomToolsTabModel.factory).instance.raHiddenInterface) {
+        this.componentRefMap.get(this.leftBottomToolsTabModel.factory).instance.raHiddenInterface();
+      }
       this.leftBottomToolsTabModel = null;
       this.leftBottom.detach(0);
     }
-    if (!rightTopToolsTabModel) {
+    if (!rightTopToolsTabModel && this.rightTopToolsTabModel) {
+      if (this.componentRefMap.get(this.rightTopToolsTabModel.factory).instance.raHiddenInterface) {
+        this.componentRefMap.get(this.rightTopToolsTabModel.factory).instance.raHiddenInterface();
+      }
       this.rightTopToolsTabModel = null;
       this.rightTop.detach(0);
     }
-    if (!rightBottomToolsTabModel) {
+    if (!rightBottomToolsTabModel && this.rightBottomToolsTabModel) {
+      if (this.componentRefMap.get(this.rightBottomToolsTabModel.factory).instance.raHiddenInterface) {
+        this.componentRefMap.get(this.rightBottomToolsTabModel.factory).instance.raHiddenInterface();
+      }
       this.rightBottomToolsTabModel = null;
       this.rightBottom.detach(0);
     }

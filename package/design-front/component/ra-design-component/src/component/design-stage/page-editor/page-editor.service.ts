@@ -4,6 +4,7 @@ import {Observable, Observer, Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {DesignHtmlJson, PageEditorServiceEvent, PageInfoModel} from './interface';
 import {map} from 'rxjs/operators';
+import {RaDesignTreeService} from '../../design-tree/ra-design-tree.service';
 
 @Injectable({providedIn: 'root'})
 export class PageEditorService {
@@ -111,17 +112,7 @@ export class PageEditorService {
 
   stringify(stageID: string, htmlJson: HtmlJson[]): string {
     const copyHtmlJson = JSON.parse(JSON.stringify(htmlJson));
-    const forEachTree = (node: any[], call) => {
-      node.forEach((_n) => {
-        if (call(_n)) {
-          return true;
-        }
-        if (_n.children && _n.children.length > 0) {
-          forEachTree(_n.children, call);
-        }
-      });
-    };
-    forEachTree(copyHtmlJson, (node: DesignHtmlJson) => {
+    RaDesignTreeService.forEachTree(copyHtmlJson, (node: DesignHtmlJson) => {
       if (!node.__designPath && node.type === 'element') {
         node.__designPath = `${stageID}|${copyHtmlJson.indexOf(node).toString()}`;
         node.attributes.push({

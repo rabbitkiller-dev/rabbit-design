@@ -4,7 +4,7 @@ import {DesignMenuModel} from '../../design-menu/interface';
 import {map} from 'rxjs/operators';
 import {PageModel, PageType, QueryToolsPageTreeDto, QueryToolsPageTreeNodeDto, Result} from './interface';
 import {Observable} from 'rxjs';
-import {TreeNodeModel} from '../../design-tree';
+import {RaDesignTreeService, TreeNodeModel} from '../../design-tree';
 
 export const PageContextMenuKey = {
   New: {
@@ -74,22 +74,11 @@ export class PageService {
    */
   index(): Observable<QueryToolsPageTreeDto[]> {
     return this.HttpClient.get('api/tools-page', {}).pipe(map((result: Result<QueryToolsPageTreeDto[]>) => {
-      const forEachTree = (node: any[], call) => {
-        node.forEach((_n) => {
-          if (call(_n)) {
-            return true;
-          }
-          if (_n.children && _n.children.length > 0) {
-            forEachTree(_n.children, call);
-          }
-        });
-      };
-      forEachTree(result.data, (node) => {
+      RaDesignTreeService.forEachTree(result.data, (node) => {
         if (node.children) {
           node.children.sort(this.sort);
         }
       });
-      // result.data[0].children.sort(this.sort);
       return result.data;
     }));
   }

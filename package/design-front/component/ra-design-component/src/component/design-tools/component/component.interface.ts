@@ -45,8 +45,8 @@ export class ComponentInterface implements OnInit {
             icon: 'rabbit-design:icon-iconfont'
           },
           {
-            key: 'layout',
-            title: 'layout',
+            key: 'top-center-bottom',
+            title: 'top-center-bottom',
             isLeaf: true,
             icon: 'rabbit-design:icon-button'
           },

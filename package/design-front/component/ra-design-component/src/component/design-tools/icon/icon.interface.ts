@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {IconService} from './icon.service';
 
 @Component({
@@ -9,7 +9,7 @@ import {IconService} from './icon.service';
     </div>
     <div class="ra-design-side-bar-interface-content">
       <li *ngFor="let icon of icons">
-        <i nz-icon [type]="icon.fontClass"></i>
+        <i nz-icon [type]="'rabbit-design:'+icon.fontClass"></i>
         <span class="anticon-class">{{icon.fontClass}}</span>
       </li>
     </div>

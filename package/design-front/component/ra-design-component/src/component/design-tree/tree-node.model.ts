@@ -140,11 +140,5 @@ export class TreeNodeModel {
   public clearChildren(): void {
     this.children = [];
   }
-  //
-  // public forEachNode(call: (node: TreeNodeModel) => boolean | undefined) {
-  //   const forEachTree = (node: TreeNodeModel[]) => {
-  //
-  //   }
-  //
-  // }
+
 }

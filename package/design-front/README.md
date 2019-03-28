@@ -12,6 +12,9 @@ preview http://47.105.84.128/design/
 tools拖拽的排序
 tools拖拽拉大拉小
 ToolsTabModel改名为sideBar
+拖拽
+     组合
+     拖拽容器
 滚动放大    transform: translate3d(0px, 0px, 0px) scale(5, 5);
         transform-origin: 0 0;
         display: block;

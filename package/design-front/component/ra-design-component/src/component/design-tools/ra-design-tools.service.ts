@@ -7,11 +7,13 @@ import {IconInterface} from './icon/icon.interface';
 import {PropertiesEditorInterface} from './properties-editor/properties-editor.interface';
 import {LocalStorageService} from 'ngx-webstorage';
 import {Subject} from 'rxjs';
+import {StructureInterface} from './structure/structure.interface';
 export enum ToolsFactory {
   DataSource = 'dataSource',
   Page = 'page',
   Component = 'component',
   Icon = 'icon',
+  Structure = 'structure',
   propertiesEditor = 'propertiesEditor',
 }
 
@@ -55,6 +57,15 @@ export class RaDesignToolsService extends Subject<SideBarServiceEvent> {
       icon: 'rabbit-design:icon-component'
     });
     this.factory.set(ToolsFactory.Component, this.ComponentFactoryResolver.resolveComponentFactory(ComponentInterface));
+    // 结构
+    this.toolsList.push({
+      factory: ToolsFactory.Structure,
+      label: 'structure',
+      position: 'left-bottom',
+      select: false,
+      icon: 'rabbit-design:icon-structure',
+    });
+    this.factory.set(ToolsFactory.Structure, this.ComponentFactoryResolver.resolveComponentFactory(StructureInterface));
     // 图标
     this.toolsList.push({
       factory: ToolsFactory.Icon,
