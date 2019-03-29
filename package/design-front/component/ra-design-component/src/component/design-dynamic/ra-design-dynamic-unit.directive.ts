@@ -43,7 +43,7 @@ export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson
   @HostBinding('class.dynamic-blank') isBlank: boolean = false;
   type: DesignDragType = 'dynamic-unit';
   ref: any[] = [];
-  lookUnit = false;
+  @HostBinding('class.dynamic-look-unit') lookUnit = false;
   lookDrag = false;
   lookDrop = false;
   mergeParent = false;
@@ -51,7 +51,7 @@ export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson
 
   @HostListener('click', ['$event']) onClick($event) {
     // 判断是否已经点击,然后结束冒泡
-    if ($event['designDynamicUnit_click']) {
+    if ($event['designDynamicUnit_click'] || this.lookUnit || this.mergeParent) {
       return;
     }
     this.PageEditorService.select(this.path);
