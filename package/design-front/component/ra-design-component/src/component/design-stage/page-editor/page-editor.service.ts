@@ -1,22 +1,43 @@
 import {Injectable} from '@angular/core';
 import {HtmlJson, parse, stringify} from 'himalaya';
-import {Observable, Observer, Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {DesignHtmlJson, PageEditorServiceEvent, PageInfoModel} from './interface';
 import {map} from 'rxjs/operators';
 import {RaDesignTreeService} from '../../design-tree/ra-design-tree.service';
-import {RaDesignKeyMapService} from '../../design-key-map/ra-design-key-map.service';
 
 @Injectable({providedIn: 'root'})
 export class PageEditorService {
   private subjects: Map<string, Subject<PageEditorServiceEvent>> = new Map();
   private htmlJsons: Map<string, HtmlJson[]> = new Map();
+  private selections: Map<string, Set<string>> = new Map();
 
   constructor(
     public HttpClient: HttpClient,
-    public RaDesignKeyMapService: RaDesignKeyMapService,
   ) {
   }
+
+  /**
+   * editor runtime api
+   */
+  select(path: string) {
+    const stageID: string = path.split('|')[0];
+    const selection = this.selections.get(stageID);
+    if (selection) {
+      selection.clear();
+      selection.add(path);
+    } else {
+      this.selections.set(stageID, new Set([path]));
+    }
+  }
+
+  getSelection(stageID: string): string[] {
+    return Array.from(this.selections.get(stageID)) || [];
+  }
+
+  /**
+   * htmlJson change api
+   */
 
   addRoot(stageID: string, htmlJson: string);
   addRoot(stageID: string, htmlJson: HtmlJson[]);
@@ -35,7 +56,11 @@ export class PageEditorService {
       this.htmlJsons.set(stageID, []);
     }
     this.htmlJsons.get(stageID).push(...add);
-    this.next(stageID, {type: 'update-dynamic-html', data: this.stringify(stageID, this.getHtmlJson(stageID))});
+    this.next(stageID, {
+      stageID: stageID,
+      type: 'update-dynamic-html',
+      data: this.stringify(stageID, this.getHtmlJson(stageID))
+    });
   }
 
   insertBefore(path: string, htmlJson: string);
@@ -58,7 +83,11 @@ export class PageEditorService {
       const originParentNode = this.getParentNodeJson(path);
       originParentNode.children.splice(originParentNode.children.indexOf(htmlJson), 1);
     }
-    this.next(stageID, {type: 'update-dynamic-html', data: this.stringify(stageID, this.getHtmlJson(stageID))});
+    this.next(stageID, {
+      stageID: stageID,
+      type: 'update-dynamic-html',
+      data: this.stringify(stageID, this.getHtmlJson(stageID))
+    });
   }
 
   insertAfter(path: string, htmlJson: string);
@@ -81,7 +110,37 @@ export class PageEditorService {
       const originParentNode = this.getParentNodeJson(path);
       originParentNode.children.splice(originParentNode.children.indexOf(htmlJson), 1);
     }
-    this.next(stageID, {type: 'update-dynamic-html', data: this.stringify(stageID, this.getHtmlJson(stageID))});
+    this.next(stageID, {
+      stageID: stageID,
+      type: 'update-dynamic-html',
+      data: this.stringify(stageID, this.getHtmlJson(stageID))
+    });
+  }
+
+  append(path: string, htmlJson: string);
+  append(path: string, htmlJson: HtmlJson[]);
+  append(path: string, htmlJson: HtmlJson, origin: string);
+  append(path: string, htmlJson: any, origin?: string) {
+    const add = [];
+    if (typeof htmlJson === 'string') {
+      add.push(...parse(htmlJson));
+    } else if (Array.isArray(htmlJson)) {
+      add.push(...htmlJson);
+    } else {
+      add.push(htmlJson);
+    }
+    const stageID: string = path.split('|')[0];
+    const targetNode = this.getNodeJson(path);
+    targetNode.children.push(...add);
+    if (origin) {
+      const originParentNode = this.getParentNodeJson(path);
+      originParentNode.children.splice(originParentNode.children.indexOf(htmlJson), 1);
+    }
+    this.next(stageID, {
+      stageID: stageID,
+      type: 'update-dynamic-html',
+      data: this.stringify(stageID, this.getHtmlJson(stageID))
+    });
   }
 
   getHtmlJson(stageID: string) {
@@ -103,6 +162,23 @@ export class PageEditorService {
     return nodeJson;
   }
 
+  deleteNodeJson(path: string) {
+    const stageID = path.split('|')[0];
+    const parent = this.getParentNodeJson(path);
+    const target = this.getNodeJson(path);
+    // 删除
+    parent.children.splice(parent.children.indexOf(target), 1);
+    // 删除选中
+    const selection = this.selections.get(stageID);
+    selection.delete(path);
+    // 更新视图
+    this.next(stageID, {
+      stageID: stageID,
+      type: 'update-dynamic-html',
+      data: this.stringify(stageID, this.getHtmlJson(stageID))
+    });
+  }
+
   getParentNodeJson(path: string): HtmlJson {
     const stageID: string = path.split('|')[0];
     const paths: string[] = path.split('|')[1].split('/');
@@ -114,6 +190,9 @@ export class PageEditorService {
     return nodeJson;
   }
 
+  /**
+   * Renderer api
+   */
   stringify(stageID: string, htmlJson: HtmlJson[]): string {
     const copyHtmlJson = JSON.parse(JSON.stringify(htmlJson));
     RaDesignTreeService.forEachTree(copyHtmlJson, (node: DesignHtmlJson) => {

@@ -50,7 +50,14 @@ export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson
   isContainer = false;
 
   @HostListener('click', ['$event']) onClick($event) {
-    this.PropertiesEditorService.openPropertiePanel(this.data);
+    // 判断是否已经点击,然后结束冒泡
+    if ($event['designDynamicUnit_click']) {
+      return;
+    }
+    this.PageEditorService.select(this.path);
+    // 用事件冒泡告诉他们已经点击了 用这种方法不停止冒泡
+    $event['designDynamicUnit_click'] = true;
+    // this.PropertiesEditorService.openPropertiePanel(this.data, this.path);
   }
 
   constructor(

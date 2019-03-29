@@ -58,7 +58,7 @@ export class ComponentService {
       case 'input':
         return '<input nz-input>';
         break;
-      case 'layout':
+      case 'top-center-bottom':
         return `<nz-layout>
   <nz-header></nz-header>
   <nz-content></nz-content>

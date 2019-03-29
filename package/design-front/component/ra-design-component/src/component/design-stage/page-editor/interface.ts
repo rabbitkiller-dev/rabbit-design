@@ -6,8 +6,10 @@ export interface PageInfoModel extends PageModel {
 }
 
 export interface PageEditorServiceEvent {
-  type: 'update-dynamic-html';
+  type: 'update-dynamic-html' | 'selectChange';
   data: any;
+  stageID: string;
+  selection?: string[];
 }
 
 export interface DesignHtmlJson extends HtmlJson {

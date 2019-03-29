@@ -76,6 +76,7 @@ export class RaDesignStageComponent implements OnInit, AfterViewInit {
 
   select(tools: StageTabModel) {
     this.RaDesignStageService.showStage(tools.id);
+    this.reviewInterface();
   }
 
   drop(event: CdkDragDrop<string[]>) {

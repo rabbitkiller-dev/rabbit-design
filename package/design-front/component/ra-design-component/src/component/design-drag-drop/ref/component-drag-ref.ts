@@ -8,12 +8,13 @@ import {extendStyles, toggleNativeDragInteractions} from '../../cdk-drag-drop/dr
 import {RaDesignDynamicUnitDirective} from '../../design-dynamic/ra-design-dynamic-unit.directive';
 import {ComponentService} from '../../design-tools/component/component.service';
 import {DynamicUnitInterface} from '../../design-dynamic/interface';
+import {deepCloneNode, getTransform} from '../drag-drop-util';
 
 export class ComponentDragRef extends FlowDragRef<TreeNodeModel> {
   lastType: 'page-editor' | 'dynamic-unit' = null;
   targetDrag: RaDesignDragDirective;
   targetDrop: RaDesignDropDirective;
-  isInsertBefore: boolean;
+  insertMode: 'insertBefore' | 'insertAfter' | 'append';
 
   constructor(public DesignDragDirective: RaDesignDragDirective) {
     super(DesignDragDirective);
@@ -171,7 +172,9 @@ const ComponentDragRefUtil = new (class {
     const clientRect = target.getBoundingClientRect();
     console.log(drop.isContainer, drop.data.tagName);
     if (drop.isContainer) {
+      // TODO target目标需要特殊处理
       target.append(this._placeholder);
+      this.insertMode = 'append';
       return;
     }
     const isHorizontal = false; // this._orientation === 'horizontal';
@@ -185,36 +188,19 @@ const ComponentDragRefUtil = new (class {
     } else {
       target.nextSibling ? parent.insertBefore(this._placeholder, target.nextSibling) : parent.appendChild(this._placeholder);
     }
-    this.isInsertBefore = index;
+    this.insertMode = index ? 'insertBefore' : 'insertAfter';
   }
 
   dynamicUnit_mouseUp(this: ComponentDragRef) {
     const pageEditorService: PageEditorService = this.Injector.get(PageEditorService);
     const componentService: ComponentService = this.Injector.get(ComponentService);
     const targetDrag: RaDesignDynamicUnitDirective = this.targetDrag as any;
-    if (this.isInsertBefore) {
+    if (this.insertMode === 'insertBefore') {
       pageEditorService.insertBefore(targetDrag.path, componentService.getHtmlJson(this.data.key));
-    } else {
+    } else if (this.insertMode === 'insertAfter') {
       pageEditorService.insertAfter(targetDrag.path, componentService.getHtmlJson(this.data.key));
+    } else if (this.insertMode === 'append') {
+      pageEditorService.append(targetDrag.path, componentService.getHtmlJson(this.data.key));
     }
   }
 })
-
-/** Creates a deep clone of an element. */
-function deepCloneNode(node: HTMLElement): HTMLElement {
-  const clone = node.cloneNode(true) as HTMLElement;
-  // Remove the `id` to avoid having multiple elements with the same id on the page.
-  clone.removeAttribute('id');
-  return clone;
-}
-
-/**
- * Gets a 3d `transform` that can be applied to an element.
- * @param x Desired position of the element along the X axis.
- * @param y Desired position of the element along the Y axis.
- */
-function getTransform(x: number, y: number): string {
-  // Round the transforms since some browsers will
-  // blur the elements for sub-pixel transforms.
-  return `translate3d(${Math.round(x)}px, ${Math.round(y)}px, 0)`;
-}

@@ -1,9 +1,10 @@
-import {Component} from '@angular/core';
+import {Component, ElementRef} from '@angular/core';
 import {RaDesignStageService, StageFactory} from '../../design-stage';
 import {NzFormatEmitEvent, TreeNodeModel} from '../../design-tree';
 import {RaDesignMenuService} from '../../design-menu/ra-design-menu.service';
 import {PageContextMenuKey, PageService} from './page.service';
 import {PageModel, PageType} from './interface';
+import {RaDesignKeyMapService} from '../../design-key-map/ra-design-key-map.service';
 
 @Component({
   template: `
@@ -39,12 +40,27 @@ export class PageInterface {
     node: TreeNodeModel
   };
 
-  constructor(public RaDesignStageService: RaDesignStageService,
-              public RaDesignMenuService: RaDesignMenuService,
-              public PageService: PageService,
+  constructor(
+    public ElementRef: ElementRef,
+    public RaDesignStageService: RaDesignStageService,
+    public RaDesignMenuService: RaDesignMenuService,
+    public PageService: PageService,
+    public RaDesignKeyMapService: RaDesignKeyMapService,
   ) {
     this.PageService.index().subscribe((result) => {
       this.data = result;
+    });
+    this.RaDesignKeyMapService.registerListenerWindow('page', this.ElementRef.nativeElement).subscribe((event) => {
+      switch (event.emitKey) {
+        case 'delete':
+          console.log('page delete');
+          // if (this.PropertiesEditorService.currentHtmlJsonL) {
+          //   const originParentNode = this.getParentNodeJson(path);
+          //   originParentNode.children.splice(originParentNode.children.indexOf(htmlJson), 1);
+          // }
+          break;
+      }
+
     });
   }
 

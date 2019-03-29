@@ -1,6 +1,6 @@
 import {
   AfterViewInit,
-  Component, OnChanges, OnDestroy,
+  Component, ElementRef, OnChanges, OnDestroy,
   OnInit, SimpleChanges,
 } from '@angular/core';
 import {PageEditorService} from './page-editor.service';
@@ -27,6 +27,7 @@ export class PageEditorInterface implements OnInit, AfterViewInit, OnDestroy, On
   private dynamicHtml: string;
 
   constructor(
+    public ElementRef: ElementRef,
     public PageEditorService: PageEditorService,
     public RaDesignKeyMapService: RaDesignKeyMapService,
   ) {
@@ -37,7 +38,18 @@ export class PageEditorInterface implements OnInit, AfterViewInit, OnDestroy, On
       this.pageInfo = pageInfo;
       this.PageEditorService.addRoot(this.stageID, pageInfo.content || '');
     });
+    this.RaDesignKeyMapService.registerListenerWindow('stage_page_editor', this.ElementRef.nativeElement, {stageID: this.stageID}).subscribe((event) => {
+      switch (event.emitKey) {
+        case 'delete':
+          const selection = this.PageEditorService.getSelection(this.stageID);
+          if (selection.length > 0) {
+            this.PageEditorService.deleteNodeJson(selection[0]);
+          }
+          break;
+      }
+    });
   }
+
   ngAfterViewInit() {
     this.PageEditorService.subscribe(this.stageID, (event) => {
       switch (event.type) {
@@ -50,11 +62,6 @@ export class PageEditorInterface implements OnInit, AfterViewInit, OnDestroy, On
       }
     });
   }
-
-  addChildren(path) {
-
-  }
-
 
   ngOnChanges(simple: SimpleChanges) {
     console.log(simple);

@@ -77,7 +77,6 @@ export class RaDesignStageService extends Subject<StageServiceEvent> {
     }
     this.stageList.forEach(stage => stage.select = false);
     stage.select = true;
-    this.next({type: 'open', data: stage});
     this.saveLocalModel();
   }
 

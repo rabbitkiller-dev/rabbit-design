@@ -2,14 +2,22 @@ import {Injectable} from '@angular/core';
 import {HtmlJson} from 'himalaya';
 import {PropertiesEditorInterface} from './properties-editor.interface';
 import {parserDirective} from '../../design-dynamic/parser-directive';
+import {RaDesignKeyMapService} from '../../design-key-map/ra-design-key-map.service';
 
 @Injectable({providedIn: 'root'})
 export class PropertiesEditorService {
+  path: string;
+  currentHtmlJsonL: HtmlJson;
   PropertiesEditorInterface: PropertiesEditorInterface;
 
-  openPropertiePanel(htmlJson: HtmlJson, instan?: any) {
+  constructor(public RaDesignKeyMapService: RaDesignKeyMapService) {
+  }
+
+  openPropertiePanel(htmlJson: HtmlJson, path: string) {
     this.PropertiesEditorInterface.panel = getDirective(htmlJson).join();
     this.PropertiesEditorInterface.createModule();
+    this.currentHtmlJsonL = htmlJson;
+    this.path = path;
   }
 }
 

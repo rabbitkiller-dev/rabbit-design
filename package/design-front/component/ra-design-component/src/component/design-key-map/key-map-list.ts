@@ -17,6 +17,9 @@ export const KEY_MAP_LIST = {
     left_switch: {key: 'alt+leftArrow'},
     right_switch: {key: 'alt+rightArrow'},
   },
+  dialog: {
+    esc: {key: 'esc'}
+  }
 };
 export const KEY_CODE_LIST = {
   65: 'a', 48: '0', 96: '0', 106: '*',

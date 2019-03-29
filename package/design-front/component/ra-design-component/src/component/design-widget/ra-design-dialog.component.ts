@@ -1,9 +1,10 @@
-import {Component, Input} from '@angular/core';
+import {Component, ElementRef, Input} from '@angular/core';
+import {RaDesignKeyMapService} from '../design-key-map/ra-design-key-map.service';
 
 @Component({
   selector: 'ra-design-dialog',
   template: `
-    <div class="ra-design-dialog">
+    <div class="ra-design-dialog" designDrag="relative">
       <div class="ra-design-dialog__message">{{header}}</div>
       <ng-content></ng-content>
     </div>
@@ -11,4 +12,13 @@ import {Component, Input} from '@angular/core';
 })
 export class RaDesignDialogComponent {
   @Input() header: string;
+
+  constructor(
+    public ElementRef: ElementRef,
+    public RaDesignKeyMapService: RaDesignKeyMapService,
+  ) {
+    this.RaDesignKeyMapService.registerListenerWindow('dialog', this.ElementRef.nativeElement).subscribe(() => {
+
+    });
+  }
 }
