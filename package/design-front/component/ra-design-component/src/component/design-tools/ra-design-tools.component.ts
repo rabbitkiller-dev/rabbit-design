@@ -97,7 +97,7 @@ export class RaDesignToolsComponent implements OnInit, AfterViewInit {
             break;
           case 'right-top':
             if (this.rightTopToolsTabModel !== sideBar) {
-              rightTopToolsTabModel = this.rightTopToolsTabModel = sideBar;
+              this.rightTopToolsTabModel = sideBar;
               if (this.rightTop.detach(0) && this.componentRefMap.get(this.rightTopToolsTabModel.factory).instance.raHiddenInterface) {
                 this.componentRefMap.get(this.rightTopToolsTabModel.factory).instance.raHiddenInterface();
               }
@@ -106,10 +106,11 @@ export class RaDesignToolsComponent implements OnInit, AfterViewInit {
                 this.componentRefMap.get(sideBar.factory).instance.raShowInterface();
               }
             }
+            rightTopToolsTabModel = this.rightTopToolsTabModel;
             break;
           case 'right-bottom':
             if (this.rightBottomToolsTabModel !== sideBar) {
-              rightBottomToolsTabModel = this.rightBottomToolsTabModel = sideBar;
+              this.rightBottomToolsTabModel = sideBar;
               if (this.rightBottom.detach(0) && this.componentRefMap.get(this.rightBottomToolsTabModel.factory).instance.raHiddenInterface) {
                 this.componentRefMap.get(this.rightBottomToolsTabModel.factory).instance.raHiddenInterface();
               }
@@ -118,6 +119,7 @@ export class RaDesignToolsComponent implements OnInit, AfterViewInit {
                 this.componentRefMap.get(sideBar.factory).instance.raShowInterface();
               }
             }
+            rightBottomToolsTabModel = this.rightBottomToolsTabModel;
             break;
         }
       }
