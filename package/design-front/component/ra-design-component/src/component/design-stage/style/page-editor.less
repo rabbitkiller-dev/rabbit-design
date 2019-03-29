@@ -15,27 +15,29 @@
   background-repeat: repeat;
   background-size: 130px;
 }
-
-
+/**
+    dynamic unit is blank
+    动态单元的窗口里面没有内容的时候
+ */
+.dynamic-blank{
+  &.ant-layout-header, &.ant-layout-footer{
+    background: #7dbcea;
+    color: #fff;
+    text-align: center;
+  }
+  &.ant-layout-content{
+    background: rgba(16, 142, 233, 1);
+    color: #fff;
+    min-height: 120px;
+    line-height: 120px;
+    text-align: center;
+  }
+}
 /**
     page-editor: dynamic component drag style
                  动态组件拖拉拽样式
  */
 .page-editor{
-  .dynamic-blank{
-    &.ant-layout-header, &.ant-layout-footer{
-      background: #7dbcea;
-      color: #fff;
-      text-align: center;
-    }
-    &.ant-layout-content{
-      background: rgba(16, 142, 233, 1);
-      color: #fff;
-      min-height: 120px;
-      line-height: 120px;
-      text-align: center;
-    }
-  }
   .cdk-drag-placeholder{
     box-shadow: 0 0 0 1px #51c1f8 !important;
     background-color: rgba(81, 193, 248, 0.2) !important;
@@ -44,7 +46,7 @@
     }
   }
 }
-.ant-input {
+.ant-input, .ant-btn {
   &.cdk-drag-preview {
     transition: none;
   }

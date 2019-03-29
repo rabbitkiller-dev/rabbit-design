@@ -170,7 +170,6 @@ const ComponentDragRefUtil = new (class {
     const target: HTMLElement = drop.ElementRef.nativeElement;
     const parent: HTMLElement = target.parentElement;
     const clientRect = target.getBoundingClientRect();
-    console.log(drop.isContainer, drop.data.tagName);
     if (drop.isContainer) {
       // TODO target目标需要特殊处理
       target.append(this._placeholder);
