@@ -27,7 +27,7 @@ import {StageTabModel} from './interface';
         </li>
       </ng-container>
     </div>
-    <div class="editor-stage-main">
+    <div class="stage-main">
       <ng-template #main></ng-template>
       <!--<ra-design-stage-interface></ra-design-stage-interface>-->
     </div>

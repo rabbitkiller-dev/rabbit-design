@@ -1,7 +1,7 @@
 import {
   Compiler,
   Component,
-  ComponentRef, ElementRef, ModuleWithComponentFactories,
+  ComponentRef, ElementRef, Injector, ModuleWithComponentFactories,
   NgModule,
   OnInit, ViewChild,
   ViewContainerRef
@@ -12,18 +12,19 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RaDesignDynamicUnitModule} from '../../design-dynamic/ra-design-dynamic-unit.module';
 import {NzIconModule, NzInputModule} from 'ng-zorro-antd';
 import {PropertiesEditorService} from './properties-editor.service';
+import {RaDesignToolsInterface} from '../ra-design-tools.interface';
 
 @Component({
   template: `
-    <div class="ra-design-tools-title">
-      <i class="fa fa-first-order"></i>
+    <div class="ra-design-side-bar-interface-title">
       <label>属性管理</label>
+      <li class="minimize" (click)="minimize()"><i nz-icon type="rabbit-design:icon-nav-left"></i></li>
     </div>
     <ng-template #content></ng-template>
   `,
   styles: []
 })
-export class PropertiesEditorInterface implements OnInit {
+export class PropertiesEditorInterface extends RaDesignToolsInterface implements OnInit {
   panel: string;
   @ViewChild('content', {read: ViewContainerRef}) content: ViewContainerRef;
   comRef: ComponentRef<any>;
@@ -31,7 +32,9 @@ export class PropertiesEditorInterface implements OnInit {
   constructor(
     private compiler: Compiler,
     private PropertiesEditorService: PropertiesEditorService,
+    public Injector: Injector
   ) {
+    super(Injector);
     this.PropertiesEditorService.PropertiesEditorInterface = this;
   }
 

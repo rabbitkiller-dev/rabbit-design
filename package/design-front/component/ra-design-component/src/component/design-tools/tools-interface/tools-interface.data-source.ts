@@ -21,7 +21,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   template: `
-    <div class="ra-design-tools-title">
+    <div class="ra-design-side-bar-interface-title">
       <i class="fa fa-first-order"></i>
       <label>数据源管理</label>
     </div>

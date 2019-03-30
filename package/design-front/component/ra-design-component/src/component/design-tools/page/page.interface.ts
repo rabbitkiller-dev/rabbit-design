@@ -1,16 +1,17 @@
-import {Component, ElementRef} from '@angular/core';
+import {Component, ElementRef, Injector} from '@angular/core';
 import {RaDesignStageService, StageFactory} from '../../design-stage';
 import {NzFormatEmitEvent, TreeNodeModel} from '../../design-tree';
 import {RaDesignMenuService} from '../../design-menu/ra-design-menu.service';
 import {PageContextMenuKey, PageService} from './page.service';
 import {PageModel, PageType} from './interface';
 import {RaDesignKeyMapService} from '../../design-key-map/ra-design-key-map.service';
+import {RaDesignToolsInterface} from '../ra-design-tools.interface';
 
 @Component({
   template: `
-    <div class="ra-design-tools-title">
-      <i class="fa fa-first-order"></i>
+    <div class="ra-design-side-bar-interface-title">
       <label>页面管理</label>
+      <li class="minimize" (click)="minimize()"><i nz-icon type="rabbit-design:icon-nav-left"></i></li>
     </div>
     <ra-design-tree [nzData]="data" (nzDblClick)="onDblclick($event)" (nzContextMenu)="onContextMenu($event)"
                     (nzTouchStart)="onTouchStart($event)"
@@ -28,7 +29,7 @@ import {RaDesignKeyMapService} from '../../design-key-map/ra-design-key-map.serv
   `,
   styles: [],
 })
-export class PageInterface {
+export class PageInterface extends RaDesignToolsInterface {
   data: any[];
   newFileOption: any = {
     visible: false,
@@ -46,7 +47,9 @@ export class PageInterface {
     public RaDesignMenuService: RaDesignMenuService,
     public PageService: PageService,
     public RaDesignKeyMapService: RaDesignKeyMapService,
+    public Injector: Injector,
   ) {
+    super(Injector);
     this.PageService.index().subscribe((result) => {
       this.data = result;
     });

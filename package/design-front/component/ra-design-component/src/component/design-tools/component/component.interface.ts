@@ -1,15 +1,17 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {NzFormatEmitEvent, NzTreeNodeOptions, TreeNodeModel} from '../../design-tree';
+import {Component, Injector, OnInit} from '@angular/core';
+import {NzFormatEmitEvent, NzTreeNodeOptions} from '../../design-tree';
+import {RaDesignToolsInterface} from '../ra-design-tools.interface';
 
 @Component({
   selector: 'ra-design-component-interface',
   templateUrl: './component.interface.html',
 })
-export class ComponentInterface implements OnInit {
+export class ComponentInterface extends RaDesignToolsInterface implements OnInit {
   nzData: NzTreeNodeOptions[] = [];
   enterPredicate = () => false;
 
-  constructor() {
+  constructor(public Injector: Injector) {
+    super(Injector);
   }
 
   ngOnInit() {

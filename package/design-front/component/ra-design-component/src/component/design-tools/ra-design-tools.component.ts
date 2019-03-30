@@ -9,6 +9,7 @@ import {
 import {RaDesignToolsService, ToolsFactory} from './ra-design-tools.service';
 import {NzIconService} from 'ng-zorro-antd';
 import {RaHiddenInterface, RaShowInterface, ToolsTabModel} from './interface';
+import {RaDesignToolsInterface} from 'ra-design-component';
 
 @Component({
   selector: 'ra-design-tools',
@@ -25,7 +26,7 @@ export class RaDesignToolsComponent implements OnInit, AfterViewInit {
   rightBottomToolsTabModel: ToolsTabModel;
   leftTopToolsTabModel: ToolsTabModel;
   viewRefMap: Map<ToolsFactory, ViewRef> = new Map();
-  componentRefMap: Map<ToolsFactory, ComponentRef<RaHiddenInterface & RaShowInterface>> = new Map();
+  componentRefMap: Map<ToolsFactory, ComponentRef<RaDesignToolsInterface>> = new Map();
 
   constructor(public ViewContainerRef: ViewContainerRef,
               public NzIconService: NzIconService,
@@ -54,7 +55,8 @@ export class RaDesignToolsComponent implements OnInit, AfterViewInit {
     for (const key of Object.keys(ToolsFactory)) {
       const factoryName: ToolsFactory = ToolsFactory[key];
       const factory = this.RaDesignToolsService.getFactory(factoryName);
-      const componentRef = this.ViewContainerRef.createComponent(factory);
+      const componentRef: ComponentRef<RaDesignToolsInterface> = this.ViewContainerRef.createComponent(factory);
+      componentRef.instance.factory = factoryName;
       this.componentRefMap.set(factoryName, componentRef);
       this.viewRefMap.set(factoryName, this.ViewContainerRef.detach(0));
     }

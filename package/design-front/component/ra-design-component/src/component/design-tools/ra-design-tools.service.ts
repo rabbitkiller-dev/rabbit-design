@@ -8,6 +8,8 @@ import {PropertiesEditorInterface} from './properties-editor/properties-editor.i
 import {LocalStorageService} from 'ngx-webstorage';
 import {Subject} from 'rxjs';
 import {StructureInterface} from './structure/structure.interface';
+import {RUNTIME_EVENT_ENUM, RuntimeEventService} from '../design-runtime/runtime-event.service';
+
 export enum ToolsFactory {
   DataSource = 'dataSource',
   Page = 'page',
@@ -25,12 +27,17 @@ export class RaDesignToolsService extends Subject<SideBarServiceEvent> {
   left: ToolsTabModel[] = [];
   right: ToolsTabModel[] = [];
 
-  constructor(public ComponentFactoryResolver: ComponentFactoryResolver, public LocalStorageService: LocalStorageService) {
+  constructor(
+    public ComponentFactoryResolver: ComponentFactoryResolver,
+    public LocalStorageService: LocalStorageService,
+    public RuntimeEventService: RuntimeEventService,
+  ) {
     super();
-    this.init();
+    this.initTools();
+    this.initEvent();
   }
 
-  private init() {
+  private initTools() {
     // 数据源管理
     this.toolsList.push({
       factory: ToolsFactory.DataSource,
@@ -124,6 +131,15 @@ export class RaDesignToolsService extends Subject<SideBarServiceEvent> {
     });
     // 保存本地数据
     this.saveLocalModel();
+  }
+
+  private initEvent() {
+    this.RuntimeEventService.on<ToolsFactory>(RUNTIME_EVENT_ENUM.ToolsInterface_Minimize, (value) => {
+      const tools = this.toolsMap.get(value);
+      tools.select = false;
+      this.next({type: 'review'});
+      this.saveLocalModel();
+    });
   }
 
   showTools(tools: ToolsFactory);

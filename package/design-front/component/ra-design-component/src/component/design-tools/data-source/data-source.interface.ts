@@ -1,17 +1,18 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Injector, OnDestroy, OnInit} from '@angular/core';
 import {DataSourceService} from './data-source.service';
+import {RaDesignToolsInterface} from '../ra-design-tools.interface';
 
 @Component({
   template: `
-    <div class="ra-design-tools-title">
-      <i class="fa fa-first-order"></i>
+    <div class="ra-design-side-bar-interface-title">
       <label>数据源管理</label>
+      <li class="minimize" (click)="minimize()"><i nz-icon type="rabbit-design:icon-nav-left"></i></li>
     </div>
     <ra-design-tree [nzData]="data"></ra-design-tree>
   `,
   styles: []
 })
-export class DataSourceInterface {
+export class DataSourceInterface extends RaDesignToolsInterface {
   data: any[] = [
     {
       'key': 1,
@@ -47,7 +48,8 @@ export class DataSourceInterface {
     }
   ];
 
-  constructor(public DataSourceService: DataSourceService) {
+  constructor(public DataSourceService: DataSourceService, public Injector: Injector) {
+    super(Injector);
     this.DataSourceService.index().subscribe((data: any[]) => {
       this.data = data;
     });

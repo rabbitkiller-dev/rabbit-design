@@ -8,12 +8,16 @@ import {DesignMenuModel} from './interface';
          (mouseenter)="onItemMouseEnter($event)"
          (mouseleave)="onItemMouseLeave($event)"
          (click)="emitClickMenu($event)">
-      <i nz-icon *ngIf="model.icon" [type]="model.icon"></i>
+      <li class="ra-design-menu-item_icon">
+        <i nz-icon *ngIf="model.icon" [type]="model.icon"></i>
+      </li>
       <!--<span *ngIf="model.icon" class="ra-design-menu-item_icon fa {{model.icon}}"></span>-->
-      <span class="">{{ model.label }}</span>
+      <span class="ra-design-menu-item_label">{{ model.label }}</span>
       <span class="ra-design-menu-item_shortcut">{{ model.shortcut }}</span>
       <span *ngIf="model.items && model.items.length>0"
-            class="ra-design-menu-item_nexticon fa fa-caret-right"></span>
+            class="ra-design-menu-item_nexticon">
+        <i nz-icon type="rabbit-design:icon-nav-right"></i>
+      </span>
       <div #itemList class="ra-design-menu-item_list">
         <ra-design-menu-item *ngFor="let item of model.items"
                           [model]="item" (clickMenu)="clickMenu.emit($event)">

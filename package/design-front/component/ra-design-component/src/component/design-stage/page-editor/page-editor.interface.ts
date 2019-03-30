@@ -12,10 +12,10 @@ import {RaDesignKeyMapService} from '../../design-key-map/ra-design-key-map.serv
   selector: 'ra-design-page-editor',
   template: `
     <div class="page-editor" style="">
-      <div class="page-editor__form" designDrop="page-editor" [designData]="stageID">
+      <div class="page-editor-content" designDrop="page-editor" [designData]="stageID">
         <ng-template [design-dynamic]="dynamicHtml"></ng-template>
       </div>
-      <div class="editor-stage-footer">
+      <div class="page-editor-footer">
       </div>
     </div>
   `,

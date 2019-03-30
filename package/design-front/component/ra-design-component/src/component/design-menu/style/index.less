@@ -1,5 +1,6 @@
 @import '../../design-style/themes/default';
-.ra-design-menu-item_list{
+
+.ra-design-menu-item_list {
   position: fixed;
   display: none;
   width: 250px;
@@ -7,27 +8,33 @@
   color: @text-light-color;
   border: 1px solid @text-light-color;
 }
+
 .ra-design-menu {
- .ra-design-menu-item_list;
   .ra-design-menu-item {
     height: 26px;
     &:hover {
-      //background: @hover-light;
       color: #ffffff;
-    }
-    .ra-design-menu-item_icon {
-      font-weight: bold;
-      padding: 6px;
-      width: 26px;
-      height: 26px;
-      text-align: center;
-    }
-    .ra-design-menu-item_label {
     }
     .ra-design-menu-item_shortcut, .ra-design-menu-item_nexticon {
       position: absolute;
       right: 5px;
       line-height: 26px;
     }
+  }
+  .ra-design-menu-item_list;
+  .ra-design-menu-item_label{
+    display: inline-block;
+    line-height: 26px;
+  }
+  .ra-design-menu-item_icon {
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    margin: 0;
+    line-height: 26px;
+    text-align: center;
+    vertical-align: top;
+    border: 0 none;
+    outline: none;
   }
 }

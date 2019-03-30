@@ -12,6 +12,13 @@ ra-design-stage {
   @import "./stage-bar";
 }
 
+//舞台头部(任务栏)
+.stage-main {
+  flex: 1;
+  background: @back-light-color;
+  overflow: hidden;
+}
+
 // stage 拖拉拽样式
 .stage-bar-item {
   &.cdk-drag-preview {
@@ -46,21 +53,6 @@ ra-design-stage {
 }
 .stage-bar.cdk-drop-list-dragging .stage-bar-item:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-
-// 舞台(编辑器)
-.editor-stage {
-  background: @back-color;
-  .editor-stage-footer {
-    height: 26px;
-    background: @back-light-color;
-  }
-}
-
-//舞台头部(任务栏)
-.editor-stage-main {
-  flex: 1;
-  background: @back-light-color;
 }
 
 @import "./page-editor";
