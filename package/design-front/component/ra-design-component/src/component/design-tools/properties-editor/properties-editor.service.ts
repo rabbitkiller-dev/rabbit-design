@@ -6,18 +6,7 @@ import {RaDesignKeyMapService} from '../../design-key-map/ra-design-key-map.serv
 
 @Injectable({providedIn: 'root'})
 export class PropertiesEditorService {
-  path: string;
-  currentHtmlJsonL: HtmlJson;
-  PropertiesEditorInterface: PropertiesEditorInterface;
-
-  constructor(public RaDesignKeyMapService: RaDesignKeyMapService) {
-  }
-
-  openPropertiePanel(htmlJson: HtmlJson, path: string) {
-    this.PropertiesEditorInterface.panel = getDirective(htmlJson).join();
-    this.PropertiesEditorInterface.createModule();
-    this.currentHtmlJsonL = htmlJson;
-    this.path = path;
+  constructor() {
   }
 }
 

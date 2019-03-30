@@ -41,9 +41,9 @@ export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson
   @Input('design-stage-id') stageID: string;
   @Input('design-dynamic-unit') path: string;
   @HostBinding('class.dynamic-blank') isBlank: boolean = false;
+  @HostBinding('class.dynamic-look-unit') lookUnit = false;
   type: DesignDragType = 'dynamic-unit';
   ref: any[] = [];
-  @HostBinding('class.dynamic-look-unit') lookUnit = false;
   lookDrag = false;
   lookDrop = false;
   mergeParent = false;
@@ -57,7 +57,6 @@ export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson
     this.PageEditorService.select(this.path);
     // 用事件冒泡告诉他们已经点击了 用这种方法不停止冒泡
     $event['designDynamicUnit_click'] = true;
-    // this.PropertiesEditorService.openPropertiePanel(this.data, this.path);
   }
 
   constructor(

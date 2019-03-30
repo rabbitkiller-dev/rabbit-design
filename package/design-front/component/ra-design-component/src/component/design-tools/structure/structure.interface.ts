@@ -1,9 +1,10 @@
 import {Component, Injector} from '@angular/core';
 import {PageEditorService} from '../../design-stage/page-editor/page-editor.service';
-import {RaDesignStageService} from '../../design-stage';
+import {StageTabModel} from '../../design-stage';
 import {NzFormatEmitEvent, RaDesignTreeService} from '../../design-tree';
 import {RaDesignToolsInterface} from '../ra-design-tools.interface';
-import {PropertiesEditorService} from '../properties-editor/properties-editor.service';
+import {RUNTIME_EVENT_ENUM} from '../../design-runtime/runtime-event.service';
+import {PageEditorServiceEvent} from '../../design-stage/page-editor/interface';
 
 
 @Component({
@@ -20,31 +21,41 @@ import {PropertiesEditorService} from '../properties-editor/properties-editor.se
   `,
   styles: [],
 })
-export class StructureInterface extends RaDesignToolsInterface{
+export class StructureInterface extends RaDesignToolsInterface {
+  currentStage: StageTabModel;
   data: any[];
 
   constructor(
-    public RaDesignStageService: RaDesignStageService,
     public PageEditorService: PageEditorService,
     public Injector: Injector
   ) {
     super(Injector);
-    this.RaDesignStageService.subscribe((event) => {
-      if (event.type === 'open') {
-        this.PageEditorService.subscribe(event.data.id, () => {
-          this.data = JSON.parse(JSON.stringify(this.PageEditorService.getHtmlJson(event.data.id)));
+    this.initEvent();
+  }
 
-          this.data = this.data.filter((node) => {
-            return node.type === 'element';
-          });
-          RaDesignTreeService.forEachTree(this.data, (node) => {
-            node.title = node.tagName;
-            if (node.children) {
-              node.children = node.children.filter((node) => {
-                return node.type === 'element';
-              });
-            }
-          });
+  initEvent() {
+    this.RuntimeEventService.on<StageTabModel>(RUNTIME_EVENT_ENUM.Stage_Open, (value) => {
+      this.currentStage = value;
+      this.updateStructure();
+    });
+    this.RuntimeEventService.on<PageEditorServiceEvent>(RUNTIME_EVENT_ENUM.StagePageEditor_UpdateDynamicHtml, (value) => {
+      this.updateStructure();
+    });
+  }
+
+  updateStructure() {
+    if (!this.currentStage || !this.PageEditorService.getHtmlJson(this.currentStage.id)) {
+      return;
+    }
+    this.data = JSON.parse(JSON.stringify(this.PageEditorService.getHtmlJson(this.currentStage.id)));
+    this.data = this.data.filter((node) => {
+      return node.type === 'element';
+    });
+    RaDesignTreeService.forEachTree(this.data, (node) => {
+      node.title = node.tagName;
+      if (node.children) {
+        node.children = node.children.filter((node) => {
+          return node.type === 'element';
         });
       }
     });

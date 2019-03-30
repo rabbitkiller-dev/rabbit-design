@@ -4,10 +4,14 @@
  * 严格先声明到RUNTIME_EVENT_ENUM才能使用
  */
 import {Injectable} from '@angular/core';
+import {StageTabModel} from 'ra-design-component';
 
 export enum RUNTIME_EVENT_ENUM {
   ToolsInterface_Minimize = 'ToolsInterface_Minimize', // 点击了最小化事件
 
+  Stage_Open = 'Stage_Open', // 打开某个舞台
+  StagePageEditor_SelectionChange = 'StagePageEditor_SelectionChange', // 选择变化
+  StagePageEditor_UpdateDynamicHtml = 'StagePageEditor_UpdateDynamicHtml', // 更新动态html
   // tools工具栏
   Tools_Init = 'TOOLS_INIT', // tools工具栏初始化完毕
   Tools_Change = 'TOOLS_CHANGE', // tools工具栏因顺序被调整而变化
@@ -52,7 +56,7 @@ export class RuntimeEventService {
     this._addEventListener(type, listener, true);
   }
 
-  on<T>(type: RUNTIME_EVENT_ENUM, listener: (value: T) => void) {
+  on<T>(type: any, listener: (value: T) => void) {
     this._addEventListener(type, listener, false);
     return () => {
       const existing: Array<Function> = this._events[type];
@@ -65,7 +69,7 @@ export class RuntimeEventService {
 
   /**
    */
-  emit<T = any>(type: RUNTIME_EVENT_ENUM, value: T) {
+  emit<T = any>(type: RUNTIME_EVENT_ENUM, value?: T) {
     const existing: Array<Function> = this._events[type];
     if (!existing) {
       throw new Error(`not event : ${type}`);

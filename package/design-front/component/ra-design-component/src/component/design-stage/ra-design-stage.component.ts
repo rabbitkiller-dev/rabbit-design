@@ -1,15 +1,9 @@
-import {
-  AfterViewInit,
-  Component,
-  ComponentFactory,
-  OnInit,
-  ViewChild,
-  ViewContainerRef, ViewRef
-} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild, ViewContainerRef, ViewRef} from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from '../cdk-drag-drop';
 import {RaDesignStageService} from './ra-design-stage.service';
 import {DesignDragDrop} from '../design-drag-drop';
 import {StageTabModel} from './interface';
+import {RUNTIME_EVENT_ENUM, RuntimeEventService} from '../design-runtime/runtime-event.service';
 
 
 @Component({
@@ -41,6 +35,7 @@ export class RaDesignStageComponent implements OnInit, AfterViewInit {
 
   constructor(
     public RaDesignStageService: RaDesignStageService,
+    public RuntimeEventService: RuntimeEventService,
   ) {
     this.RaDesignStageService.subscribe((event) => {
       if (event.type === 'put') {
@@ -68,8 +63,9 @@ export class RaDesignStageComponent implements OnInit, AfterViewInit {
           const a = this.main.createComponent(this.RaDesignStageService.getFactory(stage.factory));
           a.instance.stageID = stage.id;
           this.componentRefMap.set(stage.id, this.main.get(0));
-          this.RaDesignStageService.next({type: 'open', data: stage});
         }
+        this.RaDesignStageService.next({type: 'open', data: stage});
+        this.RuntimeEventService.emit(RUNTIME_EVENT_ENUM.Stage_Open, stage);
       }
     });
   }

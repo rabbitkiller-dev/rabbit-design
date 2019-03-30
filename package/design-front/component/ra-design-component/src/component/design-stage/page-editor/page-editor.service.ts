@@ -5,6 +5,7 @@ import {HttpClient} from '@angular/common/http';
 import {DesignHtmlJson, PageEditorServiceEvent, PageInfoModel} from './interface';
 import {map} from 'rxjs/operators';
 import {RaDesignTreeService} from '../../design-tree/ra-design-tree.service';
+import {RUNTIME_EVENT_ENUM, RuntimeEventService} from '../../design-runtime/runtime-event.service';
 
 @Injectable({providedIn: 'root'})
 export class PageEditorService {
@@ -14,6 +15,7 @@ export class PageEditorService {
 
   constructor(
     public HttpClient: HttpClient,
+    public RuntimeEventService: RuntimeEventService,
   ) {
   }
 
@@ -23,16 +25,21 @@ export class PageEditorService {
   select(path: string) {
     const stageID: string = path.split('|')[0];
     const selection = this.selections.get(stageID);
+    // 如果已经选中了就不执行了
+    if (selection && selection.has(path)) {
+      return;
+    }
     if (selection) {
       selection.clear();
       selection.add(path);
     } else {
       this.selections.set(stageID, new Set([path]));
     }
+    this.RuntimeEventService.emit(RUNTIME_EVENT_ENUM.StagePageEditor_SelectionChange);
   }
 
   getSelection(stageID: string): string[] {
-    return Array.from(this.selections.get(stageID)) || [];
+    return Array.from(this.selections.get(stageID) || []);
   }
 
   /**
@@ -57,6 +64,11 @@ export class PageEditorService {
     }
     this.htmlJsons.get(stageID).push(...add);
     this.next(stageID, {
+      stageID: stageID,
+      type: 'update-dynamic-html',
+      data: this.stringify(stageID, this.getHtmlJson(stageID))
+    });
+    this.RuntimeEventService.emit(RUNTIME_EVENT_ENUM.StagePageEditor_UpdateDynamicHtml, {
       stageID: stageID,
       type: 'update-dynamic-html',
       data: this.stringify(stageID, this.getHtmlJson(stageID))
@@ -88,6 +100,11 @@ export class PageEditorService {
       type: 'update-dynamic-html',
       data: this.stringify(stageID, this.getHtmlJson(stageID))
     });
+    this.RuntimeEventService.emit(RUNTIME_EVENT_ENUM.StagePageEditor_UpdateDynamicHtml, {
+      stageID: stageID,
+      type: 'update-dynamic-html',
+      data: this.stringify(stageID, this.getHtmlJson(stageID))
+    });
   }
 
   insertAfter(path: string, htmlJson: string);
@@ -115,6 +132,11 @@ export class PageEditorService {
       type: 'update-dynamic-html',
       data: this.stringify(stageID, this.getHtmlJson(stageID))
     });
+    this.RuntimeEventService.emit(RUNTIME_EVENT_ENUM.StagePageEditor_UpdateDynamicHtml, {
+      stageID: stageID,
+      type: 'update-dynamic-html',
+      data: this.stringify(stageID, this.getHtmlJson(stageID))
+    });
   }
 
   append(path: string, htmlJson: string);
@@ -137,6 +159,11 @@ export class PageEditorService {
       originParentNode.children.splice(originParentNode.children.indexOf(htmlJson), 1);
     }
     this.next(stageID, {
+      stageID: stageID,
+      type: 'update-dynamic-html',
+      data: this.stringify(stageID, this.getHtmlJson(stageID))
+    });
+    this.RuntimeEventService.emit(RUNTIME_EVENT_ENUM.StagePageEditor_UpdateDynamicHtml, {
       stageID: stageID,
       type: 'update-dynamic-html',
       data: this.stringify(stageID, this.getHtmlJson(stageID))
@@ -173,6 +200,11 @@ export class PageEditorService {
     selection.delete(path);
     // 更新视图
     this.next(stageID, {
+      stageID: stageID,
+      type: 'update-dynamic-html',
+      data: this.stringify(stageID, this.getHtmlJson(stageID))
+    });
+    this.RuntimeEventService.emit(RUNTIME_EVENT_ENUM.StagePageEditor_UpdateDynamicHtml, {
       stageID: stageID,
       type: 'update-dynamic-html',
       data: this.stringify(stageID, this.getHtmlJson(stageID))
