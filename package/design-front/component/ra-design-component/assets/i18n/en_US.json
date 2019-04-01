@@ -5,5 +5,13 @@
   "structure": "structure",
   "icons": "icons",
   "properties": "properties",
-  "page": "page"
+  "page": "page",
+  "New": "New",
+  "Page": "Page",
+  "Dir": "Dir",
+  "Router2Dir": "Router2Dir",
+  "ComponentDir": "ComponentDir",
+  "Copy": "Copy",
+  "Cut": "Cut",
+  "Delete": "Delete"
 }

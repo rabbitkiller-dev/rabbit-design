@@ -1,3 +1,4 @@
+/*
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {DomHandler, Throttle, TreeHelper, TreeNodeModel} from 'rabbit-component';
@@ -247,3 +248,4 @@ export class ToolsInterfaceDataSource implements OnInit, OnDestroy {
     }, () => this.newTable.loading = false);
   }
 }
+*/

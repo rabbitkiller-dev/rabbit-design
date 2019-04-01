@@ -12,7 +12,7 @@ import {DesignMenuModel} from './interface';
         <i nz-icon *ngIf="model.icon" [type]="model.icon"></i>
       </li>
       <!--<span *ngIf="model.icon" class="ra-design-menu-item_icon fa {{model.icon}}"></span>-->
-      <span class="ra-design-menu-item_label">{{ model.label }}</span>
+      <span class="ra-design-menu-item_label">{{ model.label | translate }}</span>
       <span class="ra-design-menu-item_shortcut">{{ model.shortcut }}</span>
       <span *ngIf="model.items && model.items.length>0"
             class="ra-design-menu-item_nexticon">

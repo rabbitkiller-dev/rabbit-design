@@ -15,6 +15,8 @@ ToolsTabModel改名为sideBar
 滚动条样式
 关联聚焦
 聚焦样式
+build:i18n增加监听文件
+build:i18n增加target目录
 拖拽
      组合
      拖拽容器

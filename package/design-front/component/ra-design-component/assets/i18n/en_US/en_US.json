@@ -1,0 +1,9 @@
+{
+  "language": "language",
+  "dataSource": "dataSource",
+  "components": "component",
+  "structure": "structure",
+  "icons": "icons",
+  "properties": "properties",
+  "page": "page"
+}
