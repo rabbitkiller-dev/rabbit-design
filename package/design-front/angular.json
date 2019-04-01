@@ -35,7 +35,7 @@
               {
                 "glob": "**/*",
                 "input": "./component/ra-design-component/assets/",
-                "output": "/ra-design-component/assets/"
+                "output": "/assets/"
               }
             ],
             "styles": [

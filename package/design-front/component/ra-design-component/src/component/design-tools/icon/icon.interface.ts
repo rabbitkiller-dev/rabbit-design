@@ -5,7 +5,7 @@ import {RaDesignToolsInterface} from '../ra-design-tools.interface';
 @Component({
   template: `
     <div class="ra-design-side-bar-interface-title">
-      <label>图标管理</label>
+      <label>{{'icons' | translate}}</label>
       <li class="minimize" (click)="minimize()"><i nz-icon type="rabbit-design:icon-nav-left"></i></li>
     </div>
     <div class="ra-design-side-bar-interface-content">

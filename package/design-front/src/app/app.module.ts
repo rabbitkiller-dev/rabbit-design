@@ -1,12 +1,18 @@
 import {NgModule} from '@angular/core';
-import {HttpClientModule, HttpClientXsrfModule} from '@angular/common/http';
+import {HttpClient, HttpClientModule, HttpClientXsrfModule} from '@angular/common/http';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {NgxWebstorageModule} from 'ngx-webstorage';
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
 import {RaComponentModule} from 'ra-component';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {NgxWebstorageModule} from 'ngx-webstorage';
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 @NgModule({
   declarations: [
@@ -20,6 +26,13 @@ import {NgxWebstorageModule} from 'ngx-webstorage';
     HttpClientXsrfModule.withOptions({
       cookieName: 'csrfToken',
       headerName: 'x-csrf-token',
+    }),
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
     }),
     NgxWebstorageModule.forRoot(),
     RaComponentModule,

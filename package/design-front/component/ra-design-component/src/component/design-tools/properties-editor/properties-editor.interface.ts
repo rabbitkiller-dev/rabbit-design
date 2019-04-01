@@ -24,7 +24,7 @@ import {StageTabModel} from 'ra-design-component';
 @Component({
   template: `
     <div class="ra-design-side-bar-interface-title">
-      <label>属性管理</label>
+      <label>{{'properties' | translate}}</label>
       <li class="minimize" (click)="minimize()"><i nz-icon type="rabbit-design:icon-nav-left"></i></li>
     </div>
     <ng-template #content></ng-template>
@@ -48,7 +48,7 @@ export class PropertiesEditorInterface extends RaDesignToolsInterface implements
   }
 
   initEvent() {
-    this.RuntimeEventService.on<StageTabModel>(RUNTIME_EVENT_ENUM.Stage_Open, (value) => {
+    this.RuntimeEventService.on(RUNTIME_EVENT_ENUM.Stage_Open, (value) => {
       this.currentStage = value;
       this.changePanel();
     });

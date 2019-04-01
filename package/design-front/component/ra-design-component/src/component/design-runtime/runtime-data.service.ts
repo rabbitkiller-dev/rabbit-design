@@ -1,5 +1,5 @@
 /**
- * 一些变量就存在这里,还有初始化舞台的操作
+ * 提供平台运行时的所有数据和服务
  */
 import {Injectable, OnInit} from '@angular/core';
 import {LocalStorageService} from 'ngx-webstorage';

@@ -11,6 +11,7 @@ import {RUNTIME_EVENT_ENUM, RuntimeEventService} from '../../design-runtime/runt
 export class PageEditorService {
   private subjects: Map<string, Subject<PageEditorServiceEvent>> = new Map();
   private htmlJsons: Map<string, HtmlJson[]> = new Map();
+  private htmlJsonMaps: Map<string, Map<string, HtmlJson>> = new Map();
   private selections: Map<string, Set<string>> = new Map();
 
   constructor(
@@ -71,7 +72,8 @@ export class PageEditorService {
     this.RuntimeEventService.emit(RUNTIME_EVENT_ENUM.StagePageEditor_UpdateDynamicHtml, {
       stageID: stageID,
       type: 'update-dynamic-html',
-      data: this.stringify(stageID, this.getHtmlJson(stageID))
+      data: this.stringify(stageID, this.getHtmlJson(stageID)),
+
     });
   }
 

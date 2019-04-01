@@ -14,6 +14,7 @@ import {FormsModule} from '@angular/forms';
 import {IconInterface} from './icon/icon.interface';
 import {PropertiesEditorInterface} from './properties-editor/properties-editor.interface';
 import {StructureInterface} from './structure/structure.interface';
+import {TranslateModule} from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -26,6 +27,7 @@ import {StructureInterface} from './structure/structure.interface';
     RaDesignTreeModule,
     RaDesignWidgetModule,
     RaDesignDragDropModule,
+    TranslateModule.forChild(),
   ],
   declarations: [
     RaDesignToolsComponent,

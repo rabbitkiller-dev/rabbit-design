@@ -10,7 +10,7 @@ import {RaDesignToolsInterface} from '../ra-design-tools.interface';
 @Component({
   template: `
     <div class="ra-design-side-bar-interface-title">
-      <label>页面管理</label>
+      <label>{{'page' | translate}}</label>
       <li class="minimize" (click)="minimize()"><i nz-icon type="rabbit-design:icon-nav-left"></i></li>
     </div>
     <ra-design-tree [nzData]="data" (nzDblClick)="onDblclick($event)" (nzContextMenu)="onContextMenu($event)"

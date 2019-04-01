@@ -49,7 +49,7 @@ export class RaDesignToolsService extends Subject<SideBarServiceEvent> {
     // 页面列表
     this.toolsList.push({
       factory: ToolsFactory.Page,
-      label: '页面管理',
+      label: 'page',
       position: 'left-top',
       select: true,
       icon: 'rabbit-design:icon-page'
@@ -58,7 +58,7 @@ export class RaDesignToolsService extends Subject<SideBarServiceEvent> {
     // 组件列表
     this.toolsList.push({
       factory: ToolsFactory.Component,
-      label: 'component',
+      label: 'components',
       position: 'left-top',
       select: false,
       icon: 'rabbit-design:icon-component'
@@ -134,7 +134,7 @@ export class RaDesignToolsService extends Subject<SideBarServiceEvent> {
   }
 
   private initEvent() {
-    this.RuntimeEventService.on<ToolsFactory>(RUNTIME_EVENT_ENUM.ToolsInterface_Minimize, (value) => {
+    this.RuntimeEventService.on(RUNTIME_EVENT_ENUM.ToolsInterface_Minimize, (value) => {
       const tools = this.toolsMap.get(value);
       tools.select = false;
       this.next({type: 'review'});

@@ -1,0 +1,9 @@
+{
+  "language": "language",
+  "dataSource": "数据源",
+  "components": "组件列表",
+  "structure": "结构视图",
+  "icons": "图标管理",
+  "properties": "属性编辑",
+  "page": "页面管理"
+}

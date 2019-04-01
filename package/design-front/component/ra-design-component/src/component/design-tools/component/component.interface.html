@@ -1,6 +1,6 @@
 <div class="ra-design-side-bar-interface-title">
   <!--<li class="icon"><i nz-icon type="rabbit-design:icon-component"></i></li>-->
-  <label>组件列表</label>
+  <label>{{'components' | translate}}</label>
   <li class="minimize" (click)="minimize()"><i nz-icon type="rabbit-design:icon-nav-left"></i></li>
 </div>
 <ra-design-tree [nzData]="nzData" designDragType="component" [designDragDisabled]="false" (nzDblClick)="ondbClick($event)"></ra-design-tree>
