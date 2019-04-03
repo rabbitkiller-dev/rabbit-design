@@ -5,6 +5,9 @@ export const KEY_MAP_LIST = {
     cut: {key: 'ctrl+x'},
     delete: {key: 'delete'},
   },
+  side_bar_structure: {
+    delete: {key: 'delete'},
+  },
   stage_page_editor: {
     copy: {key: 'ctrl+c'},
     paste: {key: 'ctrl+v'},

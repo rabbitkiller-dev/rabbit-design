@@ -195,11 +195,11 @@ const ComponentDragRefUtil = new (class {
     const componentService: ComponentService = this.Injector.get(ComponentService);
     const targetDrag: RaDesignDynamicUnitDirective = this.targetDrag as any;
     if (this.insertMode === 'insertBefore') {
-      pageEditorService.insertBefore(targetDrag.path, componentService.getHtmlJson(this.data.key));
+      pageEditorService.insertBefore(targetDrag.RabbitPath, componentService.getHtmlJson(this.data.key));
     } else if (this.insertMode === 'insertAfter') {
-      pageEditorService.insertAfter(targetDrag.path, componentService.getHtmlJson(this.data.key));
+      pageEditorService.insertAfter(targetDrag.RabbitPath, componentService.getHtmlJson(this.data.key));
     } else if (this.insertMode === 'append') {
-      pageEditorService.append(targetDrag.path, componentService.getHtmlJson(this.data.key));
+      pageEditorService.append(targetDrag.RabbitPath, componentService.getHtmlJson(this.data.key));
     }
   }
 })

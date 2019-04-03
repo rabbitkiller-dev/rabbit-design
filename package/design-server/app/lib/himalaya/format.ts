@@ -23,7 +23,7 @@ export interface HtmlJson {
   type: string;
   tagName?: string;
   children?: HtmlJson[];
-  attributes?: Attributes[];
+  attributes: Attributes[];
   content?: string;
   position?: string;
 }
@@ -40,7 +40,7 @@ export function format(nodes, options): HtmlJson[] {
         children: format(node.children, options),
       };
     } else {
-      outputNode = {type: type, content: node.content};
+      outputNode = {type: type, content: node.content, attributes: []};
     }
     if (options.includePositions) {
       outputNode.position = node.position;
@@ -50,12 +50,12 @@ export function format(nodes, options): HtmlJson[] {
 }
 
 export function formatAttributes(attributes) {
-  return attributes.map(attribute => {
-    const parts = splitHead(attribute.trim(), '=')
-    const key = parts[0]
+  return attributes.map((attribute) => {
+    const parts = splitHead(attribute.trim(), '=');
+    const key = parts[0];
     const value = typeof parts[1] === 'string'
       ? unquote(parts[1])
-      : null
-    return {key, value}
-  })
+      : null;
+    return {key, value};
+  });
 }

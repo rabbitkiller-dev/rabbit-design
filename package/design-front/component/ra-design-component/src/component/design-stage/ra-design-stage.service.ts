@@ -1,20 +1,16 @@
-import {
-  ComponentFactory,
-  ComponentFactoryResolver,
-  Injectable,
-} from '@angular/core';
-import {StageServiceEvent, StageTabModel, StageTabServerModel} from './interface';
+import {ComponentFactory, ComponentFactoryResolver, Injectable,} from '@angular/core';
+import {StageTabModel, StageTabServerModel} from './interface';
 import {PageEditorInterface} from './page-editor/page-editor.interface';
 import {moveItemInArray} from '../cdk-drag-drop';
 import {LocalStorageService} from 'ngx-webstorage';
-import {Subject} from 'rxjs';
+import {RUNTIME_EVENT_ENUM, RuntimeEventService} from '../design-runtime/runtime-event.service';
 
 export enum StageFactory {
   PageEditor = 'pageEditor',
 }
 
 @Injectable()
-export class RaDesignStageService extends Subject<StageServiceEvent> {
+export class RaDesignStageService {
   /**
    * static
    */
@@ -24,9 +20,9 @@ export class RaDesignStageService extends Subject<StageServiceEvent> {
 
   constructor(
     public ComponentFactoryResolver: ComponentFactoryResolver,
+    public RuntimeEventService: RuntimeEventService,
     public LocalStorageService: LocalStorageService,
   ) {
-    super();
     this.init();
   }
 
@@ -59,7 +55,7 @@ export class RaDesignStageService extends Subject<StageServiceEvent> {
     }
     this.stageList.forEach(stage => stage.select = false);
     this.stageMap.get(stageTabServer.id).select = true;
-    this.next({type: 'put', data: this.stageMap.get(stageTabServer.id)});
+    this.RuntimeEventService.emit(RUNTIME_EVENT_ENUM.Stage_Put, this.stageMap.get(stageTabServer.id));
     this.saveLocalModel();
   }
 

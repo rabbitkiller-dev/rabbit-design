@@ -10,6 +10,7 @@ import {PageEditorServiceEvent} from '../design-stage/page-editor/interface';
 
 export enum RUNTIME_EVENT_ENUM {
   ToolsInterface_Minimize = 'ToolsInterface_Minimize', // 点击了最小化事件
+  Stage_Put = 'Stage_Put', // 在stage list推入了一个新的stage
   Stage_Open = 'Stage_Open', // 打开某个舞台
   StagePageEditor_SelectionChange = 'StagePageEditor_SelectionChange', // 选择变化
   StagePageEditor_UpdateDynamicHtml = 'StagePageEditor_UpdateDynamicHtml', // 更新动态html
@@ -28,8 +29,9 @@ export class RuntimeEventService {
     }
   }
 
-  on(type: RUNTIME_EVENT_ENUM.Stage_Open, listener: (value: StageTabModel) => void);
   on(type: RUNTIME_EVENT_ENUM.ToolsInterface_Minimize, listener: (value: ToolsFactory) => void);
+  on(type: RUNTIME_EVENT_ENUM.Stage_Open, listener: (value: StageTabModel) => void);
+  on(type: RUNTIME_EVENT_ENUM.Stage_Put, listener: (value: StageTabModel) => void);
   on(type: RUNTIME_EVENT_ENUM.StagePageEditor_UpdateDynamicHtml, listener: (value: PageEditorServiceEvent) => void);
   on(type: RUNTIME_EVENT_ENUM.StagePageEditor_SelectionChange, listener: (value: void) => void);
   on<T>(type: any, listener: (value: T) => void) {
@@ -43,8 +45,9 @@ export class RuntimeEventService {
     };
   }
 
-  emit(type: RUNTIME_EVENT_ENUM.Stage_Open, value: StageTabModel);
   emit(type: RUNTIME_EVENT_ENUM.ToolsInterface_Minimize, value: ToolsFactory);
+  emit(type: RUNTIME_EVENT_ENUM.Stage_Put, StageTabModel);
+  emit(type: RUNTIME_EVENT_ENUM.Stage_Open, value: StageTabModel);
   emit(type: RUNTIME_EVENT_ENUM.StagePageEditor_UpdateDynamicHtml, value: PageEditorServiceEvent);
   emit(type: RUNTIME_EVENT_ENUM.StagePageEditor_SelectionChange, value: void);
   emit<T = any>(type: any, value?: T) {

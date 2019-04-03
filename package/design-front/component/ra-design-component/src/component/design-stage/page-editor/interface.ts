@@ -13,6 +13,11 @@ export interface PageEditorServiceEvent {
 }
 
 export interface DesignHtmlJson extends HtmlJson {
-  __designPath: string;
+  RabbitID: string;
+  RabbitPath?: string;
   children: DesignHtmlJson[];
+}
+export interface DesignDynamicHtmlJson extends DesignHtmlJson {
+  RabbitPath: string;
+  children: DesignDynamicHtmlJson[];
 }

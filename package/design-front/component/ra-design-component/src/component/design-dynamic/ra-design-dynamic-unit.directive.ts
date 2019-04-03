@@ -38,8 +38,8 @@ import {DynamicUnitInterface} from './interface';
   }
 })
 export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson> implements OnInit, AfterViewInit, DynamicUnitInterface {
-  @Input('design-stage-id') stageID: string;
-  @Input('design-dynamic-unit') path: string;
+  @Input('design-dynamic-unit') RabbitPath: string;
+  @Input() RabbitID: string;
   @HostBinding('class.dynamic-blank') isBlank: boolean = false;
   @HostBinding('class.dynamic-look-unit') lookUnit = false;
   type: DesignDragType = 'dynamic-unit';
@@ -54,7 +54,7 @@ export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson
     if ($event['designDynamicUnit_click'] || this.lookUnit || this.mergeParent) {
       return;
     }
-    this.PageEditorService.select(this.path);
+    this.PageEditorService.select(this.RabbitPath);
     // 用事件冒泡告诉他们已经点击了 用这种方法不停止冒泡
     $event['designDynamicUnit_click'] = true;
   }
@@ -78,7 +78,7 @@ export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson
   }
 
   ngOnInit(): void {
-    this.data = this.PageEditorService.getNodeJson(this.path);
+    this.data = this.PageEditorService.getNodeJson(this.RabbitPath);
     this.isBlank = this.data.children.length < 1;
     this.getRef();
     super.ngOnInit();

@@ -12,7 +12,6 @@ import {RUNTIME_EVENT_ENUM, RuntimeEventService} from '../design-runtime/runtime
     <!-- stage的上方上任务栏 -->
     <div class="stage-bar" designDrop (onDesignDropped)="onDesignDropped($event)" (wheel)="onMouseWheel($event)">
       <ng-container *ngFor="let stageTab of RaDesignStageService.stageList">
-        <!-- TODO cdkDragBoundary=".stage-bar" 限制移动元素 -->
         <li class="stage-bar-item" [class.is-select]="stageTab.select" (click)="select(stageTab)"
             [style.order]="stageTab.order" designDrag="stage-bar-item">
           <i nz-icon [type]="stageTab.icon"></i>
@@ -37,10 +36,8 @@ export class RaDesignStageComponent implements OnInit, AfterViewInit {
     public RaDesignStageService: RaDesignStageService,
     public RuntimeEventService: RuntimeEventService,
   ) {
-    this.RaDesignStageService.subscribe((event) => {
-      if (event.type === 'put') {
-        this.reviewInterface();
-      }
+    this.RuntimeEventService.on(RUNTIME_EVENT_ENUM.Stage_Put, (value) => {
+      this.reviewInterface();
     });
   }
 
@@ -64,7 +61,6 @@ export class RaDesignStageComponent implements OnInit, AfterViewInit {
           a.instance.stageID = stage.id;
           this.componentRefMap.set(stage.id, this.main.get(0));
         }
-        this.RaDesignStageService.next({type: 'open', data: stage});
         this.RuntimeEventService.emit(RUNTIME_EVENT_ENUM.Stage_Open, stage);
       }
     });
@@ -97,6 +93,7 @@ export class RaDesignStageComponent implements OnInit, AfterViewInit {
     }
     this.componentRefMap.delete(stageTab.id);
     this.RaDesignStageService.deleteStage(stageTab.id);
+    this.reviewInterface();
   }
 
   onMouseWheel($event) {

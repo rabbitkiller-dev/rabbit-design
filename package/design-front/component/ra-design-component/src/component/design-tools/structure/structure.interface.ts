@@ -1,9 +1,12 @@
-import {Component, Injector} from '@angular/core';
+import {Component, ElementRef, Injector} from '@angular/core';
 import {PageEditorService} from '../../design-stage/page-editor/page-editor.service';
 import {StageFactory, StageTabModel} from '../../design-stage';
-import {NzFormatEmitEvent, RaDesignTreeService} from '../../design-tree';
+import {NzFormatEmitEvent, NzTreeNodeOptions, RaDesignTreeService, TreeNodeModel} from '../../design-tree';
 import {RaDesignToolsInterface} from '../ra-design-tools.interface';
 import {RUNTIME_EVENT_ENUM} from '../../design-runtime/runtime-event.service';
+import {HtmlJson} from 'himalaya';
+import {DesignHtmlJson} from '../../design-stage/page-editor/interface';
+import {RaDesignKeyMapService} from '../../design-key-map/ra-design-key-map.service';
 
 @Component({
   template: `
@@ -12,7 +15,7 @@ import {RUNTIME_EVENT_ENUM} from '../../design-runtime/runtime-event.service';
       <li class="minimize" (click)="minimize()"><i nz-icon type="rabbit-design:icon-nav-left"></i></li>
     </div>
     <div class="ra-design-side-bar-interface-content">
-      <ra-design-tree [nzData]="data" (nzDblClick)="onDblclick($event)" (nzContextMenu)="onContextMenu($event)"
+      <ra-design-tree [nzData]="data" (nzDblClick)="onDblclick($event)" (nzClick)="onClick($event)"
                       (nzTouchStart)="onTouchStart($event)"
                       [cdkDrag]="true"></ra-design-tree>
     </div>
@@ -21,11 +24,13 @@ import {RUNTIME_EVENT_ENUM} from '../../design-runtime/runtime-event.service';
 })
 export class StructureInterface extends RaDesignToolsInterface {
   currentStage: StageTabModel;
-  data: any[];
+  data: Array<HtmlJson & NzTreeNodeOptions>;
   selection: string[] = [];
 
   constructor(
+    public ElementRef: ElementRef,
     public PageEditorService: PageEditorService,
+    public RaDesignKeyMapService: RaDesignKeyMapService,
     public Injector: Injector
   ) {
     super(Injector);
@@ -33,6 +38,16 @@ export class StructureInterface extends RaDesignToolsInterface {
   }
 
   initEvent() {
+    this.RaDesignKeyMapService.registerListenerWindow('stage_page_editor', this.ElementRef.nativeElement, {}).subscribe((event) => {
+      switch (event.emitKey) {
+        case 'delete':
+          const selection = this.PageEditorService.getSelection(this.currentStage.id);
+          if (selection.length > 0) {
+            this.PageEditorService.deleteNodeJson(selection[0]);
+          }
+          break;
+      }
+    });
     this.RuntimeEventService.on(RUNTIME_EVENT_ENUM.Stage_Open, (value) => {
       this.currentStage = value;
       this.updateStructure();
@@ -43,11 +58,7 @@ export class StructureInterface extends RaDesignToolsInterface {
     });
     this.RuntimeEventService.on(RUNTIME_EVENT_ENUM.StagePageEditor_SelectionChange, (value) => {
       this.selection = this.PageEditorService.getSelection(this.currentStage.id);
-      RaDesignTreeService.forEachTree(this.data, (node) => {
-        if (this.selection.indexOf(node.path) !== -1) {
-          node.selected = true;
-        }
-      });
+      this.updateStructure();
     });
   }
 
@@ -70,7 +81,7 @@ export class StructureInterface extends RaDesignToolsInterface {
     });
     RaDesignTreeService.forEachTree(this.data, (node) => {
       node.title = node.tagName;
-      if (this.selection.indexOf(node.path) !== -1) {
+      if (this.selection.indexOf(node.RabbitPath) !== -1) {
         node.selected = true;
       }
       if (node.children) {
@@ -87,5 +98,10 @@ export class StructureInterface extends RaDesignToolsInterface {
 
   onDblclick($event: NzFormatEmitEvent) {
     $event.node.setExpanded(!$event.node.isExpanded);
+  }
+
+  onClick($event: NzFormatEmitEvent) {
+    const htmlJson: DesignHtmlJson = $event.node.origin;
+    this.PageEditorService.select(htmlJson.RabbitPath);
   }
 }

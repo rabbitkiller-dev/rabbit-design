@@ -7,5 +7,5 @@ import {StageTabModel} from 'ra-design-component';
 @Injectable({
   providedIn: 'root'
 })
-export class RuntimeEventService {
+export class RuntimeHandleService {
 }

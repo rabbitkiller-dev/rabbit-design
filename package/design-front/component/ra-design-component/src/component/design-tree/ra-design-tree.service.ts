@@ -23,15 +23,15 @@ export class RaDesignTreeService {
   halfCheckedNodeList: TreeNodeModel[] = [];
   matchedNodeList: TreeNodeModel[] = [];
 
-  static forEachTree(node: any[], call) {
-      node.forEach((_n) => {
-        if (call(_n)) {
-          return true;
-        }
-        if (_n.children && _n.children.length > 0) {
-          RaDesignTreeService.forEachTree(_n.children, call);
-        }
-      });
+  static forEachTree<T>(node: Array<T & { children?: T[] }>, call: (value: T) => boolean | void) {
+    node.forEach((_n) => {
+      if (call(_n)) {
+        return true;
+      }
+      if (_n.children && _n.children.length > 0) {
+        RaDesignTreeService.forEachTree(_n.children, call);
+      }
+    });
   }
 
   /**
