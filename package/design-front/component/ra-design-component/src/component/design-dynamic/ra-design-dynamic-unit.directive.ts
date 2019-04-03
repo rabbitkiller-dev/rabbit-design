@@ -54,7 +54,7 @@ export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson
     if ($event['designDynamicUnit_click'] || this.lookUnit || this.mergeParent) {
       return;
     }
-    this.PageEditorService.select(this.RabbitPath);
+    this.PageEditorService.select(this.RabbitPath, this);
     // 用事件冒泡告诉他们已经点击了 用这种方法不停止冒泡
     $event['designDynamicUnit_click'] = true;
   }

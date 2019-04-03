@@ -1,16 +1,18 @@
 import {Injectable} from '@angular/core';
-import {HtmlJson} from 'himalaya';
-import {PropertiesEditorInterface} from './properties-editor.interface';
 import {parserDirective} from '../../design-dynamic/parser-directive';
-import {RaDesignKeyMapService} from '../../design-key-map/ra-design-key-map.service';
+import {DesignHtmlJson} from '../../design-stage/page-editor/interface';
 
 @Injectable({providedIn: 'root'})
 export class PropertiesEditorService {
   constructor() {
   }
+
+  getPanel(nodeJson: DesignHtmlJson): string {
+    return getDirective(nodeJson).join();
+  }
 }
 
-function getDirective(htmlJson: HtmlJson) {
+function getDirective(htmlJson: DesignHtmlJson) {
   return parserDirective(htmlJson).map((directiveName) => {
     return getDirectiveProperties(directiveName);
   });
@@ -19,7 +21,14 @@ function getDirective(htmlJson: HtmlJson) {
 function getDirectiveProperties(directiveName): string {
   switch (directiveName) {
     case 'nz-icon':
-      return 'a';
+      return `
+        <nz-form-item>
+        <nz-form-label [nzSm]="6">type: {{proxy.type}}</nz-form-label>
+        <nz-form-control [nzSm]="14">
+          <input design-input [(ngModel)]="proxy.type">
+        </nz-form-control>
+      </nz-form-item>
+      `;
     case 'nz-input':
       return 'b';
   }

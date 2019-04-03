@@ -6,6 +6,7 @@ import {DesignDynamicHtmlJson, DesignHtmlJson, PageEditorServiceEvent, PageInfoM
 import {map} from 'rxjs/operators';
 import {RaDesignTreeService} from '../../design-tree/ra-design-tree.service';
 import {RUNTIME_EVENT_ENUM, RuntimeEventService} from '../../design-runtime/runtime-event.service';
+import {DynamicUnitInterface} from '../../design-dynamic/interface';
 
 @Injectable({providedIn: 'root'})
 export class PageEditorService {
@@ -13,7 +14,7 @@ export class PageEditorService {
   private htmlJsons: Map<string, DesignHtmlJson[]> = new Map();
   private htmlJsonMaps: Map<string, Map<string, DesignHtmlJson>> = new Map();
   private selections: Map<string, Set<string>> = new Map();
-
+  instance: DynamicUnitInterface;
   constructor(
     public HttpClient: HttpClient,
     public RuntimeEventService: RuntimeEventService,
@@ -23,7 +24,8 @@ export class PageEditorService {
   /**
    * editor runtime api
    */
-  select(RabbitPath: string) {
+  select(RabbitPath: string, instance?: DynamicUnitInterface) {
+    this.instance = instance;
     const stageID: string = RabbitPath.split('|')[0];
     const selection = this.selections.get(stageID);
     // 如果已经选中了就不执行了
@@ -163,7 +165,7 @@ export class PageEditorService {
     return this.htmlJsons.delete(stageID);
   }
 
-  getNodeJson(RabbitPath: string): HtmlJson {
+  getNodeJson(RabbitPath: string): DesignHtmlJson {
     const stageID: string = RabbitPath.split('|')[0];
     const paths: string[] = RabbitPath.split('|')[1].split('/');
     let nodeJson: any = {children: this.getHtmlJson(stageID)};

@@ -5,8 +5,8 @@ import {
   ElementRef,
   Injector,
   ModuleWithComponentFactories,
-  NgModule,
-  OnInit,
+  NgModule, OnChanges,
+  OnInit, SimpleChanges,
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
@@ -14,12 +14,14 @@ import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RaDesignDynamicUnitModule} from '../../design-dynamic/ra-design-dynamic-unit.module';
-import {NzIconModule, NzInputModule} from 'ng-zorro-antd';
+import {NzFormModule, NzIconModule, NzInputModule} from 'ng-zorro-antd';
 import {PropertiesEditorService} from './properties-editor.service';
 import {RaDesignToolsInterface} from '../ra-design-tools.interface';
 import {RUNTIME_EVENT_ENUM, RuntimeEventService} from '../../design-runtime/runtime-event.service';
 import {PageEditorService} from '../../design-stage/page-editor/page-editor.service';
 import {StageTabModel} from 'ra-design-component';
+import {DesignHtmlJson} from '../../design-stage/page-editor/interface';
+import {RaDesignWidgetModule} from '../../design-widget/ra-design-widget.module';
 
 @Component({
   template: `
@@ -36,6 +38,7 @@ export class PropertiesEditorInterface extends RaDesignToolsInterface implements
   panel: string;
   @ViewChild('content', {read: ViewContainerRef}) content: ViewContainerRef;
   comRef: ComponentRef<any>;
+  node: DesignHtmlJson;
 
   constructor(
     public Injector: Injector,
@@ -68,6 +71,8 @@ export class PropertiesEditorInterface extends RaDesignToolsInterface implements
       return;
     }
     const nodeJson = this.PageEditorService.getNodeJson(selection[0]);
+    this.panel = this.PropertiesEditorService.getPanel(nodeJson);
+    this.createModule();
   }
 
   ngOnInit(): void {
@@ -85,6 +90,8 @@ export class PropertiesEditorInterface extends RaDesignToolsInterface implements
 
     @NgModule({
       imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule, RaDesignDynamicUnitModule,
+        NzFormModule,
+        RaDesignWidgetModule,
         NzIconModule, NzInputModule],
       declarations: [master],
       // declarations: [master, __this.createComponent('page-cccc', '<div>嵌套页面</div>')],
@@ -109,15 +116,28 @@ export class PropertiesEditorInterface extends RaDesignToolsInterface implements
       styles: [],
       // encapsulation: ViewEncapsulation.Native,
     })
-    class DynamicComponent implements OnInit {
+    class DynamicComponent implements OnInit, OnChanges {
+      proxy;
 
       constructor(public ElementRef: ElementRef) {
       }
 
       ngOnInit() {
+        this.proxy = new Proxy<DynamicComponent>(this, {
+          set: (target, p, value, receiver) => {
+            console.log(target, p, value, receiver);
+            return true;
+          }
+        });
+      }
+
+      ngOnChanges(simple: SimpleChanges) {
+        console.log(simple);
       }
     }
 
     return DynamicComponent;
   }
+
+
 }
