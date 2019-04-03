@@ -14,7 +14,7 @@ export class PageEditorService {
   private htmlJsons: Map<string, DesignHtmlJson[]> = new Map();
   private htmlJsonMaps: Map<string, Map<string, DesignHtmlJson>> = new Map();
   private selections: Map<string, Set<string>> = new Map();
-  instance: DynamicUnitInterface;
+  instance: any;
   constructor(
     public HttpClient: HttpClient,
     public RuntimeEventService: RuntimeEventService,
@@ -24,7 +24,7 @@ export class PageEditorService {
   /**
    * editor runtime api
    */
-  select(RabbitPath: string, instance?: DynamicUnitInterface) {
+  select(RabbitPath: string, instance?: any) {
     this.instance = instance;
     const stageID: string = RabbitPath.split('|')[0];
     const selection = this.selections.get(stageID);

@@ -5,8 +5,10 @@ import {
   ElementRef,
   Injector,
   ModuleWithComponentFactories,
-  NgModule, OnChanges,
-  OnInit, SimpleChanges,
+  NgModule,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
@@ -17,11 +19,12 @@ import {RaDesignDynamicUnitModule} from '../../design-dynamic/ra-design-dynamic-
 import {NzFormModule, NzIconModule, NzInputModule} from 'ng-zorro-antd';
 import {PropertiesEditorService} from './properties-editor.service';
 import {RaDesignToolsInterface} from '../ra-design-tools.interface';
-import {RUNTIME_EVENT_ENUM, RuntimeEventService} from '../../design-runtime/runtime-event.service';
+import {RUNTIME_EVENT_ENUM} from '../../design-runtime/runtime-event.service';
 import {PageEditorService} from '../../design-stage/page-editor/page-editor.service';
 import {StageTabModel} from 'ra-design-component';
 import {DesignHtmlJson} from '../../design-stage/page-editor/interface';
 import {RaDesignWidgetModule} from '../../design-widget/ra-design-widget.module';
+import {parserDirective} from "../../design-dynamic/parser-directive";
 
 @Component({
   template: `
@@ -38,7 +41,7 @@ export class PropertiesEditorInterface extends RaDesignToolsInterface implements
   panel: string;
   @ViewChild('content', {read: ViewContainerRef}) content: ViewContainerRef;
   comRef: ComponentRef<any>;
-  node: DesignHtmlJson;
+  nodeJson: DesignHtmlJson;
 
   constructor(
     public Injector: Injector,
@@ -70,7 +73,7 @@ export class PropertiesEditorInterface extends RaDesignToolsInterface implements
     if (selection.length !== 1) {
       return;
     }
-    const nodeJson = this.PageEditorService.getNodeJson(selection[0]);
+    const nodeJson = this.nodeJson = this.PageEditorService.getNodeJson(selection[0]);
     this.panel = this.PropertiesEditorService.getPanel(nodeJson);
     this.createModule();
   }
@@ -94,7 +97,6 @@ export class PropertiesEditorInterface extends RaDesignToolsInterface implements
         RaDesignWidgetModule,
         NzIconModule, NzInputModule],
       declarations: [master],
-      // declarations: [master, __this.createComponent('page-cccc', '<div>嵌套页面</div>')],
     })
     class DynamicModule {
     }
@@ -106,6 +108,9 @@ export class PropertiesEditorInterface extends RaDesignToolsInterface implements
       }).then((factory) => {
       this.destroy();
       this.comRef = this.content.createComponent(factory, 0);
+      console.log(this.PageEditorService.instance);
+      this.comRef.instance.setInstance(this.PageEditorService.instance);
+      this.comRef.instance.setNodeJson(this.nodeJson);
     });
   }
 
@@ -117,22 +122,31 @@ export class PropertiesEditorInterface extends RaDesignToolsInterface implements
       // encapsulation: ViewEncapsulation.Native,
     })
     class DynamicComponent implements OnInit, OnChanges {
-      proxy;
+      directive: string[];
+      instance;
+      nodeJson: DesignHtmlJson;
 
       constructor(public ElementRef: ElementRef) {
       }
 
       ngOnInit() {
-        this.proxy = new Proxy<DynamicComponent>(this, {
-          set: (target, p, value, receiver) => {
-            console.log(target, p, value, receiver);
-            return true;
-          }
-        });
       }
 
       ngOnChanges(simple: SimpleChanges) {
-        console.log(simple);
+      }
+
+      setNodeJson(nodeJson) {
+        this.directive = parserDirective(nodeJson);
+        this.nodeJson = nodeJson;
+      }
+
+      setInstance(instance: any) {
+        this.instance = new Proxy<any>(instance, {
+          set: (target, p, value, receiver) => {
+            console.log(value);
+            return true;
+          }
+        });
       }
     }
 
