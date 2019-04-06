@@ -5,8 +5,6 @@ preview http://47.105.84.128/design/
 快捷键功能
 复制/剪切
 提示功能-删除前要提交才能删除
-动态切换语言(jhipster)
-菜单样式
 弹窗拖拽移动还有关闭按钮
 查找图标,实现icon/input
 tools拖拽的排序
@@ -17,12 +15,33 @@ ToolsTabModel改名为sideBar
 聚焦样式
 build:i18n增加监听文件
 build:i18n增加target目录
+  枚举
+    输入框-枚举项
+      变量-枚举项
+    选择框-枚举项
+      变量-枚举项
+  变量
+    输入框-全局变量/局部变量
+      变量-all/xxx
+    字符串
+    选择框-全局变量
+      变量-all/xxx
+  url
+    输入框-全局变量
+    字符串
+    选择框-全局变量
+    api选择器
+  图标
+    图标选择器
+    输入框-全局变量
+    字符串
+  
 拖拽
      组合
      拖拽容器
      lookDrop bug 假设拖拽到lookDrop窗口下面的组件,就会变成排序,那就会无视lookDrop插入到lookDrop元素下
      解决ng组件容器 找到容器append的目标元素
-滚动放大    transform: translate3d(0px, 0px, 0px) scale(5, 5);
+滚动放大    transform: translate3d(0px, 0px, 0px) scale(1.1, 1.1);
         transform-origin: 0 0;
         display: block;
 ## 设计平台相关

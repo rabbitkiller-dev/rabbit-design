@@ -1,7 +1,7 @@
 import {
   AfterViewInit,
   Component, ElementRef, OnChanges, OnDestroy,
-  OnInit, SimpleChanges,
+  OnInit, SimpleChanges, ViewChild,
 } from '@angular/core';
 import {PageEditorService} from './page-editor.service';
 import {DesignHtmlJson, PageInfoModel} from './interface';
@@ -12,8 +12,10 @@ import {RaDesignKeyMapService} from '../../design-key-map/ra-design-key-map.serv
   selector: 'ra-design-page-editor',
   template: `
     <div class="page-editor" style="">
-      <div class="page-editor-content" designDrop="page-editor" [designData]="stageID">
-        <ng-template [design-dynamic]="dynamicHtml"></ng-template>
+      <div class="page-editor-content" designDrop="page-editor" [designData]="stageID" (wheel)="onMouseWheel($event)">
+        <div class="page-editor-content__left_top" #topLeft>
+          <ng-template [design-dynamic]="dynamicHtml"></ng-template>
+        </div>
       </div>
       <div class="page-editor-footer">
       </div>
@@ -24,10 +26,14 @@ import {RaDesignKeyMapService} from '../../design-key-map/ra-design-key-map.serv
 export class PageEditorInterface implements OnInit, AfterViewInit, OnDestroy, OnChanges {
   pageInfo: PageInfoModel;
   stageID: string;
+  wheelOption = {
+    size: 1,
+  }
   private dynamicHtml: string;
+  @ViewChild('topLeft') topLeft: ElementRef;
 
   constructor(
-    public ElementRef: ElementRef,
+    public ElementRef: ElementRef<HTMLElement>,
     public PageEditorService: PageEditorService,
     public RaDesignKeyMapService: RaDesignKeyMapService,
   ) {
@@ -61,6 +67,21 @@ export class PageEditorInterface implements OnInit, AfterViewInit, OnDestroy, On
           break;
       }
     });
+  }
+
+  onMouseWheel($event: WheelEvent) {
+    if ($event.ctrlKey) {
+      $event.preventDefault();
+      if ($event.deltaY > 0) {
+        this.wheelOption.size -= 0.1;
+      } else {
+        this.wheelOption.size += 0.1;
+      }
+      const element: HTMLElement = this.topLeft.nativeElement;
+      element.style.transform = `translate3d(0px, 0px, 0px) scale(${this.wheelOption.size}, ${this.wheelOption.size})`;
+      element.style.transformOrigin = '0 0';
+      element.style.display = 'block';
+    }
   }
 
   ngOnChanges(simple: SimpleChanges) {
