@@ -14,4 +14,4 @@ export function stringify(ast, options: ParseDefaults = parseDefaults) {
   return toHTML(ast, options);
 }
 
-export {HtmlJson} from './format';
+export {HtmlJson, Attributes} from './format';

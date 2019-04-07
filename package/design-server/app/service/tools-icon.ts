@@ -65,10 +65,16 @@ export default class ToolsPageService extends Service {
 
   async getIcon(entityManager: EntityManager, params: { fontClass: string, namespace?: string, projectID: string }): Promise<Icon> {
     const iconRepo = entityManager.getRepository(Icon);
-    const icon = await iconRepo.findOne({
+    let icon = await iconRepo.findOne({
       projectID: params.projectID,
       fontClass: params.fontClass,
     });
+    if (!icon) {
+      icon = await iconRepo.findOne({
+        projectID: params.projectID,
+        fontClass: 'icon-iconfont',
+      });
+    }
     if (!icon) {
       throw ErrorService.RuntimeErrorNotFind();
     }

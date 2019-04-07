@@ -54,7 +54,15 @@ export default class ToolsPageService extends Service {
     page.author = this.config.user.userID;
     page.projectID = this.config.user.projectID;
 
-    await entityManager.getRepository(PageInfo).save(page);
+    await entityManager.getRepository(PageInfo).save(Object.assign(page, {
+      content: {
+        html: '',
+        ts: '',
+        css: '',
+        unitStructure: {},
+        propertiesStructure: {},
+      },
+    }));
     return this.formatPageToTree(await pageRepo.save(page));
   }
 
