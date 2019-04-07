@@ -6,15 +6,26 @@ import {DesignDynamicHtmlJson, DesignHtmlJson, PageEditorServiceEvent, PageInfoM
 import {map} from 'rxjs/operators';
 import {RaDesignTreeService} from '../../design-tree/ra-design-tree.service';
 import {RUNTIME_EVENT_ENUM, RuntimeEventService} from '../../design-runtime/runtime-event.service';
-import {DynamicUnitInterface} from '../../design-dynamic/interface';
+import {DynamicUnitInterface, DynamicUnitServerInterface} from '../../design-dynamic/interface';
 
 @Injectable({providedIn: 'root'})
 export class PageEditorService {
-  private subjects: Map<string, Subject<PageEditorServiceEvent>> = new Map();
-  private htmlJsons: Map<string, DesignHtmlJson[]> = new Map();
-  private htmlJsonMaps: Map<string, Map<string, DesignHtmlJson>> = new Map();
-  private selections: Map<string, Set<string>> = new Map();
+  subjects: Map<string, Subject<PageEditorServiceEvent>> = new Map(); // 存储与page-editor.component订阅的事件
+  pageInfos: Map<string, PageInfoModel> = new Map(); // 存储所有打开的page的信息
   instance: any;
+
+  /**
+   * runtime data
+   * htmlJson.get(stageID);
+   * htmlJsonMaps.get(stageID).get(RabbitID);
+   * selections.get(stageID);
+   * dynamicUnits.get(stageID).get(RabbitID);
+   */
+  private htmlJsons: Map<string, DesignHtmlJson[]> = new Map(); // 存储html结构
+  private htmlJsonMaps: Map<string, Map<string, DesignHtmlJson>> = new Map(); // 以key-value的形式存储的html
+  private selections: Map<string, Set<string>> = new Map(); // 存储选中的html
+  private dynamicUnits: Map<string, Map<string, DynamicUnitInterface>> = new Map();
+
   constructor(
     public HttpClient: HttpClient,
     public RuntimeEventService: RuntimeEventService,
@@ -45,12 +56,22 @@ export class PageEditorService {
     return Array.from(this.selections.get(stageID) || []);
   }
 
+  registerDynamicUnit(stageID: string, instance: DynamicUnitInterface) {
+    const map = this.dynamicUnits.get(stageID);
+    map.set(instance.RabbitID, instance);
+    const pageInfo = this.pageInfos.get(stageID);
+    const unit: DynamicUnitServerInterface = pageInfo.content.unitStructure[instance.RabbitID];
+    if (unit) {
+      Object.assign(instance, unit);
+    }
+  }
+
   /**
    * htmlJson change api
    */
 
-  addRoot(stageID: string, htmlJson: string);
-  addRoot(stageID: string, htmlJson: HtmlJson[]);
+  addRoot(stageID: string, htmlString: string);
+  addRoot(stageID: string, htmlJsonArr: HtmlJson[]);
   addRoot(stageID: string, htmlJson: HtmlJson);
   addRoot(stageID: string, htmlJson: any) {
     const add = [];
@@ -67,11 +88,7 @@ export class PageEditorService {
     }
     this.htmlJsons.get(stageID).push(...add);
     this.updateRabbitID(stageID, this.htmlJsons.get(stageID));
-    this.next(stageID, {
-      stageID: stageID,
-      type: 'update-dynamic-html',
-      data: this.stringify(stageID, this.getHtmlJson(stageID))
-    });
+    this.updateDynamic(stageID);
   }
 
   insertBefore(path: string, htmlJson: string);
@@ -95,11 +112,7 @@ export class PageEditorService {
       originParentNode.children.splice(originParentNode.children.indexOf(htmlJson), 1);
     }
     this.updateRabbitID(stageID, this.htmlJsons.get(stageID));
-    this.next(stageID, {
-      stageID: stageID,
-      type: 'update-dynamic-html',
-      data: this.stringify(stageID, this.getHtmlJson(stageID))
-    });
+    this.updateDynamic(stageID);
   }
 
   insertAfter(path: string, htmlJson: string);
@@ -123,11 +136,7 @@ export class PageEditorService {
       originParentNode.children.splice(originParentNode.children.indexOf(htmlJson), 1);
     }
     this.updateRabbitID(stageID, this.htmlJsons.get(stageID));
-    this.next(stageID, {
-      stageID: stageID,
-      type: 'update-dynamic-html',
-      data: this.stringify(stageID, this.getHtmlJson(stageID))
-    });
+    this.updateDynamic(stageID);
   }
 
   append(path: string, htmlJson: string);
@@ -150,11 +159,7 @@ export class PageEditorService {
       originParentNode.children.splice(originParentNode.children.indexOf(htmlJson), 1);
     }
     this.updateRabbitID(stageID, this.htmlJsons.get(stageID));
-    this.next(stageID, {
-      stageID: stageID,
-      type: 'update-dynamic-html',
-      data: this.stringify(stageID, this.getHtmlJson(stageID))
-    });
+    this.updateDynamic(stageID);
   }
 
   getHtmlJson(stageID: string) {
@@ -189,11 +194,7 @@ export class PageEditorService {
     selection.delete(path);
     this.updateRabbitID(stageID, this.htmlJsons.get(stageID));
     // 更新视图
-    this.next(stageID, {
-      stageID: stageID,
-      type: 'update-dynamic-html',
-      data: this.stringify(stageID, this.getHtmlJson(stageID))
-    });
+    this.updateDynamic(stageID);
   }
 
   getParentNodeJson(path: string): HtmlJson {
@@ -254,9 +255,9 @@ export class PageEditorService {
   /**
    * Renderer api
    */
-  stringify(stageID: string, htmlJson: DesignHtmlJson[]): string {
+  updateDynamic(stageID: string) {
     const htmlJsonMap = this.htmlJsonMaps.get(stageID);
-    const copyHtmlJson = JSON.parse(JSON.stringify(htmlJson));
+    const copyHtmlJson = JSON.parse(JSON.stringify(this.getHtmlJson(stageID)));
     RaDesignTreeService.forEachTree(copyHtmlJson, (node: DesignDynamicHtmlJson) => {
       if (!node.RabbitPath && node.type === 'element') {
         node.RabbitPath = `${stageID}|${node.RabbitID}`;
@@ -279,7 +280,14 @@ export class PageEditorService {
         childrenNode.RabbitPath = `${node.RabbitPath}/${childrenNode.RabbitID}`;
       });
     });
-    return stringify(copyHtmlJson);
+    this.dynamicUnits.delete(stageID);
+    this.dynamicUnits.set(stageID, new Map());
+    this.next(stageID, {
+      stageID: stageID,
+      type: 'update-dynamic-html',
+      data: stringify(copyHtmlJson),
+      selection: this.getSelection(stageID),
+    });
   }
 
   /**
@@ -299,7 +307,12 @@ export class PageEditorService {
     subject.next(value);
     switch (value.type) {
       case 'update-dynamic-html':
+        this.pageInfos.get(stageID).content.html = stringify(this.getHtmlJson(stageID));
         this.RuntimeEventService.emit(RUNTIME_EVENT_ENUM.StagePageEditor_UpdateDynamicHtml, value);
+        setTimeout(() => {
+          this.modify(stageID).subscribe(() => {
+          });
+        }, 200);
         break;
     }
   }
@@ -310,12 +323,30 @@ export class PageEditorService {
 
   findOne(id: string): Observable<PageInfoModel> {
     return this.HttpClient.get(`api/tools-page/page-info/${id}`).pipe(map((result: any) => {
-      return result.data;
+      const pageInfo: PageInfoModel = result.data;
+      this.pageInfos.set(id, pageInfo);
+      this.addRoot(id, pageInfo.content.html || '');
+      return pageInfo;
     }));
   }
 
-  modify(page: PageInfoModel): Observable<PageInfoModel> {
-    return this.HttpClient.put(`api/tools-page/page-info`, page).pipe(map((result: any) => {
+  modify(id: string): Observable<PageInfoModel> {
+    const pageInfo = this.pageInfos.get(id);
+    const unitStructure: {
+      [index: string]: DynamicUnitServerInterface
+    } = {};
+    this.dynamicUnits.get(id).forEach((value, key, map) => {
+      unitStructure[value.RabbitID] = {
+        RabbitID: value.RabbitID,
+        lookUnit: value.lookUnit,
+        lookDrag: value.lookDrag,
+        lookDrop: value.lookDrop,
+        mergeParent: value.mergeParent,
+        isContainer: value.isContainer,
+      };
+    });
+    pageInfo.content.unitStructure = unitStructure;
+    return this.HttpClient.put(`api/tools-page/page-info`, this.pageInfos.get(id)).pipe(map((result: any) => {
       return result.data;
     }));
   }

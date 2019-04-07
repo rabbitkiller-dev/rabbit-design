@@ -24,7 +24,9 @@ import {PageEditorService} from '../../design-stage/page-editor/page-editor.serv
 import {StageTabModel} from 'ra-design-component';
 import {DesignHtmlJson} from '../../design-stage/page-editor/interface';
 import {RaDesignWidgetModule} from '../../design-widget/ra-design-widget.module';
-import {parserDirective} from "../../design-dynamic/parser-directive";
+import {parserDirective} from '../../design-dynamic/parser-directive';
+import {Attributes} from 'himalaya';
+import {RaDesignPropertiesModule} from '../../design-properties/ra-design-properties.module';
 
 @Component({
   template: `
@@ -94,7 +96,7 @@ export class PropertiesEditorInterface extends RaDesignToolsInterface implements
     @NgModule({
       imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule, RaDesignDynamicUnitModule,
         NzFormModule,
-        RaDesignWidgetModule,
+        RaDesignWidgetModule, RaDesignPropertiesModule,
         NzIconModule, NzInputModule],
       declarations: [master],
     })
@@ -125,6 +127,7 @@ export class PropertiesEditorInterface extends RaDesignToolsInterface implements
       directive: string[];
       instance;
       nodeJson: DesignHtmlJson;
+      RabbitID: Attributes;
 
       constructor(public ElementRef: ElementRef) {
       }
@@ -138,6 +141,7 @@ export class PropertiesEditorInterface extends RaDesignToolsInterface implements
       setNodeJson(nodeJson) {
         this.directive = parserDirective(nodeJson);
         this.nodeJson = nodeJson;
+        this.RabbitID = this.nodeJson.attributes.find((attr) => attr.key === 'RabbitID' || attr.key === '[RabbitID]');
       }
 
       setInstance(instance: any) {

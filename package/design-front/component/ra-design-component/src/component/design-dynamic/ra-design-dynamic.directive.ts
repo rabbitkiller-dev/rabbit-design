@@ -9,7 +9,7 @@ import {RouterModule} from '@angular/router';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Throttle} from './throttle';
 import {RaDesignDynamicUnitModule} from './ra-design-dynamic-unit.module';
-import {NgZorroAntdModule} from 'ng-zorro-antd';
+import {NgZorroAntdModule} from './nz-module/ng-zorro-antd.module';
 
 @Directive({
   selector: '[design-dynamic]',

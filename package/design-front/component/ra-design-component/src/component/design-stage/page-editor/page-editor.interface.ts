@@ -5,13 +5,12 @@ import {
 } from '@angular/core';
 import {PageEditorService} from './page-editor.service';
 import {DesignHtmlJson, PageInfoModel} from './interface';
-import {HtmlJson, parse, stringify} from 'himalaya';
 import {RaDesignKeyMapService} from '../../design-key-map/ra-design-key-map.service';
 
 @Component({
   selector: 'ra-design-page-editor',
   template: `
-    <div class="page-editor" style="">
+    <div class="page-editor">
       <div class="page-editor-content" designDrop="page-editor" [designData]="stageID" (wheel)="onMouseWheel($event)">
         <div class="page-editor-content__left_top" #topLeft>
           <ng-template [design-dynamic]="dynamicHtml"></ng-template>
@@ -23,7 +22,7 @@ import {RaDesignKeyMapService} from '../../design-key-map/ra-design-key-map.serv
   `,
   styles: []
 })
-export class PageEditorInterface implements OnInit, AfterViewInit, OnDestroy, OnChanges {
+export class PageEditorInterface implements OnInit, AfterViewInit, OnDestroy {
   pageInfo: PageInfoModel;
   stageID: string;
   wheelOption = {
@@ -42,7 +41,6 @@ export class PageEditorInterface implements OnInit, AfterViewInit, OnDestroy, On
   ngOnInit() {
     this.PageEditorService.findOne(this.stageID).subscribe((pageInfo) => {
       this.pageInfo = pageInfo;
-      this.PageEditorService.addRoot(this.stageID, pageInfo.content || '');
     });
     this.RaDesignKeyMapService.registerListenerWindow('stage_page_editor', this.ElementRef.nativeElement, {stageID: this.stageID}).subscribe((event) => {
       switch (event.emitKey) {
@@ -61,9 +59,6 @@ export class PageEditorInterface implements OnInit, AfterViewInit, OnDestroy, On
       switch (event.type) {
         case 'update-dynamic-html':
           this.dynamicHtml = event.data;
-          this.pageInfo.content = stringify(this.PageEditorService.getHtmlJson(this.stageID));
-          this.PageEditorService.modify(this.pageInfo).subscribe(() => {
-          });
           break;
       }
     });
@@ -84,12 +79,8 @@ export class PageEditorInterface implements OnInit, AfterViewInit, OnDestroy, On
     }
   }
 
-  ngOnChanges(simple: SimpleChanges) {
-    console.log(simple);
-  }
-
   ngOnDestroy() {
-    this.PageEditorService.modify(this.pageInfo).subscribe(() => {
+    this.PageEditorService.modify(this.stageID).subscribe(() => {
     });
     this.PageEditorService.deleteHtmlJson(this.stageID);
   }

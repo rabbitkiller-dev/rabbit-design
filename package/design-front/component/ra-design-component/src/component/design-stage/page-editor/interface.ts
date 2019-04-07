@@ -2,7 +2,23 @@ import {PageModel} from '../../design-tools/page/interface';
 import {HtmlJson} from 'himalaya';
 
 export interface PageInfoModel extends PageModel {
-  content?: string; // 页面类型
+  content?: {
+    ts: string,
+    html: string,
+    css: string,
+    unitStructure: {
+      [index: string]: {
+        RabbitID: string; // ID
+        lookUnit?: boolean; // 锁定单元
+        lookDrag?: boolean; // 锁定拖拽
+        lookDrop?: boolean; // 锁定拖放
+        mergeParent?: boolean; // 合并父级
+        isContainer?: boolean; // 是否是容器
+      },
+    },
+    propertiesStructure: {
+    },
+  }; // 页面类型
 }
 
 export interface PageEditorServiceEvent {

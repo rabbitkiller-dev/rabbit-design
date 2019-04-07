@@ -14,8 +14,7 @@ import {
   NgZone,
   Renderer2, AfterViewInit, ChangeDetectorRef, HostBinding
 } from '@angular/core';
-import {NzHeaderComponent, NzIconDirective, NzLayoutComponent} from 'ng-zorro-antd';
-import {NzInputDirective} from 'ng-zorro-antd';
+import {NzInputDirective, NzHeaderComponent, NzIconDirective, NzLayoutComponent} from './nz-module/ng-zorro-antd.module';
 import {PageEditorService} from '../design-stage/page-editor/page-editor.service';
 import {HtmlJson} from 'himalaya';
 import {PropertiesEditorService} from '../design-tools/properties-editor/properties-editor.service';
@@ -38,12 +37,13 @@ import {DynamicUnitInterface} from './interface';
   }
 })
 export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson> implements OnInit, AfterViewInit, DynamicUnitInterface {
+  type: DesignDragType = 'dynamic-unit';
+  ref: any = {};
+  stageID: string;
   @Input('design-dynamic-unit') RabbitPath: string;
   @Input() RabbitID: string;
   @HostBinding('class.dynamic-blank') isBlank: boolean = false;
   @HostBinding('class.dynamic-look-unit') lookUnit = false;
-  type: DesignDragType = 'dynamic-unit';
-  ref: any[] = [];
   lookDrag = false;
   lookDrop = false;
   mergeParent = false;
@@ -54,7 +54,7 @@ export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson
     if ($event['designDynamicUnit_click'] || this.lookUnit || this.mergeParent) {
       return;
     }
-    this.PageEditorService.select(this.RabbitPath, this);
+    this.PageEditorService.select(this.RabbitPath, this.ref);
     // 用事件冒泡告诉他们已经点击了 用这种方法不停止冒泡
     $event['designDynamicUnit_click'] = true;
   }
@@ -78,9 +78,11 @@ export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson
   }
 
   ngOnInit(): void {
+    this.stageID = this.RabbitPath.split('|')[0];
     this.data = this.PageEditorService.getNodeJson(this.RabbitPath);
     this.isBlank = this.data.children.length < 1;
     this.getRef();
+    this.PageEditorService.registerDynamicUnit(this.stageID, this);
     super.ngOnInit();
   }
 
@@ -93,32 +95,18 @@ export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson
     const directives = parserDirective(this.data);
     directives.forEach((directives) => {
       if (directives === 'nz-icon') {
-        this.ref.push(this.Injector.get(NzIconDirective, null, InjectFlags.SkipSelf));
+        this.ref['nz-icon'] = this.Injector.get(NzIconDirective, null, InjectFlags.SkipSelf);
       } else if (directives === 'nz-input') {
-        this.ref.push(this.Injector.get(NzInputDirective, null, InjectFlags.SkipSelf));
       } else if (directives === 'nz-header') {
-        this.ref.push(this.Injector.get(NzHeaderComponent, null, InjectFlags.SkipSelf));
-        if (this.isBlank) {
-          this.ElementRef.nativeElement.innerText = 'Header';
-        }
         this.mergeParent = true;
         this.isContainer = true;
       } else if (directives === 'nz-content') {
-        this.ref.push(this.Injector.get(NzHeaderComponent, null, InjectFlags.SkipSelf));
-        if (this.isBlank) {
-          this.ElementRef.nativeElement.innerText = 'Content';
-        }
         this.mergeParent = true;
         this.isContainer = true;
       } else if (directives === 'nz-footer') {
-        this.ref.push(this.Injector.get(NzHeaderComponent, null, InjectFlags.SkipSelf));
-        if (this.isBlank) {
-          this.ElementRef.nativeElement.innerText = 'Footer';
-        }
         this.mergeParent = true;
         this.isContainer = true;
       } else if (directives === 'nz-layout') {
-        this.ref.push(this.Injector.get(NzLayoutComponent, null, InjectFlags.SkipSelf));
         this.lookDrop = true;
         this.isContainer = true;
       }
