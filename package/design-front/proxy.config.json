@@ -1,4 +1,22 @@
 {
+  "/api/icons/assets/outline":{
+    "target": "http://localhost:4200",
+    "pathRewrite": {
+      "^/api/icons/": ""
+    }
+  },
+  "/api/icons/assets/fill":{
+    "target": "http://localhost:4200",
+    "pathRewrite": {
+      "^/api/icons/": ""
+    }
+  },
+  "/api/icons/assets/twotone":{
+    "target": "http://localhost:4200",
+    "pathRewrite": {
+      "^/api/icons/": ""
+    }
+  },
   "/api": {
     "target": "http://localhost:7001",
     "secure":false,
