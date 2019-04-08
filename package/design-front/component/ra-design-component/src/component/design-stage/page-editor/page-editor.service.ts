@@ -24,7 +24,7 @@ export class PageEditorService {
   private htmlJsons: Map<string, DesignHtmlJson[]> = new Map(); // 存储html结构
   private htmlJsonMaps: Map<string, Map<string, DesignHtmlJson>> = new Map(); // 以key-value的形式存储的html
   private selections: Map<string, Set<string>> = new Map(); // 存储选中的html
-  private dynamicUnits: Map<string, Map<string, DynamicUnitInterface>> = new Map();
+  readonly dynamicUnits: Map<string, Map<string, DynamicUnitInterface>> = new Map();
 
   constructor(
     public HttpClient: HttpClient,
@@ -308,6 +308,7 @@ export class PageEditorService {
     switch (value.type) {
       case 'update-dynamic-html':
         this.pageInfos.get(stageID).content.html = stringify(this.getHtmlJson(stageID));
+        // TODO 增加渲染后的方法
         this.RuntimeEventService.emit(RUNTIME_EVENT_ENUM.StagePageEditor_UpdateDynamicHtml, value);
         setTimeout(() => {
           this.modify(stageID).subscribe(() => {

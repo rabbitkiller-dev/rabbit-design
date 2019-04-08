@@ -8,6 +8,7 @@ export interface DynamicUnitInterface extends DynamicUnitServerInterface{
   RabbitPath: string; // 他主要的HtmlJson的路径
   ElementRef?: ElementRef;
   data?: HtmlJson;
+  ref: any;
 }
 
 export interface DynamicUnitServerInterface {

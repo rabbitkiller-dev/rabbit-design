@@ -16,7 +16,7 @@ import {DesignMenuModel} from './interface';
       <span class="ra-design-menu-item_shortcut">{{ model.shortcut }}</span>
       <span *ngIf="model.items && model.items.length>0"
             class="ra-design-menu-item_nexticon">
-        <i nz-icon type="rabbit-design:icon-nav-right"></i>
+        <i nz-icon type="caret-right"></i>
       </span>
       <div #itemList class="ra-design-menu-item_list">
         <ra-design-menu-item *ngFor="let item of model.items"

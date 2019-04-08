@@ -44,6 +44,7 @@ export class PropertiesEditorInterface extends RaDesignToolsInterface implements
   @ViewChild('content', {read: ViewContainerRef}) content: ViewContainerRef;
   comRef: ComponentRef<any>;
   nodeJson: DesignHtmlJson;
+  instance: any;
 
   constructor(
     public Injector: Injector,
@@ -63,6 +64,12 @@ export class PropertiesEditorInterface extends RaDesignToolsInterface implements
     this.RuntimeEventService.on(RUNTIME_EVENT_ENUM.StagePageEditor_SelectionChange, () => {
       this.changePanel();
     });
+    this.RuntimeEventService.on(RUNTIME_EVENT_ENUM.StagePageEditor_UpdateDynamicHtml, () => {
+      setTimeout(() => {
+        // TODO 增加渲染后的方法
+        this.changePanel();
+      }, 200);
+    });
   }
 
   changePanel() {
@@ -73,9 +80,11 @@ export class PropertiesEditorInterface extends RaDesignToolsInterface implements
     const selection = this.PageEditorService.getSelection(this.currentStage.id);
     // 只处理选择了一个组件的情况
     if (selection.length !== 1) {
+      this.destroy();
       return;
     }
     const nodeJson = this.nodeJson = this.PageEditorService.getNodeJson(selection[0]);
+    this.instance = this.PageEditorService.dynamicUnits.get(this.currentStage.id).get(nodeJson.RabbitID).ref;
     this.panel = this.PropertiesEditorService.getPanel(nodeJson);
     this.createModule();
   }
@@ -110,8 +119,7 @@ export class PropertiesEditorInterface extends RaDesignToolsInterface implements
       }).then((factory) => {
       this.destroy();
       this.comRef = this.content.createComponent(factory, 0);
-      console.log(this.PageEditorService.instance);
-      this.comRef.instance.setInstance(this.PageEditorService.instance);
+      this.comRef.instance.setInstance(this.instance);
       this.comRef.instance.setNodeJson(this.nodeJson);
     });
   }
