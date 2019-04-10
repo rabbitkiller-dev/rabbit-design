@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import {PageEditorService} from './page-editor.service';
 import {DesignHtmlJson, PageInfoModel} from './interface';
-import {RaDesignKeyMapService} from '../../design-key-map/ra-design-key-map.service';
+import {RaDesignKeyMapService, WINDOW_NAME} from '../../design-key-map/ra-design-key-map.service';
 
 @Component({
   selector: 'ra-design-page-editor',
@@ -13,10 +13,14 @@ import {RaDesignKeyMapService} from '../../design-key-map/ra-design-key-map.serv
     <div class="page-editor">
       <div class="page-editor-content" designDrop="page-editor" [designData]="stageID" (wheel)="onMouseWheel($event)">
         <div class="page-editor-content__left_top" #topLeft>
-          <ng-template [design-dynamic]="dynamicHtml"></ng-template>
+          <ng-container *ngIf="mode == 'a'">
+            <ng-template [design-dynamic]="dynamicHtml"></ng-template>
+          </ng-container>
+          <textarea *ngIf="mode == 'b'" [(ngModel)]="dynamicHtml"></textarea>
         </div>
       </div>
       <div class="page-editor-footer">
+        <button nz-button (click)="aaa()">转换</button>
       </div>
     </div>
   `,
@@ -25,6 +29,7 @@ import {RaDesignKeyMapService} from '../../design-key-map/ra-design-key-map.serv
 export class PageEditorInterface implements OnInit, AfterViewInit, OnDestroy {
   pageInfo: PageInfoModel;
   stageID: string;
+  mode = 'a';
   wheelOption = {
     size: 1,
   }
@@ -38,11 +43,20 @@ export class PageEditorInterface implements OnInit, AfterViewInit, OnDestroy {
   ) {
   }
 
+  aaa() {
+    if (this.mode === 'b') {
+      this.mode = 'a';
+    } else {
+      this.mode = 'b';
+    }
+    ;
+  }
+
   ngOnInit() {
     this.PageEditorService.findOne(this.stageID).subscribe((pageInfo) => {
       this.pageInfo = pageInfo;
     });
-    this.RaDesignKeyMapService.registerListenerWindow('stage_page_editor', this.ElementRef.nativeElement, {stageID: this.stageID}).subscribe((event) => {
+    this.RaDesignKeyMapService.registerListenerWindow(WINDOW_NAME.Stage_PageEditor, this.ElementRef.nativeElement, {stageID: this.stageID}).subscribe((event) => {
       switch (event.emitKey) {
         case 'delete':
           const selection = this.PageEditorService.getSelection(this.stageID);

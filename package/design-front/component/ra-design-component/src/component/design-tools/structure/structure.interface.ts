@@ -1,12 +1,18 @@
-import {Component, ElementRef, Injector} from '@angular/core';
+import {Component, ElementRef, Injector, ViewChild} from '@angular/core';
 import {PageEditorService} from '../../design-stage/page-editor/page-editor.service';
 import {StageFactory, StageTabModel} from '../../design-stage';
-import {NzFormatEmitEvent, NzTreeNodeOptions, RaDesignTreeService, TreeNodeModel} from '../../design-tree';
+import {
+  NzFormatEmitEvent,
+  NzTreeNodeOptions,
+  RaDesignTreeComponent,
+  RaDesignTreeService,
+  TreeNodeModel,
+} from '../../design-tree';
 import {RaDesignToolsInterface} from '../ra-design-tools.interface';
 import {RUNTIME_EVENT_ENUM} from '../../design-runtime/runtime-event.service';
 import {HtmlJson} from 'himalaya';
 import {DesignHtmlJson} from '../../design-stage/page-editor/interface';
-import {RaDesignKeyMapService} from '../../design-key-map/ra-design-key-map.service';
+import {RaDesignKeyMapService, WINDOW_NAME} from '../../design-key-map/ra-design-key-map.service';
 
 @Component({
   template: `
@@ -15,7 +21,7 @@ import {RaDesignKeyMapService} from '../../design-key-map/ra-design-key-map.serv
       <li class="minimize" (click)="minimize()"><i nz-icon type="rabbit-design:icon-nav-left"></i></li>
     </div>
     <div class="ra-design-side-bar-interface-content">
-      <ra-design-tree [nzData]="data" (nzDblClick)="onDblclick($event)" (nzClick)="onClick($event)"
+      <ra-design-tree #structureTree [nzData]="data" (nzDblClick)="onDblclick($event)" (nzClick)="onClick($event)"
                       (nzTouchStart)="onTouchStart($event)"
                       [cdkDrag]="true"></ra-design-tree>
     </div>
@@ -26,6 +32,7 @@ export class StructureInterface extends RaDesignToolsInterface {
   currentStage: StageTabModel;
   data: Array<HtmlJson & NzTreeNodeOptions>;
   selection: string[] = [];
+  @ViewChild('structureTree') structureTree: RaDesignTreeComponent;
 
   constructor(
     public ElementRef: ElementRef,
@@ -38,7 +45,7 @@ export class StructureInterface extends RaDesignToolsInterface {
   }
 
   initEvent() {
-    this.RaDesignKeyMapService.registerListenerWindow('stage_page_editor', this.ElementRef.nativeElement, {}).subscribe((event) => {
+    this.RaDesignKeyMapService.registerListenerWindow(WINDOW_NAME.SideBar_Structure, this.ElementRef.nativeElement, {}).subscribe((event) => {
       switch (event.emitKey) {
         case 'delete':
           const selection = this.PageEditorService.getSelection(this.currentStage.id);
@@ -58,7 +65,7 @@ export class StructureInterface extends RaDesignToolsInterface {
     });
     this.RuntimeEventService.on(RUNTIME_EVENT_ENUM.StagePageEditor_SelectionChange, (value) => {
       this.selection = this.PageEditorService.getSelection(this.currentStage.id);
-      this.updateStructure();
+      this.updateSelection();
     });
   }
 
@@ -90,6 +97,30 @@ export class StructureInterface extends RaDesignToolsInterface {
         });
       }
     });
+  }
+
+  updateSelection() {
+    if (!this.currentStage) {
+      this.destroy();
+      return;
+    }
+    if (this.currentStage.factory !== StageFactory.PageEditor) {
+      this.destroy();
+      return;
+    }
+    if (!this.PageEditorService.getHtmlJson(this.currentStage.id)) {
+      this.destroy();
+      return;
+    }
+    let selectNode: TreeNodeModel;
+    RaDesignTreeService.forEachTree(this.structureTree.nzNodes, (node) => {
+      if (this.selection.indexOf(node.origin.RabbitPath) !== -1) {
+        selectNode = node;
+      }
+    });
+    const raDesignTreeService = this.structureTree.RaDesignTreeService;
+    raDesignTreeService.setNodeActive(selectNode, false);
+    raDesignTreeService.expandParent(selectNode);
   }
 
   destroy() {

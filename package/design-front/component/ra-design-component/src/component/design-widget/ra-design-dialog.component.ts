@@ -1,5 +1,5 @@
 import {Component, ElementRef, Input} from '@angular/core';
-import {RaDesignKeyMapService} from '../design-key-map/ra-design-key-map.service';
+import {RaDesignKeyMapService, WINDOW_NAME} from '../design-key-map/ra-design-key-map.service';
 
 @Component({
   selector: 'ra-design-dialog',
@@ -17,7 +17,7 @@ export class RaDesignDialogComponent {
     public ElementRef: ElementRef,
     public RaDesignKeyMapService: RaDesignKeyMapService,
   ) {
-    this.RaDesignKeyMapService.registerListenerWindow('dialog', this.ElementRef.nativeElement).subscribe(() => {
+    this.RaDesignKeyMapService.registerListenerWindow(WINDOW_NAME.Dialog, this.ElementRef.nativeElement).subscribe(() => {
 
     });
   }

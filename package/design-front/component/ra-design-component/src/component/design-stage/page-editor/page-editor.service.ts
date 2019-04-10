@@ -24,7 +24,7 @@ export class PageEditorService {
   private htmlJsons: Map<string, DesignHtmlJson[]> = new Map(); // 存储html结构
   private htmlJsonMaps: Map<string, Map<string, DesignHtmlJson>> = new Map(); // 以key-value的形式存储的html
   private selections: Map<string, Set<string>> = new Map(); // 存储选中的html
-  readonly dynamicUnits: Map<string, Map<string, DynamicUnitInterface>> = new Map();
+  readonly dynamicUnits: Map<string, Map<string, DynamicUnitInterface>> = new Map(); // 存储动态组件的实例
 
   constructor(
     public HttpClient: HttpClient,
@@ -38,7 +38,9 @@ export class PageEditorService {
   select(RabbitPath: string, instance?: any) {
     this.instance = instance;
     const stageID: string = RabbitPath.split('|')[0];
+    // const RabbitID: string = this.getNodeJson(RabbitPath).RabbitID;
     const selection = this.selections.get(stageID);
+    const dynamicUnitMap = this.dynamicUnits.get(stageID);
     // 如果已经选中了就不执行了
     if (selection && selection.has(RabbitPath)) {
       return;
@@ -49,6 +51,9 @@ export class PageEditorService {
     } else {
       this.selections.set(stageID, new Set([RabbitPath]));
     }
+    dynamicUnitMap.forEach((value, key, map) => {
+      value.isSelect = selection.has(value.RabbitPath);
+    });
     this.RuntimeEventService.emit(RUNTIME_EVENT_ENUM.StagePageEditor_SelectionChange);
   }
 

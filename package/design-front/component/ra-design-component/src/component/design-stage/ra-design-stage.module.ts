@@ -7,10 +7,12 @@ import {RaDesignStageComponent} from './ra-design-stage.component';
 import {RaDesignStageService} from './ra-design-stage.service';
 import {PageEditorInterface} from './page-editor/page-editor.interface';
 import {RaDesignDynamicModule} from '../design-dynamic/ra-design-dynamic.module';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
     // DragDropModule,
     RaDesignDynamicModule,
     RaDesignDragDropModule,

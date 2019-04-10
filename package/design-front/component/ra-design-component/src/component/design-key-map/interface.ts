@@ -1,6 +1,8 @@
+import {WINDOW_NAME} from './ra-design-key-map.service';
+
 export interface DesignWindow {
   id: number;
-  name: any;
+  name: WINDOW_NAME;
   option?: any;
 }
 

@@ -18,4 +18,5 @@ export interface DynamicUnitServerInterface {
   lookDrop?: boolean; // 锁定拖放
   mergeParent?: boolean; // 合并父级
   isContainer?: boolean; // 是否是容器
+  isSelect?: boolean; // 是否选中
 }

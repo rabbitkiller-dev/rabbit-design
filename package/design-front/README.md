@@ -16,6 +16,12 @@ ToolsTabModel改名为sideBar
 build:i18n增加监听文件
 build:i18n增加target目录
 
+命令行
+埋点
+  日志
+  性能埋点
+  交互反馈
+  统计
 流程管理
 多用户交互(socket)
 项目管理
@@ -23,6 +29,7 @@ build:i18n增加target目录
   访问路径为 host/{{projectName}}
   项目名保持唯一或个人保持唯一不唯一的情况设置访问别名
 数据源管理
+版本管理
 UI
   图标管理
     内置图标-主题
@@ -40,16 +47,19 @@ UI
   单元测试
   环境测试
   测试代码生成
-
+  api测试
+  随机json生成
+url配置
+  api
+  资源
+  图标
   
 拖拽
      组合
      拖拽容器
      lookDrop bug 假设拖拽到lookDrop窗口下面的组件,就会变成排序,那就会无视lookDrop插入到lookDrop元素下
      解决ng组件容器 找到容器append的目标元素
-滚动放大    transform: translate3d(0px, 0px, 0px) scale(1.1, 1.1);
-        transform-origin: 0 0;
-        display: block;
+
 ## 设计平台相关
  - 尽量不停止冒泡功能,导致父节点无法触发事件.采用判断target和$event记录同等事件是否触发过来结束方法
  - 按功能实现service,全部都是全局服务.就算远在异乡的组件也能操作彼此的组件

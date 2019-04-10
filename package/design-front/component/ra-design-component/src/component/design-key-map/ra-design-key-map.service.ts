@@ -4,18 +4,29 @@ import {KEY_CODE_LIST, KEY_MAP_LIST} from './key-map-list';
 import {Subject} from 'rxjs';
 import {DesignWindow, KeyMapEvent} from './interface';
 
+
+export enum WINDOW_NAME {
+  SideBar = 'side_bar_key_map',
+  SideBar_Page = 'side_bar_page',
+  SideBar_Structure = 'side_bar_structure',
+  SideBar_Component = 'side_bar_component',
+  Stage_PageEditor = 'stage_page_editor',
+  Dialog = 'dialog'
+}
+
+
 /**
  * KeyMap
- * 将会让所有元素增加tabIndex
- * 将会管理注册窗口的聚焦
+ * 将会管理注册窗口的聚焦,在哪聚焦就在哪触发快捷键
  */
 
 @Injectable({providedIn: 'root'})
 export class RaDesignKeyMapService {
-  focus: 'side_bar_key_map' | 'stage_page_editor' | 'dialog' | 'key-map-set' | string = 'stage_page_editor';
+  focus: WINDOW_NAME = WINDOW_NAME.Stage_PageEditor;
   status: 'down' | 'up' | 'none' = 'none';
   history: any[] = [];
   listenerMap: Map<number, Subject<KeyMapEvent>> = new Map();
+  private windowElement: Map<number, HTMLElement> = new Map();
   private focusDesignWindow: DesignWindow; // 窗口自带的参数
   private _id: number = 0;
 
@@ -77,18 +88,22 @@ export class RaDesignKeyMapService {
     });
     window.addEventListener('click', (event) => {
       const designWindow = this.findElementUp(event);
-      if (designWindow) {
-        this.focusDesignWindow = designWindow;
-        this.focus = designWindow.name;
-        this.history.push(designWindow);
+      if (!designWindow) {
+        return;
       }
+      this.windowElement.forEach(we => we.classList.remove('ra-design-window-focus'));
+      this.windowElement.get(designWindow.id).classList.add('ra-design-window-focus');
+      this.focusDesignWindow = designWindow;
+      this.focus = designWindow.name;
+      this.history.push(designWindow);
     });
   }
 
-  registerListenerWindow(winName: string, element: HTMLElement, option?: any): Subject<KeyMapEvent> {
+  registerListenerWindow(winName: WINDOW_NAME, element: HTMLElement, option?: any): Subject<KeyMapEvent> {
     // this.Renderer2.addClass(element, 'ra-design-window');
     // this.Renderer2.setProperty(element, 'designWindow', {name: winName});
     const designWindow: DesignWindow = {id: this.getID(), name: winName, option: option};
+    this.windowElement.set(designWindow.id, element);
     element.classList.add('ra-design-window');
     element['designWindow'] = designWindow;
     const subject = new Subject<KeyMapEvent>();
@@ -108,12 +123,15 @@ export class RaDesignKeyMapService {
     return null;
   }
 
-  focusWindow(winName: string) {
-
-  }
-
-  blurWindow(winName: string) {
-
+  destroyListenerWindow(element: HTMLElement) {
+    const designWindow: DesignWindow = element['designWindow'];
+    if (!designWindow) {
+      console.error('销毁的窗口并不存在');
+    }
+    this.windowElement.delete(designWindow.id);
+    this.listenerMap.get(designWindow.id).unsubscribe();
+    this.listenerMap.delete(designWindow.id);
+    this.history = this.history.filter(h => h !== history);
   }
 
 }

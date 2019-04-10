@@ -1,6 +1,7 @@
-import {Component, Injector, OnInit} from '@angular/core';
+import {Component, ElementRef, Injector, OnInit} from '@angular/core';
 import {NzFormatEmitEvent, NzTreeNodeOptions} from '../../design-tree';
 import {RaDesignToolsInterface} from '../ra-design-tools.interface';
+import {RaDesignKeyMapService, WINDOW_NAME} from '../../design-key-map/ra-design-key-map.service';
 
 @Component({
   selector: 'ra-design-component-interface',
@@ -10,8 +11,14 @@ export class ComponentInterface extends RaDesignToolsInterface implements OnInit
   nzData: NzTreeNodeOptions[] = [];
   enterPredicate = () => false;
 
-  constructor(public Injector: Injector) {
+  constructor(
+    public ElementRef: ElementRef,
+    public Injector: Injector,
+    public RaDesignKeyMapService: RaDesignKeyMapService,
+  ) {
     super(Injector);
+    this.RaDesignKeyMapService.registerListenerWindow(WINDOW_NAME.SideBar_Component, ElementRef.nativeElement).subscribe(() => {
+    });
   }
 
   ngOnInit() {
@@ -44,11 +51,23 @@ export class ComponentInterface extends RaDesignToolsInterface implements OnInit
             key: 'grid',
             title: 'grid',
             isLeaf: true,
-            icon: 'rabbit-design:icon-iconfont'
+            icon: 'rabbit-design:icon-button'
           },
           {
             key: 'top-center-bottom',
             title: 'top-center-bottom',
+            isLeaf: true,
+            icon: 'rabbit-design:icon-button'
+          },
+          {
+            key: 'top-right-content',
+            title: 'top-right-content',
+            isLeaf: true,
+            icon: 'rabbit-design:icon-button'
+          },
+          {
+            key: 'top-left-content',
+            title: 'top-right-content',
             isLeaf: true,
             icon: 'rabbit-design:icon-button'
           },
@@ -74,6 +93,12 @@ export class ComponentInterface extends RaDesignToolsInterface implements OnInit
           {
             key: 'dropdown',
             title: 'dropdown',
+            isLeaf: true,
+            icon: 'rabbit-design:icon-button'
+          },
+          {
+            key: 'header-menu',
+            title: 'header-menu',
             isLeaf: true,
             icon: 'rabbit-design:icon-button'
           },

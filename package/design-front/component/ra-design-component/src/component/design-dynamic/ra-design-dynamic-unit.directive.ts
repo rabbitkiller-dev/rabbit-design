@@ -42,6 +42,7 @@ export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson
   stageID: string;
   @Input('design-dynamic-unit') RabbitPath: string;
   @Input() RabbitID: string;
+  @HostBinding('class.dynamic-select') isSelect = false;
   @HostBinding('class.dynamic-blank') isBlank: boolean = false;
   @HostBinding('class.dynamic-look-unit') lookUnit = false;
   lookDrag = false;
@@ -107,7 +108,8 @@ export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson
         this.mergeParent = true;
         this.isContainer = true;
       } else if (directives === 'nz-layout') {
-        this.lookDrop = true;
+        this.isContainer = true;
+      } else if (directives === 'nz-sider') {
         this.isContainer = true;
       }
     });

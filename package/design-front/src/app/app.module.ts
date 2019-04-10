@@ -5,6 +5,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgxWebstorageModule} from 'ngx-webstorage';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import {OverlayModule} from '@angular/cdk/overlay';
 
 import {RaComponentModule} from 'ra-component';
 import {AppRoutingModule} from './app-routing.module';
@@ -21,6 +22,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    OverlayModule,
     AppRoutingModule,
     HttpClientModule,
     HttpClientXsrfModule.withOptions({

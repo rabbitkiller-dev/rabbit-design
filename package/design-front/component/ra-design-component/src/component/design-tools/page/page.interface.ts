@@ -4,7 +4,7 @@ import {NzFormatEmitEvent, TreeNodeModel} from '../../design-tree';
 import {RaDesignMenuService} from '../../design-menu/ra-design-menu.service';
 import {PageContextMenuKey, PageService} from './page.service';
 import {PageModel, PageType} from './interface';
-import {RaDesignKeyMapService} from '../../design-key-map/ra-design-key-map.service';
+import {RaDesignKeyMapService, WINDOW_NAME} from '../../design-key-map/ra-design-key-map.service';
 import {RaDesignToolsInterface} from '../ra-design-tools.interface';
 
 @Component({
@@ -53,7 +53,7 @@ export class PageInterface extends RaDesignToolsInterface {
     this.PageService.index().subscribe((result) => {
       this.data = result;
     });
-    this.RaDesignKeyMapService.registerListenerWindow('page', this.ElementRef.nativeElement).subscribe((event) => {
+    this.RaDesignKeyMapService.registerListenerWindow(WINDOW_NAME.SideBar_Page, this.ElementRef.nativeElement).subscribe((event) => {
       switch (event.emitKey) {
         case 'delete':
           console.log('page delete');

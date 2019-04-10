@@ -304,6 +304,15 @@ export class RaDesignTreeService {
     }
   }
 
+  expandParent(p: TreeNodeModel) {
+    // expand parent node
+    if (p.getParentNode()) {
+      p.getParentNode().setExpanded(true);
+      this.setExpandedNodeList(p.getParentNode());
+      this.expandParent(p.getParentNode());
+    }
+  }
+
   /**
    * check state
    * @param node
