@@ -13,5 +13,7 @@
   "ComponentDir": "ComponentDir",
   "Copy": "Copy",
   "Cut": "Cut",
-  "Delete": "Delete"
+  "Delete": "Delete",
+  "general": "general",
+  "general.icon": "icon"
 }

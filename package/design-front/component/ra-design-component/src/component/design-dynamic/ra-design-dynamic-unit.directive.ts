@@ -14,7 +14,12 @@ import {
   NgZone,
   Renderer2, AfterViewInit, ChangeDetectorRef, HostBinding
 } from '@angular/core';
-import {NzInputDirective, NzHeaderComponent, NzIconDirective, NzLayoutComponent} from './nz-module/ng-zorro-antd.module';
+import {
+  NzInputDirective,
+  NzHeaderComponent,
+  NzIconDirective,
+  NzLayoutComponent
+} from './nz-module/ng-zorro-antd.module';
 import {PageEditorService} from '../design-stage/page-editor/page-editor.service';
 import {HtmlJson} from 'himalaya';
 import {PropertiesEditorService} from '../design-tools/properties-editor/properties-editor.service';
@@ -58,6 +63,16 @@ export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson
     this.PageEditorService.select(this.RabbitPath, this.ref);
     // 用事件冒泡告诉他们已经点击了 用这种方法不停止冒泡
     $event['designDynamicUnit_click'] = true;
+  }
+
+  @HostListener('mousemove', ['$event']) onMouseEnter($event: MouseEvent) {
+    // 判断是否已经点击,然后结束冒泡
+    if ($event['designDynamicUnit_mouseenter'] || this.lookUnit || this.mergeParent) {
+      return;
+    }
+    this.PageEditorService.hover($event, this.ElementRef.nativeElement);
+    // 用事件冒泡告诉他们已经点击了 用这种方法不停止冒泡
+    $event['designDynamicUnit_mouseenter'] = true;
   }
 
   constructor(

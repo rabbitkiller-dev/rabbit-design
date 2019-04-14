@@ -1,20 +1,23 @@
 import {Component, ElementRef, Injector, OnInit} from '@angular/core';
-import {NzFormatEmitEvent, NzTreeNodeOptions} from '../../design-tree';
+import {NzFormatEmitEvent, NzTreeNodeOptions, RaDesignTreeService} from '../../design-tree';
 import {RaDesignToolsInterface} from '../ra-design-tools.interface';
 import {RaDesignKeyMapService, WINDOW_NAME} from '../../design-key-map/ra-design-key-map.service';
+import {ComponentTree} from './registry';
+import {LangChangeEvent, TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'ra-design-component-interface',
   templateUrl: './component.interface.html',
 })
 export class ComponentInterface extends RaDesignToolsInterface implements OnInit {
-  nzData: NzTreeNodeOptions[] = [];
+  nzData: NzTreeNodeOptions[] = ComponentTree;
   enterPredicate = () => false;
 
   constructor(
     public ElementRef: ElementRef,
     public Injector: Injector,
     public RaDesignKeyMapService: RaDesignKeyMapService,
+    public TranslateService: TranslateService,
   ) {
     super(Injector);
     this.RaDesignKeyMapService.registerListenerWindow(WINDOW_NAME.SideBar_Component, ElementRef.nativeElement).subscribe(() => {
@@ -22,120 +25,17 @@ export class ComponentInterface extends RaDesignToolsInterface implements OnInit
   }
 
   ngOnInit() {
-    this.nzData = [
-      {
-        key: 'general',
-        title: 'general',
-        expanded: true,
-        children: [
-          {
-            key: 'icon',
-            title: 'icon',
-            isLeaf: true,
-            icon: 'rabbit-design:icon-iconfont'
-          },
-          {
-            key: 'button',
-            title: 'button',
-            isLeaf: true,
-            icon: 'rabbit-design:icon-button'
-          },
-        ]
-      },
-      {
-        key: 'layout',
-        title: 'layout',
-        expanded: true,
-        children: [
-          {
-            key: 'grid',
-            title: 'grid',
-            isLeaf: true,
-            icon: 'rabbit-design:icon-button'
-          },
-          {
-            key: 'top-center-bottom',
-            title: 'top-center-bottom',
-            isLeaf: true,
-            icon: 'rabbit-design:icon-button'
-          },
-          {
-            key: 'top-right-content',
-            title: 'top-right-content',
-            isLeaf: true,
-            icon: 'rabbit-design:icon-button'
-          },
-          {
-            key: 'top-left-content',
-            title: 'top-right-content',
-            isLeaf: true,
-            icon: 'rabbit-design:icon-button'
-          },
-        ]
-      },
-      {
-        key: 'navigation',
-        title: 'navigation',
-        expanded: true,
-        children: [
-          {
-            key: 'affix',
-            title: 'affix',
-            isLeaf: true,
-            icon: 'rabbit-design:icon-iconfont'
-          },
-          {
-            key: 'breadcrumb',
-            title: 'breadcrumb',
-            isLeaf: true,
-            icon: 'rabbit-design:icon-button'
-          },
-          {
-            key: 'dropdown',
-            title: 'dropdown',
-            isLeaf: true,
-            icon: 'rabbit-design:icon-button'
-          },
-          {
-            key: 'header-menu',
-            title: 'header-menu',
-            isLeaf: true,
-            icon: 'rabbit-design:icon-button'
-          },
-          {
-            key: 'menu',
-            title: 'menu',
-            isLeaf: true,
-            icon: 'rabbit-design:icon-button'
-          },
-          {
-            key: 'pagination',
-            title: 'pagination',
-            isLeaf: true,
-            icon: 'rabbit-design:icon-button'
-          },
-          {
-            key: 'steps',
-            title: 'steps',
-            isLeaf: true,
-            icon: 'rabbit-design:icon-button'
-          },
-        ]
-      },
-      {
-        key: 'forms',
-        title: 'forms',
-        expanded: true,
-        children: [
-          {
-            key: 'input',
-            title: 'input',
-            isLeaf: true,
-            icon: 'rabbit-design:icon-input'
-          }
-        ]
-      },
-    ];
+    this.TranslateService.onLangChange.subscribe(this.translateComponentTitle.bind(this));
+    this.translateComponentTitle();
+  }
+
+  translateComponentTitle(event?: LangChangeEvent) {
+    RaDesignTreeService.forEachTree(this.nzData, (node) => {
+      this.TranslateService.get(node.key).subscribe((value) => {
+        node.title = value;
+      });
+    });
+    this.nzData = [...this.nzData];
   }
 
   ondbClick($event: NzFormatEmitEvent) {

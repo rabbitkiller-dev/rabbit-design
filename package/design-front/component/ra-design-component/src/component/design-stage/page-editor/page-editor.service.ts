@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {HtmlJson, parse, stringify} from 'himalaya';
 import {Observable, Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
@@ -7,6 +7,7 @@ import {map} from 'rxjs/operators';
 import {RaDesignTreeService} from '../../design-tree/ra-design-tree.service';
 import {RUNTIME_EVENT_ENUM, RuntimeEventService} from '../../design-runtime/runtime-event.service';
 import {DynamicUnitInterface, DynamicUnitServerInterface} from '../../design-dynamic/interface';
+import {getTransformTransitionDurationInMs} from '../../cdk-drag-drop/transition-duration';
 
 @Injectable({providedIn: 'root'})
 export class PageEditorService {
@@ -26,10 +27,69 @@ export class PageEditorService {
   private selections: Map<string, Set<string>> = new Map(); // 存储选中的html
   readonly dynamicUnits: Map<string, Map<string, DynamicUnitInterface>> = new Map(); // 存储动态组件的实例
 
+  /**
+   * hover
+   */
+  designHover: HTMLElement;
+  currentHoverTarget: HTMLElement;
+  designSelection: HTMLElement;
+
   constructor(
     public HttpClient: HttpClient,
+    public NgZone: NgZone,
     public RuntimeEventService: RuntimeEventService,
   ) {
+    // 舞台变化更新selection视图
+    this.RuntimeEventService.on(RUNTIME_EVENT_ENUM.Stage_Open, (value) => {
+      const selection = this.selections.get(value.id);
+      const dynamicUnitMap = this.dynamicUnits.get(value.id);
+      dynamicUnitMap.forEach((value, key, map) => {
+        if (selection.has(value.RabbitPath)) {
+          const rect = value.ElementRef.nativeElement.getBoundingClientRect();
+          this.designSelection.style.display = 'block';
+          this.designSelection.style.width = rect.width + 'px';
+          this.designSelection.style.height = rect.height + 'px';
+          this.designSelection.style.transform = `translate3d(${Math.round(rect.left)}px, ${Math.round(rect.top)}px, 0)`;
+        }
+      });
+    });
+    this.designHover = document.createElement('div');
+    this.designHover.id = 'design-hover';
+    this.designSelection = document.createElement('div');
+    this.designSelection.id = 'design-selection';
+    const style = {
+      pointerEvents: 'none',
+      position: 'fixed',
+      top: '0',
+      left: '0',
+      width: '100px',
+      height: '100px',
+      zIndex: '1000',
+      transition: 'transform 255ms',
+      transitionProperty: 'transform,width,height',
+    } as CSSStyleDeclaration;
+    Object.assign(this.designHover.style, style, {
+      display: 'none',
+      boxShadow: '0 0 0 1px #51c1f8',
+      // backgroundColor: 'rgba(81, 193, 248, 0.2)',
+    });
+    Object.assign(this.designSelection.style, style, {
+      display: 'none',
+      boxShadow: '0 0 0 1px #ee4743',
+      backgroundColor: 'rgba(238, 71, 67, 0.2)',
+    });
+    document.body.append(this.designHover);
+    document.body.append(this.designSelection);
+    window.addEventListener('mousemove', ($event) => {
+      // 判断是否已经点击,然后结束冒泡
+      if ($event['designDynamicUnit_mouseenter']) {
+        return;
+      }
+      this.designHover.style.display = 'none';
+      this.currentHoverTarget = null;
+      // 用事件冒泡告诉他们已经点击了 用这种方法不停止冒泡
+      $event['designDynamicUnit_mouseenter'] = true;
+    });
   }
 
   /**
@@ -52,7 +112,13 @@ export class PageEditorService {
       this.selections.set(stageID, new Set([RabbitPath]));
     }
     dynamicUnitMap.forEach((value, key, map) => {
-      value.isSelect = selection.has(value.RabbitPath);
+      if (selection.has(value.RabbitPath)) {
+        const rect = value.ElementRef.nativeElement.getBoundingClientRect();
+        this.designSelection.style.display = 'block';
+        this.designSelection.style.width = rect.width + 'px';
+        this.designSelection.style.height = rect.height + 'px';
+        this.designSelection.style.transform = `translate3d(${Math.round(rect.left)}px, ${Math.round(rect.top)}px, 0)`;
+      }
     });
     this.RuntimeEventService.emit(RUNTIME_EVENT_ENUM.StagePageEditor_SelectionChange);
   }
@@ -208,7 +274,9 @@ export class PageEditorService {
     let nodeJson: any = {children: this.getHtmlJson(stageID)};
     while (paths.length > 1) {
       const index = paths.shift();
-      nodeJson = nodeJson.children[index];
+      nodeJson = nodeJson.children.find((node) => {
+        return node.RabbitID === index;
+      });
     }
     return nodeJson;
   }
@@ -294,6 +362,46 @@ export class PageEditorService {
       selection: this.getSelection(stageID),
     });
   }
+
+  hover($event, html?: HTMLElement) {
+    const target: HTMLElement = html || $event.target;
+    if (this.currentHoverTarget === target) {
+      return;
+    }
+    this.currentHoverTarget = target;
+    const rect = this.currentHoverTarget.getBoundingClientRect();
+    this.designHover.style.display = 'block';
+    this.designHover.style.width = rect.width + 'px';
+    this.designHover.style.height = rect.height + 'px';
+    this.designHover.style.transform = `translate3d(${Math.round(rect.left)}px, ${Math.round(rect.top)}px, 0)`;
+  }
+
+  _animateHover(ele: HTMLElement): Promise<void> {
+    const duration = getTransformTransitionDurationInMs(ele);
+
+    if (duration === 0) {
+      return Promise.resolve();
+    }
+
+    return this.NgZone.runOutsideAngular(() => {
+      return new Promise(resolve => {
+        const handler = ((event: TransitionEvent) => {
+          if (!event || (event.target === ele && event.propertyName === 'transform')) {
+            ele.removeEventListener('transitionend', handler);
+            resolve();
+            clearTimeout(timeout);
+          }
+        }) as EventListenerOrEventListenerObject;
+
+        // If a transition is short enough, the browser might not fire the `transitionend` event.
+        // Since we know how long it's supposed to take, add a timeout with a 50% buffer that'll
+        // fire if the transition hasn't completed when it was supposed to.
+        const timeout = setTimeout(handler as Function, duration * 1.5);
+        ele.addEventListener('transitionend', handler);
+      });
+    });
+  }
+
 
   /**
    * Subject api

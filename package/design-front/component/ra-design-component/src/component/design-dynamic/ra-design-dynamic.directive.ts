@@ -7,7 +7,7 @@ import {RouterModule} from '@angular/router';
 
 // Rendering ElComponent dependence
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {Throttle} from './throttle';
+import {Throttle} from '../design-unit/throttle';
 import {RaDesignDynamicUnitModule} from './ra-design-dynamic-unit.module';
 import {NgZorroAntdModule} from './nz-module/ng-zorro-antd.module';
 

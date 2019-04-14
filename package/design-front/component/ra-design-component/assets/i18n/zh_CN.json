@@ -7,6 +7,8 @@
   "Copy": "复制",
   "Cut": "剪切",
   "Delete": "删除",
+  "general": "通用",
+  "general.icon": "图标",
   "language": "语言",
   "dataSource": "数据源",
   "components": "组件列表",

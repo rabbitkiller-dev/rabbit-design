@@ -49,7 +49,6 @@ export class PageEditorInterface implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.mode = 'b';
     }
-    ;
   }
 
   ngOnInit() {

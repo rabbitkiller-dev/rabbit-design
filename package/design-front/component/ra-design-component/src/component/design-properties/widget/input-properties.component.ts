@@ -2,11 +2,11 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 /**
  枚举-输入框
- 变量-枚举项
+  变量-枚举项
  枚举-选择框
- 变量-枚举项
+  变量-枚举项
  变量-输入框
- 变量-全局变量/局部变量
+  变量-全局变量/局部变量
  字符串
  选择框-全局变量
  变量-all/xxx
