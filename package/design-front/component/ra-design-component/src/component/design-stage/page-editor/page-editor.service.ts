@@ -57,6 +57,7 @@ export class PageEditorService {
         }
       });
     });
+    // 组件删除时更新selection视图
     this.RuntimeEventService.on(RUNTIME_EVENT_ENUM.StagePageEditor_HtmlJsonChange, (value) => {
       if (value.changeType !== 'delete') {
         return;
@@ -77,6 +78,8 @@ export class PageEditorService {
         }
       });
     });
+
+    // 初始化selection视图/hover视图
     this.designHover = document.createElement('div');
     this.designHover.id = 'design-hover';
     this.designSelection = document.createElement('div');
@@ -165,8 +168,8 @@ export class PageEditorService {
 
   addRoot(stageID: string, htmlString: string);
   addRoot(stageID: string, htmlJsonArr: HtmlJson[]);
-  addRoot(stageID: string, htmlJson: HtmlJson);
-  addRoot(stageID: string, htmlJson: any) {
+  addRoot(stageID: string, htmlJson: HtmlJson, origin?: string);
+  addRoot(stageID: string, htmlJson: any, origin?: string) {
     const add = [];
     if (typeof htmlJson === 'string') {
       add.push(...parse(htmlJson));
@@ -174,6 +177,10 @@ export class PageEditorService {
       add.push(...htmlJson);
     } else {
       add.push(htmlJson);
+    }
+    if (origin) {
+      const originParentNode = this.getParentNodeJson(origin);
+      originParentNode.children.splice(originParentNode.children.indexOf(htmlJson), 1);
     }
     // 没有的话就初始化
     if (!this.htmlJsons.get(stageID)) {
@@ -196,14 +203,14 @@ export class PageEditorService {
     } else {
       add.push(htmlJson);
     }
+    if (origin) {
+      const originParentNode = this.getParentNodeJson(origin);
+      originParentNode.children.splice(originParentNode.children.indexOf(htmlJson), 1);
+    }
     const stageID: string = path.split('|')[0];
     const targetNode = this.getNodeJson(path);
     const targetParentNode = this.getParentNodeJson(path);
     targetParentNode.children.splice(targetParentNode.children.indexOf(targetNode), 0, ...add);
-    if (origin) {
-      const originParentNode = this.getParentNodeJson(path);
-      originParentNode.children.splice(originParentNode.children.indexOf(htmlJson), 1);
-    }
     this.updateRabbitID(stageID, this.htmlJsons.get(stageID));
     this.updateDynamic(stageID);
   }
@@ -220,14 +227,15 @@ export class PageEditorService {
     } else {
       add.push(htmlJson);
     }
+    if (origin) {
+      const originParentNode = this.getParentNodeJson(origin);
+      originParentNode.children.splice(originParentNode.children.indexOf(htmlJson), 1);
+    }
     const stageID: string = path.split('|')[0];
     const targetNode = this.getNodeJson(path);
     const targetParentNode = this.getParentNodeJson(path);
+    console.log(targetParentNode.children.indexOf(targetNode));
     targetParentNode.children.splice(targetParentNode.children.indexOf(targetNode) + 1, 0, ...add);
-    if (origin) {
-      const originParentNode = this.getParentNodeJson(path);
-      originParentNode.children.splice(originParentNode.children.indexOf(htmlJson), 1);
-    }
     this.updateRabbitID(stageID, this.htmlJsons.get(stageID));
     this.updateDynamic(stageID);
   }
@@ -244,13 +252,13 @@ export class PageEditorService {
     } else {
       add.push(htmlJson);
     }
+    if (origin) {
+      const originParentNode = this.getParentNodeJson(origin);
+      originParentNode.children.splice(originParentNode.children.indexOf(htmlJson), 1);
+    }
     const stageID: string = path.split('|')[0];
     const targetNode = this.getNodeJson(path);
     targetNode.children.push(...add);
-    if (origin) {
-      const originParentNode = this.getParentNodeJson(path);
-      originParentNode.children.splice(originParentNode.children.indexOf(htmlJson), 1);
-    }
     this.updateRabbitID(stageID, this.htmlJsons.get(stageID));
     this.updateDynamic(stageID);
   }
@@ -342,15 +350,15 @@ export class PageEditorService {
     this.htmlJsonMaps.set(stageID, htmlJsonMap);
   }
 
-  _generateId(htmlJsonMap: Map<string, DesignHtmlJson>, name: string): string {
+  _generateId(htmlJsonMap: Map<string, DesignHtmlJson>, name: string, addSize: number = 0): string {
     let index = 0;
     let id;
     // 一直循环到id唯一
     do {
-      id = name + (index + 1);
       index++;
+      id = name + (index);
     } while (htmlJsonMap.get(id));
-    return id;
+    return name + (index + addSize);
   }
 
   /**
@@ -545,12 +553,12 @@ export class PageEditorChild {
     return this.PageEditorService.dynamicUnits.get(this.stageID);
   }
 
-  generateId(name: string, dynamicUnit: DynamicUnitServerInterface = {}): string {
-    const RabbitID = this.PageEditorService._generateId(this.htmlJsonMap, name);
+  generateId(name: string, dynamicUnit: DynamicUnitServerInterface = {}, addSize?: number): string {
+    const RabbitID = this.PageEditorService._generateId(this.htmlJsonMap, name, addSize);
     dynamicUnit.RabbitID = RabbitID;
     this.pageInfo.content.unitStructure[RabbitID] = Object.assign({
       lookUnit: false,
-      lookDrag: true,
+      lookDrag: false,
       lookDrop: false,
       mergeParent: false,
       isContainer: false,
@@ -577,7 +585,7 @@ export class PageEditorChild {
   insertAfter(path: string, htmlJson: HtmlJson[]);
   insertAfter(path: string, htmlJson: HtmlJson, origin: string);
   insertAfter(path: string, htmlJson: any, origin?: string) {
-    this.PageEditorService.insertBefore(path, htmlJson, origin);
+    this.PageEditorService.insertAfter(path, htmlJson, origin);
   }
 
   append(path: string, htmlJson: string);

@@ -70,27 +70,41 @@ class TopCenterBottomLayout implements ComponentInfo {
   }
 }
 
-class Header1Group implements ComponentInfo {
+class InputForms implements ComponentInfo {
   getPlaceholder(): HTMLElement {
     const div = document.createElement('div');
-    div.innerHTML = `<div style="width:100%"><div style="width: 120px;height: 31px;background: rgba(255, 255, 255, 0.2);margin: 16px 28px 16px 0;float: left;"></div>
-        <ul nz-menu [nzTheme]="'dark'" [nzMode]="'horizontal'" style="line-height: 64px;">
-          <li nz-menu-item>nav 1</li>
-          <li nz-menu-item>nav 2</li>
-          <li nz-menu-item>nav 3</li>
-        </ul>
-      </div>`;
+    div.innerHTML = `<input class="ant-input">`;
     return div.children[0] as HTMLElement;
   }
 
   createToPage(pageEditor: PageEditorChild): HtmlJson[] {
-    const MenuID = pageEditor.generateId('Menu:', {lookDrop: true, isContainer: true});
-    const htmlJson = parse(`<div style="width:100%">
-<div style="width: 120px;height: 31px;background: rgba(255, 255, 255, 0.2);margin: 16px 28px 16px 0;float: left;"></div>
+    const InputID = pageEditor.generateId('Input:');
+    const htmlJson = parse(`<input nz-input RabbitID="${InputID}">`);
+    return htmlJson;
+  }
+}
+
+class Header1Group implements ComponentInfo {
+  getPlaceholder(): HTMLElement {
+    const div = document.createElement('div');
+    div.innerHTML = `<div style="width:100%"><div style="width: 120px;height: 31px;background: rgba(255, 255, 255, 0.2);margin: 16px 28px 16px 0;float: left;"></div>
+        <ul style="line-height: 64px;"><li nz-menu-item>nav 1</li></ul></div>`;
+    return div.children[0] as HTMLElement;
+  }
+
+  createToPage(pageEditor: PageEditorChild): HtmlJson[] {
+    const HeaderID1 = pageEditor.generateId('Header1:');
+    const LogoID = pageEditor.generateId('Logo:', {mergeParent: true});
+    const MenuID = pageEditor.generateId('Menu:', {mergeParent: true});
+    const MenuItemID1 = pageEditor.generateId('MenuItem:', {mergeParent: true});
+    const MenuItemID2 = pageEditor.generateId('MenuItem:', {mergeParent: true}, 1);
+    const MenuItemID3 = pageEditor.generateId('MenuItem:', {mergeParent: true}, 2);
+    const htmlJson = parse(`<div style="width:100%" RabbitID="${HeaderID1}">
+<div RabbitID="${LogoID}" style="width: 120px;height: 31px;background: rgba(255, 255, 255, 0.2);margin: 16px 28px 16px 0;float: left;"></div>
 <ul nz-menu [nzTheme]="'dark'" [nzMode]="'horizontal'" style="line-height: 64px;" RabbitID="${MenuID}">
-<li nz-menu-item>nav 1</li>
-<li nz-menu-item>nav 2</li>
-<li nz-menu-item>nav 3</li>
+<li nz-menu-item RabbitID="${MenuItemID1}">nav 1</li>
+<li nz-menu-item RabbitID="${MenuItemID2}">nav 2</li>
+<li nz-menu-item RabbitID="${MenuItemID3}">nav 3</li>
 </ul>
 </div>`);
     return htmlJson;
@@ -141,6 +155,8 @@ createComponentInfo('general.icon', 'rabbit-design:icon-iconfont', IconModel);
 createComponentInfo('general.button', 'rabbit-design:icon-button', ButtonModel);
 createComponentInfo('layout');
 createComponentInfo('layout.top-center-bottom', 'rabbit-design:icon-iconfont', TopCenterBottomLayout);
+createComponentInfo('forms');
+createComponentInfo('forms.input', 'rabbit-design:icon-input', InputForms);
 createComponentInfo('completed');
 createComponentInfo('completed.header-1-group', 'rabbit-design:icon-iconfont', Header1Group);
 createComponentInfoOver();
@@ -217,19 +233,6 @@ let a = [
         isLeaf: true,
         icon: 'rabbit-design:icon-button'
       },
-    ]
-  },
-  {
-    key: 'forms',
-    title: 'forms',
-    expanded: true,
-    children: [
-      {
-        key: 'input',
-        title: 'input',
-        isLeaf: true,
-        icon: 'rabbit-design:icon-input'
-      }
     ]
   },
 ]

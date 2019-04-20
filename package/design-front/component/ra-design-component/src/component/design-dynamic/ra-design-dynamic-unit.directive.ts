@@ -18,7 +18,7 @@ import {
   NzInputDirective,
   NzHeaderComponent,
   NzIconDirective,
-  NzLayoutComponent
+  NzLayoutComponent, NzContentComponent, NzFooterComponent, NzSiderComponent
 } from './nz-module/ng-zorro-antd.module';
 import {PageEditorService} from '../design-stage/page-editor/page-editor.service';
 import {HtmlJson} from 'himalaya';
@@ -57,7 +57,7 @@ export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson
 
   @HostListener('click', ['$event']) onClick($event) {
     // 判断是否已经点击,然后结束冒泡
-    if ($event['designDynamicUnit_click'] || this.lookUnit || this.mergeParent) {
+    if ($event['designDynamicUnit_click']) {
       return;
     }
     this.PageEditorService.select(this.RabbitPath);
@@ -117,10 +117,13 @@ export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson
       } else if (directives === 'nz-header') {
         this.ref['nz-header'] = this.Injector.get(NzHeaderComponent, null, InjectFlags.SkipSelf);
       } else if (directives === 'nz-content') {
+        this.ref['nz-content'] = this.Injector.get(NzContentComponent, null, InjectFlags.SkipSelf);
       } else if (directives === 'nz-footer') {
+        this.ref['nz-footer'] = this.Injector.get(NzFooterComponent, null, InjectFlags.SkipSelf);
       } else if (directives === 'nz-layout') {
         this.ref['nz-layout'] = this.Injector.get(NzLayoutComponent, null, InjectFlags.SkipSelf);
       } else if (directives === 'nz-sider') {
+        this.ref['nz-sider'] = this.Injector.get(NzSiderComponent, null, InjectFlags.SkipSelf);
       }
     });
   }

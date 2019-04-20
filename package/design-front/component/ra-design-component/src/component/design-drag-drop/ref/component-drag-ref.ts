@@ -16,17 +16,16 @@ export class ComponentDragRef extends FlowDragRef<TreeNodeModel> {
   targetDrag: RaDesignDragDirective;
   targetDrop: RaDesignDropDirective;
   insertMode: 'insertBefore' | 'insertAfter' | 'append';
-
-  constructor(public DesignDragDirective: RaDesignDragDirective) {
-    super(DesignDragDirective);
-  }
-
   /** Handler for the `mousedown`/`touchstart` events. */
   _pointerDown = (event: MouseEvent | TouchEvent) => {
     // TODO (@angular/cdk/cdk-drag-drop/drag-ref.ts!_pointerDown)
     if (!this.disabled && this.data.children.length === 0) {
       this._initializeDragSequence(this._rootElement, event);
     }
+  }
+
+  constructor(public DesignDragDirective: RaDesignDragDirective) {
+    super(DesignDragDirective);
   }
 
   _updateActiveDropContainer(event: MouseEvent | TouchEvent, {x, y}: Point) {
@@ -71,15 +70,29 @@ export class ComponentDragRef extends FlowDragRef<TreeNodeModel> {
       }
     } else if (currentElement.classList.contains('cdk-drag') && currentElement.designDragDrop) {
       const drag: RaDesignDragDirective = currentElement.designDragDrop;
-      if (drag.type === 'dynamic-unit') {
-        const dynamicUnit: DynamicUnitInterface = drag as any;
-        if (!dynamicUnit.lookDrop) {
-          return {
-            type: 'drag',
-            dragDrop: drag,
-          };
-        }
+      if (drag.type !== 'dynamic-unit') {
+        return;
       }
+      const dynamicUnit: DynamicUnitInterface = drag as any;
+      // 是容器的情况
+      if (dynamicUnit.isContainer) {
+        // 锁定拖拽了就不行
+        if (dynamicUnit.lookDrop || dynamicUnit.lookUnit) {
+          return;
+        }
+        return {
+          type: 'drag',
+          dragDrop: drag,
+        };
+      }
+      // 不是容器的情况
+      if (dynamicUnit.mergeParent || dynamicUnit.lookDrop) {
+        return;
+      }
+      return {
+        type: 'drag',
+        dragDrop: drag,
+      };
     }
   }
 
