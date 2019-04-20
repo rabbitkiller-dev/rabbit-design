@@ -21,7 +21,7 @@ import {PropertiesEditorService} from './properties-editor.service';
 import {RaDesignToolsInterface} from '../ra-design-tools.interface';
 import {RUNTIME_EVENT_ENUM} from '../../design-runtime/runtime-event.service';
 import {PageEditorService} from '../../design-stage/page-editor/page-editor.service';
-import {StageTabModel} from 'ra-design-component';
+import {RaDesignStageService, StageTabModel} from '../../design-stage';
 import {DesignHtmlJson} from '../../design-stage/page-editor/interface';
 import {RaDesignWidgetModule} from '../../design-widget/ra-design-widget.module';
 import {parserDirective} from '../../design-dynamic/parser-directive';
@@ -51,24 +51,23 @@ export class PropertiesEditorInterface extends RaDesignToolsInterface implements
     private compiler: Compiler,
     private PropertiesEditorService: PropertiesEditorService,
     private PageEditorService: PageEditorService,
+    private RaDesignStageService: RaDesignStageService,
   ) {
     super(Injector);
     this.initEvent();
   }
 
   initEvent() {
-    this.RuntimeEventService.on(RUNTIME_EVENT_ENUM.Stage_Open, (value) => {
+    this.RuntimeEventService.on(RUNTIME_EVENT_ENUM.Stage_Click, (value) => {
       this.currentStage = value;
+      this.changePanel();
+    });
+    this.RuntimeEventService.on(RUNTIME_EVENT_ENUM.StagePageEditor_DynamicAfterViewInit, (value) => {
+      this.currentStage = this.RaDesignStageService.stageMap.get(value);
       this.changePanel();
     });
     this.RuntimeEventService.on(RUNTIME_EVENT_ENUM.StagePageEditor_SelectionChange, () => {
       this.changePanel();
-    });
-    this.RuntimeEventService.on(RUNTIME_EVENT_ENUM.StagePageEditor_UpdateDynamicHtml, () => {
-      setTimeout(() => {
-        // TODO 增加渲染后的方法
-        this.changePanel();
-      }, 200);
     });
   }
 

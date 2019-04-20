@@ -3,12 +3,13 @@ import {FlowDragRef} from './flow-drag-ref';
 import {Point} from './interface/point';
 import {TreeNodeModel} from '../../design-tree';
 import {RaDesignDropDirective} from '../ra-design-drop.directive';
-import {PageEditorService} from '../../design-stage/page-editor/page-editor.service';
+import {PageEditorChild, PageEditorService} from '../../design-stage/page-editor/page-editor.service';
 import {extendStyles, toggleNativeDragInteractions} from '../../cdk-drag-drop/drag-styling';
 import {RaDesignDynamicUnitDirective} from '../../design-dynamic/ra-design-dynamic-unit.directive';
 import {ComponentService} from '../../design-tools/component/component.service';
 import {DynamicUnitInterface} from '../../design-dynamic/interface';
 import {deepCloneNode, getTransform} from '../drag-drop-util';
+import {ComponentMap} from '../../design-tools/component/registry';
 
 export class ComponentDragRef extends FlowDragRef<TreeNodeModel> {
   lastType: 'page-editor' | 'dynamic-unit' = null;
@@ -162,15 +163,15 @@ const ComponentDragRefUtil = new (class {
 
   pageEditor_mouseUp(this: ComponentDragRef) {
     const pageEditorService: PageEditorService = this.Injector.get(PageEditorService);
-    const componentService: ComponentService = this.Injector.get(ComponentService);
-    pageEditorService.addRoot(this.targetDrop.data, componentService.getHtmlJson(this.data.key));
+    const pageEditorChild = new PageEditorChild(this.targetDrop.data, pageEditorService);
+    pageEditorService.addRoot(this.targetDrop.data, ComponentMap.get(this.data.key).createToPage(pageEditorChild));
   }
 
   dynamicUnit_mouseMove(this: ComponentDragRef, drop: DynamicUnitInterface, event: MouseEvent | TouchEvent, {x, y}: Point) {
     const target: HTMLElement = drop.ElementRef.nativeElement;
     const parent: HTMLElement = target.parentElement;
     const clientRect = target.getBoundingClientRect();
-    if (drop.isContainer) {
+    if (drop.isContainer && !drop.lookDrop) {
       // TODO target目标需要特殊处理
       target.append(this._placeholder);
       this.insertMode = 'append';
@@ -192,14 +193,14 @@ const ComponentDragRefUtil = new (class {
 
   dynamicUnit_mouseUp(this: ComponentDragRef) {
     const pageEditorService: PageEditorService = this.Injector.get(PageEditorService);
-    const componentService: ComponentService = this.Injector.get(ComponentService);
     const targetDrag: RaDesignDynamicUnitDirective = this.targetDrag as any;
+    const pageEditorChild = new PageEditorChild(targetDrag.stageID, pageEditorService);
     if (this.insertMode === 'insertBefore') {
-      pageEditorService.insertBefore(targetDrag.RabbitPath, componentService.getHtmlJson(this.data.key));
+      pageEditorChild.insertBefore(targetDrag.RabbitPath, ComponentMap.get(this.data.key).createToPage(pageEditorChild));
     } else if (this.insertMode === 'insertAfter') {
-      pageEditorService.insertAfter(targetDrag.RabbitPath, componentService.getHtmlJson(this.data.key));
+      pageEditorChild.insertAfter(targetDrag.RabbitPath, ComponentMap.get(this.data.key).createToPage(pageEditorChild));
     } else if (this.insertMode === 'append') {
-      pageEditorService.append(targetDrag.RabbitPath, componentService.getHtmlJson(this.data.key));
+      pageEditorChild.append(targetDrag.RabbitPath, ComponentMap.get(this.data.key).createToPage(pageEditorChild));
     }
   }
 })

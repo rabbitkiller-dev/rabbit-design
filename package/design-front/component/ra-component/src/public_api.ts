@@ -5,5 +5,4 @@
 export * from './lib/ra-component.service';
 export * from './lib/ra-component.component';
 export * from './lib/ra-component.module';
-
-
+export * from './lib/services/http.service';

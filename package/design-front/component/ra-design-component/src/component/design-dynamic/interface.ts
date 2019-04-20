@@ -12,7 +12,7 @@ export interface DynamicUnitInterface extends DynamicUnitServerInterface{
 }
 
 export interface DynamicUnitServerInterface {
-  RabbitID: string; // 他主要的HtmlJson的路径
+  RabbitID?: string; // 他主要的HtmlJson的路径
   lookUnit?: boolean; // 锁定单元
   lookDrag?: boolean; // 锁定拖拽
   lookDrop?: boolean; // 锁定拖放

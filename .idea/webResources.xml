@@ -8,6 +8,7 @@
             <path value="file://$PROJECT_DIR$/package/design-front/src" />
             <path value="file://$PROJECT_DIR$/package/tutu-gallery/src" />
             <path value="file://$PROJECT_DIR$/package/design-front/component/ra-design-component" />
+            <path value="file://$PROJECT_DIR$/package/design-front/component/ra-component" />
           </resourceRoots>
         </entryData>
       </entry>

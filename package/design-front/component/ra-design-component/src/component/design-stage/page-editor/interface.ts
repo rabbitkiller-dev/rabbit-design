@@ -1,5 +1,6 @@
 import {PageModel} from '../../design-tools/page/interface';
 import {HtmlJson} from 'himalaya';
+import {DynamicUnitServerInterface} from '../../design-dynamic/interface';
 
 export interface PageInfoModel extends PageModel {
   content?: {
@@ -7,17 +8,9 @@ export interface PageInfoModel extends PageModel {
     html: string,
     css: string,
     unitStructure: {
-      [index: string]: {
-        RabbitID: string; // ID
-        lookUnit?: boolean; // 锁定单元
-        lookDrag?: boolean; // 锁定拖拽
-        lookDrop?: boolean; // 锁定拖放
-        mergeParent?: boolean; // 合并父级
-        isContainer?: boolean; // 是否是容器
-      },
+      [index: string]: DynamicUnitServerInterface,
     },
-    propertiesStructure: {
-    },
+    propertiesStructure: {},
   }; // 页面类型
 }
 
@@ -33,7 +26,15 @@ export interface DesignHtmlJson extends HtmlJson {
   RabbitPath?: string;
   children: DesignHtmlJson[];
 }
+
 export interface DesignDynamicHtmlJson extends DesignHtmlJson {
   RabbitPath: string;
   children: DesignDynamicHtmlJson[];
+}
+
+export interface HtmlJsonChangeEvent {
+  changeType: 'add' | 'modify' | 'delete';
+  stageID: string;
+  htmlJson: DesignHtmlJson[];
+  nodeJson: DesignHtmlJson;
 }

@@ -6,14 +6,17 @@
 import {Injectable} from '@angular/core';
 import {ToolsFactory} from '../design-tools/ra-design-tools.service';
 import {StageTabModel} from '../design-stage/interface';
-import {PageEditorServiceEvent} from '../design-stage/page-editor/interface';
+import {HtmlJsonChangeEvent, PageEditorServiceEvent} from '../design-stage/page-editor/interface';
 
 export enum RUNTIME_EVENT_ENUM {
-  ToolsInterface_Minimize = 'ToolsInterface_Minimize', // 点击了最小化事件
-  Stage_Put = 'Stage_Put', // 在stage list推入了一个新的stage
-  Stage_Open = 'Stage_Open', // 打开某个舞台
-  StagePageEditor_SelectionChange = 'StagePageEditor_SelectionChange', // 选择变化
-  StagePageEditor_UpdateDynamicHtml = 'StagePageEditor_UpdateDynamicHtml', // 更新动态html
+  ToolsInterface_Minimize, // 点击了最小化事件
+  Stage_Put, // 在stage list推入了一个新的stage
+  Stage_Open, // 打开某个舞台
+  Stage_Click, // 点击某个舞台
+  StagePageEditor_SelectionChange, // 选择变化
+  StagePageEditor_UpdateDynamicHtml, // 更新动态html
+  StagePageEditor_DynamicAfterViewInit, // 动态组件视图初始化完毕
+  StagePageEditor_HtmlJsonChange, // htmlJson变化
 }
 @Injectable({
   providedIn: 'root'
@@ -32,9 +35,12 @@ export class RuntimeEventService {
   on(type: RUNTIME_EVENT_ENUM.ToolsInterface_Minimize, listener: (value: ToolsFactory) => void);
   on(type: RUNTIME_EVENT_ENUM.Stage_Open, listener: (value: StageTabModel) => void);
   on(type: RUNTIME_EVENT_ENUM.Stage_Put, listener: (value: StageTabModel) => void);
+  on(type: RUNTIME_EVENT_ENUM.Stage_Click, listener: (value: StageTabModel) => void);
   on(type: RUNTIME_EVENT_ENUM.StagePageEditor_UpdateDynamicHtml, listener: (value: PageEditorServiceEvent) => void);
   on(type: RUNTIME_EVENT_ENUM.StagePageEditor_SelectionChange, listener: (value: void) => void);
-  on<T>(type: any, listener: (value: T) => void) {
+  on(type: RUNTIME_EVENT_ENUM.StagePageEditor_DynamicAfterViewInit, listener: (value: string) => void);
+  on(type: RUNTIME_EVENT_ENUM.StagePageEditor_HtmlJsonChange, listener: (value: HtmlJsonChangeEvent) => void);
+  on<T>(type: any, listener: (value: T) => void): () => void {
     this._addEventListener(type, listener, false);
     return () => {
       const existing: Array<Function> = this._events[type];
@@ -48,8 +54,11 @@ export class RuntimeEventService {
   emit(type: RUNTIME_EVENT_ENUM.ToolsInterface_Minimize, value: ToolsFactory);
   emit(type: RUNTIME_EVENT_ENUM.Stage_Put, StageTabModel);
   emit(type: RUNTIME_EVENT_ENUM.Stage_Open, value: StageTabModel);
+  emit(type: RUNTIME_EVENT_ENUM.Stage_Click, value: StageTabModel);
   emit(type: RUNTIME_EVENT_ENUM.StagePageEditor_UpdateDynamicHtml, value: PageEditorServiceEvent);
   emit(type: RUNTIME_EVENT_ENUM.StagePageEditor_SelectionChange, value: void);
+  emit(type: RUNTIME_EVENT_ENUM.StagePageEditor_DynamicAfterViewInit, value: string);
+  emit(type: RUNTIME_EVENT_ENUM.StagePageEditor_HtmlJsonChange, value: HtmlJsonChangeEvent);
   emit<T = any>(type: any, value?: T) {
     const existing: Array<Function> = this._events[type];
     if (!existing) {

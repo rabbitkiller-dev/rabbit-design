@@ -8,6 +8,13 @@ export const KEY_MAP_LIST = {
   side_bar_structure: {
     delete: {key: 'delete'},
   },
+  side_bar_page: {
+    copy: {key: 'ctrl+c'},
+    paste: {key: 'ctrl+v'},
+    cut: {key: 'ctrl+x'},
+    delete: {key: 'delete'},
+  },
+  side_bar_component: {},
   stage_page_editor: {
     copy: {key: 'ctrl+c'},
     paste: {key: 'ctrl+v'},

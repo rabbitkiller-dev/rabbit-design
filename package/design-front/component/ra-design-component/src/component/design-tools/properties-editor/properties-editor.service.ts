@@ -15,7 +15,7 @@ export class PropertiesEditorService {
 
   static getNzInput() {
     return `
-            <ra-design-icon-panel [instance]="instance['nz-icon']" [nodeJson]="nodeJson"></ra-design-icon-panel>
+            <ra-design-icon-panel [instance]="instance['nz-input']" [nodeJson]="nodeJson"></ra-design-icon-panel>
 `;
   }
 

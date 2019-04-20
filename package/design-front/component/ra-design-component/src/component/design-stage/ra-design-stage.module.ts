@@ -8,12 +8,14 @@ import {RaDesignStageService} from './ra-design-stage.service';
 import {PageEditorInterface} from './page-editor/page-editor.interface';
 import {RaDesignDynamicModule} from '../design-dynamic/ra-design-dynamic.module';
 import {FormsModule} from '@angular/forms';
+import {RaDesignMonacoModule} from '../design-monaco/ra-design-monaco.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     // DragDropModule,
+    RaDesignMonacoModule,
     RaDesignDynamicModule,
     RaDesignDragDropModule,
     NzIconModule,

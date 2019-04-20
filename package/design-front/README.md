@@ -45,10 +45,12 @@ UI
 测试
   测试平台
   单元测试
-  环境测试
+  端到端测试
   测试代码生成
   api测试
   随机json生成
+bug中心
+需求中心
 url配置
   api
   资源
@@ -59,6 +61,11 @@ url配置
      拖拽容器
      lookDrop bug 假设拖拽到lookDrop窗口下面的组件,就会变成排序,那就会无视lookDrop插入到lookDrop元素下
      解决ng组件容器 找到容器append的目标元素
+     移动端用坐标获取目标
+     document.elementFromPoint(myLocation.clientX, myLocation.clientY);
+RabbitID
+  拥有ID的标签才会被Rabbit所管理
+  不被Rabbit管理的标签无法进行拖拽和编辑功能
 
 ## 设计平台相关
  - 尽量不停止冒泡功能,导致父节点无法触发事件.采用判断target和$event记录同等事件是否触发过来结束方法

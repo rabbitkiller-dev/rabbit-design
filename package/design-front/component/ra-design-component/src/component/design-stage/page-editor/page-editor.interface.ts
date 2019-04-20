@@ -14,9 +14,9 @@ import {RaDesignKeyMapService, WINDOW_NAME} from '../../design-key-map/ra-design
       <div class="page-editor-content" designDrop="page-editor" [designData]="stageID" (wheel)="onMouseWheel($event)">
         <div class="page-editor-content__left_top" #topLeft>
           <ng-container *ngIf="mode == 'a'">
-            <ng-template [design-dynamic]="dynamicHtml"></ng-template>
+            <ng-template [design-dynamic]="dynamicHtml" [stageID]="stageID"></ng-template>
           </ng-container>
-          <textarea *ngIf="mode == 'b'" [(ngModel)]="dynamicHtml"></textarea>
+          <ra-design-monaco *ngIf="mode == 'b'" [(ngModel)]="pageInfo.content.html"></ra-design-monaco>
         </div>
       </div>
       <div class="page-editor-footer">
@@ -32,7 +32,7 @@ export class PageEditorInterface implements OnInit, AfterViewInit, OnDestroy {
   mode = 'a';
   wheelOption = {
     size: 1,
-  }
+  };
   private dynamicHtml: string;
   @ViewChild('topLeft') topLeft: ElementRef;
 
@@ -46,8 +46,10 @@ export class PageEditorInterface implements OnInit, AfterViewInit, OnDestroy {
   aaa() {
     if (this.mode === 'b') {
       this.mode = 'a';
+      this.PageEditorService.addRoot(this.stageID, this.pageInfo.content.html);
     } else {
       this.mode = 'b';
+      this.PageEditorService.deleteHtmlJson(this.stageID);
     }
   }
 

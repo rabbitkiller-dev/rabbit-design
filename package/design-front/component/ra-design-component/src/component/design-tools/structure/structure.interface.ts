@@ -1,6 +1,6 @@
 import {Component, ElementRef, Injector, ViewChild} from '@angular/core';
 import {PageEditorService} from '../../design-stage/page-editor/page-editor.service';
-import {StageFactory, StageTabModel} from '../../design-stage';
+import {StageFactoryType, StageTabModel} from '../../design-stage';
 import {
   NzFormatEmitEvent,
   NzTreeNodeOptions,
@@ -13,6 +13,7 @@ import {RUNTIME_EVENT_ENUM} from '../../design-runtime/runtime-event.service';
 import {HtmlJson} from 'himalaya';
 import {DesignHtmlJson} from '../../design-stage/page-editor/interface';
 import {RaDesignKeyMapService, WINDOW_NAME} from '../../design-key-map/ra-design-key-map.service';
+import {RaDesignStageService} from '../../design-stage/ra-design-stage.service';
 
 @Component({
   template: `
@@ -38,7 +39,8 @@ export class StructureInterface extends RaDesignToolsInterface {
     public ElementRef: ElementRef,
     public PageEditorService: PageEditorService,
     public RaDesignKeyMapService: RaDesignKeyMapService,
-    public Injector: Injector
+    public RaDesignStageService: RaDesignStageService,
+    public Injector: Injector,
   ) {
     super(Injector);
     this.initEvent();
@@ -55,12 +57,12 @@ export class StructureInterface extends RaDesignToolsInterface {
           break;
       }
     });
-    this.RuntimeEventService.on(RUNTIME_EVENT_ENUM.Stage_Open, (value) => {
+    this.RuntimeEventService.on(RUNTIME_EVENT_ENUM.Stage_Click, (value) => {
       this.currentStage = value;
       this.updateStructure();
     });
-    this.RuntimeEventService.on(RUNTIME_EVENT_ENUM.StagePageEditor_UpdateDynamicHtml, (value) => {
-      this.selection = this.PageEditorService.getSelection(this.currentStage.id);
+    this.RuntimeEventService.on(RUNTIME_EVENT_ENUM.StagePageEditor_DynamicAfterViewInit, (value) => {
+      this.currentStage = this.RaDesignStageService.stageMap.get(value);
       this.updateStructure();
     });
     this.RuntimeEventService.on(RUNTIME_EVENT_ENUM.StagePageEditor_SelectionChange, (value) => {
@@ -74,7 +76,7 @@ export class StructureInterface extends RaDesignToolsInterface {
       this.destroy();
       return;
     }
-    if (this.currentStage.factory !== StageFactory.PageEditor) {
+    if (this.currentStage.factory !== StageFactoryType.PageEditor) {
       this.destroy();
       return;
     }
@@ -104,7 +106,7 @@ export class StructureInterface extends RaDesignToolsInterface {
       this.destroy();
       return;
     }
-    if (this.currentStage.factory !== StageFactory.PageEditor) {
+    if (this.currentStage.factory !== StageFactoryType.PageEditor) {
       this.destroy();
       return;
     }

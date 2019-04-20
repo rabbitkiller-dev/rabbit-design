@@ -1,4 +1,4 @@
-import { AppPage } from './app.po';
+import {AppPage} from './app.po';
 
 describe('workspace-project App', () => {
   let page: AppPage;
@@ -7,8 +7,11 @@ describe('workspace-project App', () => {
     page = new AppPage();
   });
 
-  it('should display welcome message', () => {
+  it('should display welcome message', async () => {
     page.navigateTo();
-    expect(page.getTitleText()).toEqual('Welcome to design-front!');
+    const a = await page.waitStageBar();
+    expect(a).toEqual(true);
+
+    // expect(page.getTitleText()).toEqual('Welcome to design-front!');
   });
 });

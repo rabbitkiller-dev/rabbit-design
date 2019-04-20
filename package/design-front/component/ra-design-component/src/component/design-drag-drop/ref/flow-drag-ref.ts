@@ -51,57 +51,90 @@ export class FlowDragRef<T = any> implements DragRefInterface {
   Injector: Injector;
 
   _rootElement: HTMLElement;
-
+  _hasStartedDragging: boolean = false; // 是否在拖拽中
   /** Element displayed next to the user's pointer while the element is dragged. */
   protected _preview: HTMLElement;
-
-  /** Reference to the view of the preview element. */
-  private _previewRef: EmbeddedViewRef<any> | null;
-
-  /** Reference to the view of the placeholder element. */
-  private _placeholderRef: EmbeddedViewRef<any> | null;
-
   /** Element that is rendered instead of the draggable item while it is being sorted. */
   protected _placeholder: HTMLElement;
-
-  _hasStartedDragging: boolean = false; // 是否在拖拽中
-
-  /** Subscription to pointer movement events. */
-  private _pointerMoveSubscription = Subscription.EMPTY;
-  /** Subscription to the event that is dispatched when the user lifts their pointer. */
-  private _pointerUpSubscription = Subscription.EMPTY;
-
   /** Coordinates within the element at which the user picked up the element. */
   protected _pickupPositionInElement: Point;
-
-  /** Coordinates on the page at which the user picked up the element. */
-  private _pickupPositionOnPage: Point;
-
   /**
    * Reference to the element that comes after the draggable in the DOM, at the time
    * it was picked up. Used for restoring its initial position when it's dropped.
    */
   protected _nextSibling: Node | null;
+  /** Cached scroll position on the page when the element was picked up. */
+  protected _scrollPosition: { top: number, left: number };
+  /** Handler for the `mousedown`/`touchstart` events. */
+  protected _pointerDown = (event: MouseEvent | TouchEvent) => {
+    if (event['button'] !== 0) {
+      return;
+    }
+    // TODO (@angular/cdk/cdk-drag-drop/drag-ref.ts!_pointerDown)
+    if (!this.disabled) {
+      this._initializeDragSequence(this._rootElement, event);
+    }
+  };
+  /** Handler that is invoked when the user lifts their pointer up, after initiating a drag. */
+  protected _pointerUp = (event: MouseEvent | TouchEvent) => {
+    // Note that here we use `isDragging` from the service, rather than from `this`.
+    // The difference is that the one from the service reflects whether a dragging sequence
+    // has been initiated, whereas the one on `this` includes whether the user has passed
+    // the minimum dragging threshold.
+    if (!this.DragDropRegistry.isDragging(this)) {
+      return;
+    }
 
+    this._removeSubscriptions();
+    this.DragDropRegistry.stopDragging(this);
+
+    if (!this._hasStartedDragging) {
+      return;
+    }
+
+    this._animatePreviewToPlaceholder().then(() => {
+      this._cleanupDragArtifacts(event);
+      this.DragDropRegistry.stopDragging(this);
+    });
+  };
+  /** Reference to the view of the preview element. */
+  private _previewRef: EmbeddedViewRef<any> | null;
+  /** Reference to the view of the placeholder element. */
+  private _placeholderRef: EmbeddedViewRef<any> | null;
+  /** Subscription to pointer movement events. */
+  private _pointerMoveSubscription = Subscription.EMPTY;
+  /** Subscription to the event that is dispatched when the user lifts their pointer. */
+  private _pointerUpSubscription = Subscription.EMPTY;
+  /** Coordinates on the page at which the user picked up the element. */
+  private _pickupPositionOnPage: Point;
   /** Element that will be used as a template to create the draggable item's preview. */
   private _previewTemplate: DragHelperTemplate | null;
   /** Template for placeholder element rendered to show where a draggable would be dropped. */
   private _placeholderTemplate: DragHelperTemplate | null;
-
   /** CSS `transform` that is applied to the element while it's being dragged. */
   private _activeTransform: Point = {x: 0, y: 0};
-
   /** Inline `transform` value that the element had before the first dragging sequence. */
   private _initialTransform?: string;
+  /** Handler that is invoked when the user moves their pointer after they've initiated a drag. */
+  private _pointerMove = (event: MouseEvent | TouchEvent) => {
+    if (!this._hasStartedDragging) {
+      const pointerPosition = this._getPointerPositionOnPage(event);
+      const distanceX = Math.abs(pointerPosition.x - this._pickupPositionOnPage.x);
+      const distanceY = Math.abs(pointerPosition.y - this._pickupPositionOnPage.y);
 
-  /** Cached scroll position on the page when the element was picked up. */
-  protected _scrollPosition: { top: number, left: number };
-
-  /** Whether starting to drag this element is disabled. */
-  get disabled(): boolean {
-    return this.RaDesignDragDirective.disabled && this.DragDropRegistry.isDragging(this);
-  }
-
+      // Only start dragging after the user has moved more than the minimum distance in either
+      // direction. Note that this is preferrable over doing something like `skip(minimumDistance)`
+      // in the `pointerMove` subscription, because we're not guaranteed to have one move event
+      // per pixel of movement (e.g. if the user moves their pointer quickly).
+      if (distanceX + distanceY >= DRAG_START_THRESHOLD) {
+        this._hasStartedDragging = true;
+        this.NgZone.run(() => this._startDragSequence(event));
+      }
+      return;
+    }
+    const constrainedPointerPosition = this._getConstrainedPointerPosition(event);
+    this._updateActiveDropContainer(event, constrainedPointerPosition);
+  };
 
   constructor(public RaDesignDragDirective: RaDesignDragDirective) {
     this.DragDropRegistry = this.RaDesignDragDirective.DragDropRegistry as DragDropRegistry<FlowDragRef>;
@@ -114,6 +147,10 @@ export class FlowDragRef<T = any> implements DragRefInterface {
     this.data = this.RaDesignDragDirective.data;
   }
 
+  /** Whether starting to drag this element is disabled. */
+  get disabled(): boolean {
+    return this.RaDesignDragDirective.disabled && this.DragDropRegistry.isDragging(this);
+  }
 
   withRootElement(rootElement: ElementRef<HTMLElement> | HTMLElement): DragRefInterface {
     const element = rootElement instanceof ElementRef ? rootElement.nativeElement : rootElement;
@@ -127,13 +164,18 @@ export class FlowDragRef<T = any> implements DragRefInterface {
     return this;
   }
 
-  /** Handler for the `mousedown`/`touchstart` events. */
-  protected _pointerDown = (event: MouseEvent | TouchEvent) => {
-    // TODO (@angular/cdk/cdk-drag-drop/drag-ref.ts!_pointerDown)
-    if (!this.disabled) {
-      this._initializeDragSequence(this._rootElement, event);
-    }
-  };
+  /**
+   * Returns the element that is being used as a placeholder
+   * while the current element is being dragged.
+   */
+  getPlaceholderElement(): HTMLElement {
+    return this._placeholder;
+  }
+
+  /** Returns the root draggable element. */
+  getRootElement(): HTMLElement {
+    return this._rootElement;
+  }
 
   /**
    * Sets up the different variables and subscriptions
@@ -204,27 +246,6 @@ export class FlowDragRef<T = any> implements DragRefInterface {
     this.DragDropRegistry.startDragging(this, event);
   }
 
-  /** Handler that is invoked when the user moves their pointer after they've initiated a drag. */
-  private _pointerMove = (event: MouseEvent | TouchEvent) => {
-    if (!this._hasStartedDragging) {
-      const pointerPosition = this._getPointerPositionOnPage(event);
-      const distanceX = Math.abs(pointerPosition.x - this._pickupPositionOnPage.x);
-      const distanceY = Math.abs(pointerPosition.y - this._pickupPositionOnPage.y);
-
-      // Only start dragging after the user has moved more than the minimum distance in either
-      // direction. Note that this is preferrable over doing something like `skip(minimumDistance)`
-      // in the `pointerMove` subscription, because we're not guaranteed to have one move event
-      // per pixel of movement (e.g. if the user moves their pointer quickly).
-      if (distanceX + distanceY >= DRAG_START_THRESHOLD) {
-        this._hasStartedDragging = true;
-        this.NgZone.run(() => this._startDragSequence(event));
-      }
-      return;
-    }
-    const constrainedPointerPosition = this._getConstrainedPointerPosition(event);
-    this._updateActiveDropContainer(event, constrainedPointerPosition);
-  };
-
   /**
    * Updates the item's position in its drop container, or moves it
    * into a new one, depending on its current drag position.
@@ -248,19 +269,6 @@ export class FlowDragRef<T = any> implements DragRefInterface {
     element.style.display = 'none';
     this.Document.body.appendChild(element.parentNode.replaceChild(placeholder, element));
     this.Document.body.appendChild(preview);
-  }
-
-  /**
-   * Returns the element that is being used as a placeholder
-   * while the current element is being dragged.
-   */
-  getPlaceholderElement(): HTMLElement {
-    return this._placeholder;
-  }
-
-  /** Returns the root draggable element. */
-  getRootElement(): HTMLElement {
-    return this._rootElement;
   }
 
   /**
@@ -328,76 +336,6 @@ export class FlowDragRef<T = any> implements DragRefInterface {
   protected _getConstrainedPointerPosition(event: MouseEvent | TouchEvent): Point {
     const point = this._getPointerPositionOnPage(event);
     return point;
-  }
-
-  /** Handler that is invoked when the user lifts their pointer up, after initiating a drag. */
-  protected _pointerUp = (event: MouseEvent | TouchEvent) => {
-    // Note that here we use `isDragging` from the service, rather than from `this`.
-    // The difference is that the one from the service reflects whether a dragging sequence
-    // has been initiated, whereas the one on `this` includes whether the user has passed
-    // the minimum dragging threshold.
-    if (!this.DragDropRegistry.isDragging(this)) {
-      return;
-    }
-
-    this._removeSubscriptions();
-    this.DragDropRegistry.stopDragging(this);
-
-    if (!this._hasStartedDragging) {
-      return;
-    }
-
-    this._animatePreviewToPlaceholder().then(() => {
-      this._cleanupDragArtifacts(event);
-      this.DragDropRegistry.stopDragging(this);
-    });
-  };
-
-  /**
-   * Animates the preview element from its current position to the location of the drop placeholder.
-   * @returns Promise that resolves when the animation completes.
-   */
-  private _animatePreviewToPlaceholder(): Promise<void> {
-    // If the user hasn't moved yet, the transitionend event won't fire.
-    if (!this._hasStartedDragging) {
-      return Promise.resolve();
-    }
-
-    const placeholderRect = this._placeholder.getBoundingClientRect();
-
-    // Apply the class that adds a transition to the preview.
-    this._preview.classList.add('cdk-drag-animating');
-
-    // Move the preview to the placeholder position.
-    this._preview.style.transform = getTransform(placeholderRect.left, placeholderRect.top);
-
-    // If the element doesn't have a `transition`, the `transitionend` event won't fire. Since
-    // we need to trigger a style recalculation in order for the `cdk-drag-animating` class to
-    // apply its style, we take advantage of the available info to figure out whether we need to
-    // bind the event in the first place.
-    const duration = getTransformTransitionDurationInMs(this._preview);
-
-    if (duration === 0) {
-      return Promise.resolve();
-    }
-
-    return this.NgZone.runOutsideAngular(() => {
-      return new Promise(resolve => {
-        const handler = ((event: TransitionEvent) => {
-          if (!event || (event.target === this._preview && event.propertyName === 'transform')) {
-            this._preview.removeEventListener('transitionend', handler);
-            resolve();
-            clearTimeout(timeout);
-          }
-        }) as EventListenerOrEventListenerObject;
-
-        // If a transition is short enough, the browser might not fire the `transitionend` event.
-        // Since we know how long it's supposed to take, add a timeout with a 50% buffer that'll
-        // fire if the transition hasn't completed when it was supposed to.
-        const timeout = setTimeout(handler as Function, duration * 1.5);
-        this._preview.addEventListener('transitionend', handler);
-      });
-    });
   }
 
   /** Cleans up the DOM artifacts that were added to facilitate the element being dragged. */
@@ -537,6 +475,53 @@ export class FlowDragRef<T = any> implements DragRefInterface {
         dragDrop: drag,
       };
     }
+  }
+
+  /**
+   * Animates the preview element from its current position to the location of the drop placeholder.
+   * @returns Promise that resolves when the animation completes.
+   */
+  private _animatePreviewToPlaceholder(): Promise<void> {
+    // If the user hasn't moved yet, the transitionend event won't fire.
+    if (!this._hasStartedDragging) {
+      return Promise.resolve();
+    }
+
+    const placeholderRect = this._placeholder.getBoundingClientRect();
+
+    // Apply the class that adds a transition to the preview.
+    this._preview.classList.add('cdk-drag-animating');
+
+    // Move the preview to the placeholder position.
+    this._preview.style.transform = getTransform(placeholderRect.left, placeholderRect.top);
+
+    // If the element doesn't have a `transition`, the `transitionend` event won't fire. Since
+    // we need to trigger a style recalculation in order for the `cdk-drag-animating` class to
+    // apply its style, we take advantage of the available info to figure out whether we need to
+    // bind the event in the first place.
+    const duration = getTransformTransitionDurationInMs(this._preview);
+
+    if (duration === 0) {
+      return Promise.resolve();
+    }
+
+    return this.NgZone.runOutsideAngular(() => {
+      return new Promise(resolve => {
+        const handler = ((event: TransitionEvent) => {
+          if (!event || (event.target === this._preview && event.propertyName === 'transform')) {
+            this._preview.removeEventListener('transitionend', handler);
+            resolve();
+            clearTimeout(timeout);
+          }
+        }) as EventListenerOrEventListenerObject;
+
+        // If a transition is short enough, the browser might not fire the `transitionend` event.
+        // Since we know how long it's supposed to take, add a timeout with a 50% buffer that'll
+        // fire if the transition hasn't completed when it was supposed to.
+        const timeout = setTimeout(handler as Function, duration * 1.5);
+        this._preview.addEventListener('transitionend', handler);
+      });
+    });
   }
 }
 

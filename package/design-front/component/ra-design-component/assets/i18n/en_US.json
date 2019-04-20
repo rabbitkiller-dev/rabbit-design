@@ -15,5 +15,10 @@
   "Cut": "Cut",
   "Delete": "Delete",
   "general": "general",
-  "general.icon": "icon"
+  "general.icon": "icon",
+  "general.button": "button",
+  "layout": "layout",
+  "layout.top-center-bottom": "top-center-bottom",
+  "completed": "completed",
+  "completed.header-1-group": "header-1-group"
 }

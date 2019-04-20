@@ -1,4 +1,9 @@
 {
   "general": "通用",
-  "general.icon": "图标"
+  "general.icon": "图标",
+  "general.button": "按钮",
+  "layout": "布局",
+  "layout.top-center-bottom": "上中下布局",
+  "completed": "已完成",
+  "completed.header-1-group": "头部组合1"
 }

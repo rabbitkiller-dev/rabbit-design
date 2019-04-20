@@ -34,6 +34,16 @@
               },
               {
                 "glob": "**/*",
+                "input": "./node_modules/monaco-editor/min/vs/",
+                "output": "/assets/monaco-editor"
+              },
+              {
+                "glob": "**/*",
+                "input": "./component/ra-component/assets/",
+                "output": "/assets/"
+              },
+              {
+                "glob": "**/*",
                 "input": "./component/ra-design-component/assets/",
                 "output": "/assets/"
               }

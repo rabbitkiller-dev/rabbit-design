@@ -15,7 +15,7 @@ import {NzIconDirective} from '../../design-dynamic/nz-module/icon';
 export class IconPanelComponent {
   @Input() nodeJson: HtmlJson;
   @Input() instance: NzIconDirective;
-  id: number;
+  id: any;
 
   constructor(private cdr: ChangeDetectorRef) {
 

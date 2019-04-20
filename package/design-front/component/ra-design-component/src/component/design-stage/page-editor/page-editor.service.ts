@@ -13,7 +13,6 @@ import {getTransformTransitionDurationInMs} from '../../cdk-drag-drop/transition
 export class PageEditorService {
   subjects: Map<string, Subject<PageEditorServiceEvent>> = new Map(); // 存储与page-editor.component订阅的事件
   pageInfos: Map<string, PageInfoModel> = new Map(); // 存储所有打开的page的信息
-  instance: any;
 
   /**
    * runtime data
@@ -22,9 +21,9 @@ export class PageEditorService {
    * selections.get(stageID);
    * dynamicUnits.get(stageID).get(RabbitID);
    */
-  private htmlJsons: Map<string, DesignHtmlJson[]> = new Map(); // 存储html结构
-  private htmlJsonMaps: Map<string, Map<string, DesignHtmlJson>> = new Map(); // 以key-value的形式存储的html
-  private selections: Map<string, Set<string>> = new Map(); // 存储选中的html
+  readonly htmlJsons: Map<string, DesignHtmlJson[]> = new Map(); // 存储html结构
+  readonly htmlJsonMaps: Map<string, Map<string, DesignHtmlJson>> = new Map(); // 以key-value的形式存储的html
+  readonly selections: Map<string, Set<string>> = new Map(); // 存储选中的html
   readonly dynamicUnits: Map<string, Map<string, DynamicUnitInterface>> = new Map(); // 存储动态组件的实例
 
   /**
@@ -39,10 +38,35 @@ export class PageEditorService {
     public NgZone: NgZone,
     public RuntimeEventService: RuntimeEventService,
   ) {
+    window['pageEditor'] = this;
     // 舞台变化更新selection视图
-    this.RuntimeEventService.on(RUNTIME_EVENT_ENUM.Stage_Open, (value) => {
+    this.RuntimeEventService.on(RUNTIME_EVENT_ENUM.Stage_Click, (value) => {
       const selection = this.selections.get(value.id);
       const dynamicUnitMap = this.dynamicUnits.get(value.id);
+      if (!selection) {
+        this.designSelection.style.display = 'none';
+        return;
+      }
+      dynamicUnitMap.forEach((value, key, map) => {
+        if (selection.has(value.RabbitPath)) {
+          const rect = value.ElementRef.nativeElement.getBoundingClientRect();
+          this.designSelection.style.display = 'block';
+          this.designSelection.style.width = rect.width + 'px';
+          this.designSelection.style.height = rect.height + 'px';
+          this.designSelection.style.transform = `translate3d(${Math.round(rect.left)}px, ${Math.round(rect.top)}px, 0)`;
+        }
+      });
+    });
+    this.RuntimeEventService.on(RUNTIME_EVENT_ENUM.StagePageEditor_HtmlJsonChange, (value) => {
+      if (value.changeType !== 'delete') {
+        return;
+      }
+      const selection = this.selections.get(value.stageID);
+      const dynamicUnitMap = this.dynamicUnits.get(value.stageID);
+      if (!selection || selection.size === 0) {
+        this.designSelection.style.display = 'none';
+        return;
+      }
       dynamicUnitMap.forEach((value, key, map) => {
         if (selection.has(value.RabbitPath)) {
           const rect = value.ElementRef.nativeElement.getBoundingClientRect();
@@ -95,22 +119,20 @@ export class PageEditorService {
   /**
    * editor runtime api
    */
-  select(RabbitPath: string, instance?: any) {
-    this.instance = instance;
+  select(RabbitPath: string) {
     const stageID: string = RabbitPath.split('|')[0];
-    // const RabbitID: string = this.getNodeJson(RabbitPath).RabbitID;
-    const selection = this.selections.get(stageID);
+    let selection = this.selections.get(stageID);
     const dynamicUnitMap = this.dynamicUnits.get(stageID);
     // 如果已经选中了就不执行了
     if (selection && selection.has(RabbitPath)) {
       return;
     }
-    if (selection) {
-      selection.clear();
-      selection.add(RabbitPath);
-    } else {
-      this.selections.set(stageID, new Set([RabbitPath]));
+    if (!selection) {
+      selection = new Set([RabbitPath]);
+      this.selections.set(stageID, selection);
     }
+    selection.clear();
+    selection.add(RabbitPath);
     dynamicUnitMap.forEach((value, key, map) => {
       if (selection.has(value.RabbitPath)) {
         const rect = value.ElementRef.nativeElement.getBoundingClientRect();
@@ -264,6 +286,12 @@ export class PageEditorService {
     const selection = this.selections.get(stageID);
     selection.delete(path);
     this.updateRabbitID(stageID, this.htmlJsons.get(stageID));
+    this.RuntimeEventService.emit(RUNTIME_EVENT_ENUM.StagePageEditor_HtmlJsonChange, {
+      changeType: 'delete',
+      stageID: stageID,
+      htmlJson: this.htmlJsons.get(stageID),
+      nodeJson: target,
+    });
     // 更新视图
     this.updateDynamic(stageID);
   }
@@ -302,7 +330,7 @@ export class PageEditorService {
         return attr.key === 'RabbitID' || attr.key === '[RabbitID]';
       });
       if (!attr) {
-        nodeJson.RabbitID = this._generateId(htmlJsonMap, nodeJson.tagName);
+        nodeJson.RabbitID = this._generateId(htmlJsonMap, 'TempID:');
         nodeJson.attributes.push({
           key: 'RabbitID',
           value: nodeJson.RabbitID,
@@ -319,7 +347,7 @@ export class PageEditorService {
     let id;
     // 一直循环到id唯一
     do {
-      id = name + (index === 0 ? '' : index);
+      id = name + (index + 1);
       index++;
     } while (htmlJsonMap.get(id));
     return id;
@@ -332,14 +360,19 @@ export class PageEditorService {
     const htmlJsonMap = this.htmlJsonMaps.get(stageID);
     const copyHtmlJson = JSON.parse(JSON.stringify(this.getHtmlJson(stageID)));
     RaDesignTreeService.forEachTree(copyHtmlJson, (node: DesignDynamicHtmlJson) => {
-      if (!node.RabbitPath && node.type === 'element') {
+      // 不是元素并且没有RabbitID就算了
+      if (node.type !== 'element' || !node.RabbitID) {
+        return;
+      }
+
+      if (!node.RabbitPath) {
         node.RabbitPath = `${stageID}|${node.RabbitID}`;
         htmlJsonMap.get(node.RabbitID).RabbitPath = node.RabbitPath;
         node.attributes.push({
           key: 'design-dynamic-unit',
           value: node.RabbitPath,
         });
-      } else if (node.RabbitPath && node.type === 'element') {
+      } else if (node.RabbitPath) {
         htmlJsonMap.get(node.RabbitID).RabbitPath = node.RabbitPath;
         node.attributes.push({
           key: 'design-dynamic-unit',
@@ -350,6 +383,10 @@ export class PageEditorService {
         return;
       }
       node.children.forEach((childrenNode) => {
+        // 不是元素并且没有RabbitID就算了
+        if (childrenNode.type !== 'element' && !!childrenNode.RabbitID) {
+          return;
+        }
         childrenNode.RabbitPath = `${node.RabbitPath}/${childrenNode.RabbitID}`;
       });
     });
@@ -463,5 +500,90 @@ export class PageEditorService {
     return this.HttpClient.put(`api/tools-page/page-info`, this.pageInfos.get(id)).pipe(map((result: any) => {
       return result.data;
     }));
+  }
+}
+
+/**
+ * 从PageEditor分出各个Stage的功能
+ */
+export class PageEditorChild {
+  constructor(
+    public stageID: string,
+    public PageEditorService: PageEditorService,
+  ) {
+  }
+
+  // 存储所有打开的page的信息
+  get pageInfo(): PageInfoModel {
+    return this.PageEditorService.pageInfos.get(this.stageID);
+  }
+
+  /**
+   * runtime data
+   * htmlJson.get(stageID);
+   * htmlJsonMaps.get(stageID).get(RabbitID);
+   * selections.get(stageID);
+   * dynamicUnits.get(stageID).get(RabbitID);
+   */
+  // 存储html结构
+  get htmlJson(): DesignHtmlJson[] {
+    return this.PageEditorService.htmlJsons.get(this.stageID);
+  }
+
+  // 以key-value的形式存储的html
+  get htmlJsonMap(): Map<string, DesignHtmlJson> {
+    return this.PageEditorService.htmlJsonMaps.get(this.stageID);
+  }
+
+  // 存储选中的html
+  get selection(): Set<string> {
+    return this.PageEditorService.selections.get(this.stageID);
+  }
+
+  // 存储动态组件的实例
+  get dynamicUnit(): Map<string, DynamicUnitInterface> {
+    return this.PageEditorService.dynamicUnits.get(this.stageID);
+  }
+
+  generateId(name: string, dynamicUnit: DynamicUnitServerInterface = {}): string {
+    const RabbitID = this.PageEditorService._generateId(this.htmlJsonMap, name);
+    dynamicUnit.RabbitID = RabbitID;
+    this.pageInfo.content.unitStructure[RabbitID] = Object.assign({
+      lookUnit: false,
+      lookDrag: true,
+      lookDrop: false,
+      mergeParent: false,
+      isContainer: false,
+      isSelect: false
+    }, dynamicUnit);
+    return RabbitID;
+  }
+
+  addRoot(htmlString: string);
+  addRoot(htmlJsonArr: HtmlJson[]);
+  addRoot(htmlJson: HtmlJson);
+  addRoot(htmlJson: any) {
+    this.PageEditorService.addRoot(this.stageID, htmlJson);
+  }
+
+  insertBefore(path: string, htmlJson: string);
+  insertBefore(path: string, htmlJson: HtmlJson[]);
+  insertBefore(path: string, htmlJson: HtmlJson, origin?: string);
+  insertBefore(path: string, htmlJson: any, origin?: string) {
+    this.PageEditorService.insertBefore(path, htmlJson, origin);
+  }
+
+  insertAfter(path: string, htmlJson: string);
+  insertAfter(path: string, htmlJson: HtmlJson[]);
+  insertAfter(path: string, htmlJson: HtmlJson, origin: string);
+  insertAfter(path: string, htmlJson: any, origin?: string) {
+    this.PageEditorService.insertBefore(path, htmlJson, origin);
+  }
+
+  append(path: string, htmlJson: string);
+  append(path: string, htmlJson: HtmlJson[]);
+  append(path: string, htmlJson: HtmlJson, origin: string);
+  append(path: string, htmlJson: any, origin?: string) {
+    this.PageEditorService.append(path, htmlJson, origin);
   }
 }

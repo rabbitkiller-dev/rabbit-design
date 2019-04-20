@@ -60,7 +60,7 @@ export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson
     if ($event['designDynamicUnit_click'] || this.lookUnit || this.mergeParent) {
       return;
     }
-    this.PageEditorService.select(this.RabbitPath, this.ref);
+    this.PageEditorService.select(this.RabbitPath);
     // 用事件冒泡告诉他们已经点击了 用这种方法不停止冒泡
     $event['designDynamicUnit_click'] = true;
   }
@@ -113,19 +113,14 @@ export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson
       if (directives === 'nz-icon') {
         this.ref['nz-icon'] = this.Injector.get(NzIconDirective, null, InjectFlags.SkipSelf);
       } else if (directives === 'nz-input') {
+        this.ref['nz-input'] = this.Injector.get(NzInputDirective, null, InjectFlags.SkipSelf);
       } else if (directives === 'nz-header') {
-        this.mergeParent = true;
-        this.isContainer = true;
+        this.ref['nz-header'] = this.Injector.get(NzHeaderComponent, null, InjectFlags.SkipSelf);
       } else if (directives === 'nz-content') {
-        this.mergeParent = true;
-        this.isContainer = true;
       } else if (directives === 'nz-footer') {
-        this.mergeParent = true;
-        this.isContainer = true;
       } else if (directives === 'nz-layout') {
-        this.isContainer = true;
+        this.ref['nz-layout'] = this.Injector.get(NzLayoutComponent, null, InjectFlags.SkipSelf);
       } else if (directives === 'nz-sider') {
-        this.isContainer = true;
       }
     });
   }

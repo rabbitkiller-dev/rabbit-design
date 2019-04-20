@@ -1,5 +1,5 @@
 import {Component, ElementRef, Injector} from '@angular/core';
-import {RaDesignStageService, StageFactory} from '../../design-stage';
+import {RaDesignStageService, StageFactoryType} from '../../design-stage';
 import {NzFormatEmitEvent, TreeNodeModel} from '../../design-tree';
 import {RaDesignMenuService} from '../../design-menu/ra-design-menu.service';
 import {PageContextMenuKey, PageService} from './page.service';
@@ -62,6 +62,9 @@ export class PageInterface extends RaDesignToolsInterface {
           //   originParentNode.children.splice(originParentNode.children.indexOf(htmlJson), 1);
           // }
           break;
+        case 'copy':
+          console.log('copy');
+          break;
       }
 
     });
@@ -71,7 +74,7 @@ export class PageInterface extends RaDesignToolsInterface {
     const node = $event.node;
     const page: PageModel = $event.node.origin;
     if (page.pageType === PageType.page) {
-      this.RaDesignStageService.putStage(StageFactory.PageEditor, {id: node.key, title: node.title});
+      this.RaDesignStageService.putStage(StageFactoryType.PageEditor, {id: node.key, title: node.title});
     } else {
       node.setExpanded(!node.isExpanded);
     }
@@ -81,7 +84,7 @@ export class PageInterface extends RaDesignToolsInterface {
     const node = $event.node;
     const page: PageModel = $event.node.origin;
     if (page.pageType === PageType.page) {
-      this.RaDesignStageService.putStage(StageFactory.PageEditor, {id: node.key, title: node.title});
+      this.RaDesignStageService.putStage(StageFactoryType.PageEditor, {id: node.key, title: node.title});
     } else {
       node.setExpanded(true);
     }

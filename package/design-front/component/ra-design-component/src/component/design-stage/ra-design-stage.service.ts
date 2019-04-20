@@ -1,11 +1,11 @@
-import {ComponentFactory, ComponentFactoryResolver, Injectable,} from '@angular/core';
+import {ComponentFactory, ComponentFactoryResolver, Injectable} from '@angular/core';
 import {StageTabModel, StageTabServerModel} from './interface';
 import {PageEditorInterface} from './page-editor/page-editor.interface';
 import {moveItemInArray} from '../cdk-drag-drop';
 import {LocalStorageService} from 'ngx-webstorage';
 import {RUNTIME_EVENT_ENUM, RuntimeEventService} from '../design-runtime/runtime-event.service';
 
-export enum StageFactory {
+export enum StageFactoryType {
   PageEditor = 'pageEditor',
 }
 
@@ -14,8 +14,8 @@ export class RaDesignStageService {
   /**
    * static
    */
-  stageList: StageTabModel[] = [];
-  private stageMap: Map<string, StageTabModel> = new Map();
+  readonly stageList: StageTabModel[] = [];
+  readonly stageMap: Map<string, StageTabModel> = new Map();
   private factory: Map<String, ComponentFactory<any>> = new Map();
 
   constructor(
@@ -27,23 +27,23 @@ export class RaDesignStageService {
   }
 
   init() {
-    this.factory.set(StageFactory.PageEditor, this.ComponentFactoryResolver.resolveComponentFactory(PageEditorInterface));
-    this.stageList = this.getLocalModel() || [];
+    this.factory.set(StageFactoryType.PageEditor, this.ComponentFactoryResolver.resolveComponentFactory(PageEditorInterface));
+    this.stageList.push(...this.getLocalModel());
     this.stageList.forEach((stage) => {
       this.stageMap.set(stage.id, stage);
     });
   }
 
-  putStage(tools: StageFactory, stageTabServer: StageTabServerModel) {
+  putStage(tools: StageFactoryType, stageTabServer: StageTabServerModel) {
     if (this.stageMap.get(stageTabServer.id)) {
       this.showStage(stageTabServer.id);
       return;
     }
 
     switch (tools) {
-      case StageFactory.PageEditor:
+      case StageFactoryType.PageEditor:
         const stage = {
-          factory: StageFactory.PageEditor,
+          factory: StageFactoryType.PageEditor,
           icon: 'rabbit-design:icon-page',
           ...stageTabServer,
         };
@@ -76,7 +76,7 @@ export class RaDesignStageService {
     this.saveLocalModel();
   }
 
-  getFactory(tools: StageFactory) {
+  getFactory(tools: StageFactoryType) {
     return this.factory.get(tools);
   }
 
@@ -90,7 +90,8 @@ export class RaDesignStageService {
   }
 
   getLocalModel(): StageTabModel[] {
-    return this.LocalStorageService.retrieve('stage-tab-local');
+    const tabs = this.LocalStorageService.retrieve('stage-tab-local');
+    return tabs || [];
   }
 
   map(call: (stage: StageTabModel) => void): void {

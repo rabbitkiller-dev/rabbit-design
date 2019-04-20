@@ -1,15 +1,24 @@
 import {
-  Input, Directive, OnInit, Compiler, Component,
-  ModuleWithComponentFactories, NgModule, ReflectiveInjector, ViewContainerRef, ComponentRef, ErrorHandler, ElementRef,
+  AfterViewInit,
+  Compiler,
+  Component,
+  ComponentRef,
+  Directive,
+  ElementRef,
+  Input,
+  ModuleWithComponentFactories,
+  NgModule,
+  OnInit,
+  ViewContainerRef,
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
-
 // Rendering ElComponent dependence
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Throttle} from '../design-unit/throttle';
 import {RaDesignDynamicUnitModule} from './ra-design-dynamic-unit.module';
 import {NgZorroAntdModule} from './nz-module/ng-zorro-antd.module';
+import {RUNTIME_EVENT_ENUM, RuntimeEventService} from '../design-runtime/runtime-event.service';
 
 @Directive({
   selector: '[design-dynamic]',
@@ -21,6 +30,8 @@ export class RaDesignDynamicDirective implements OnInit {
   _dynamicFormData: any;
 
   dynamicChange: Throttle = new Throttle(1000);
+
+  @Input() stageID: string;
 
   @Input('design-dynamic') set dynamicHtml(html: string) {
 
@@ -77,6 +88,7 @@ export class RaDesignDynamicDirective implements OnInit {
       }
       this.vcRef.clear();
       this.comRef = this.vcRef.createComponent(factory, 0);
+      this.comRef.instance.stageID = this.stageID;
     });
   }
 
@@ -87,12 +99,22 @@ export class RaDesignDynamicDirective implements OnInit {
       styles: [],
       // encapsulation: ViewEncapsulation.Native,
     })
-    class DynamicComponent implements OnInit {
+    class DynamicComponent implements OnInit, AfterViewInit {
+      stageID: string;
 
-      constructor(public ElementRef: ElementRef) {
+      constructor(
+        public ElementRef: ElementRef,
+        public RuntimeEventService: RuntimeEventService,
+      ) {
       }
 
       ngOnInit() {
+      }
+
+      ngAfterViewInit() {
+        setTimeout(() => {
+          this.RuntimeEventService.emit(RUNTIME_EVENT_ENUM.StagePageEditor_DynamicAfterViewInit, this.stageID);
+        });
       }
     }
 

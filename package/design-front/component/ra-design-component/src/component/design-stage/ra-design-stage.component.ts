@@ -9,7 +9,7 @@ import {RUNTIME_EVENT_ENUM, RuntimeEventService} from '../design-runtime/runtime
 @Component({
   selector: 'ra-design-stage',
   template: `
-    <!-- stage的上方上任务栏 -->
+    <!-- stage的上方上舞台栏 -->
     <div class="stage-bar" designDrop (onDesignDropped)="onDesignDropped($event)" (wheel)="onMouseWheel($event)">
       <ng-container *ngFor="let stageTab of RaDesignStageService.stageList">
         <li class="stage-bar-item" [class.is-select]="stageTab.select" (click)="select(stageTab)"
@@ -69,6 +69,7 @@ export class RaDesignStageComponent implements OnInit, AfterViewInit {
   select(tools: StageTabModel) {
     this.RaDesignStageService.showStage(tools.id);
     this.reviewInterface();
+    this.RuntimeEventService.emit(RUNTIME_EVENT_ENUM.Stage_Click, tools);
   }
 
   drop(event: CdkDragDrop<string[]>) {
