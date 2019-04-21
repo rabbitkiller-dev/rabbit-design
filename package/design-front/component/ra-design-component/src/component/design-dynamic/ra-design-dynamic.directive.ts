@@ -19,6 +19,7 @@ import {Throttle} from '../design-unit/throttle';
 import {RaDesignDynamicUnitModule} from './ra-design-dynamic-unit.module';
 import {NgZorroAntdModule} from './nz-module/ng-zorro-antd.module';
 import {RUNTIME_EVENT_ENUM, RuntimeEventService} from '../design-runtime/runtime-event.service';
+import {PageEditorService} from '../design-stage/page-editor/page-editor.service';
 
 @Directive({
   selector: '[design-dynamic]',
@@ -57,6 +58,7 @@ export class RaDesignDynamicDirective implements OnInit {
 
   constructor(
     private vcRef: ViewContainerRef,
+    private PageEditorService: PageEditorService,
     private compiler: Compiler,
   ) {
   }
@@ -86,6 +88,8 @@ export class RaDesignDynamicDirective implements OnInit {
       if (this.comRef) {
         this.comRef.destroy();
       }
+      this.PageEditorService.dynamicUnits.delete(this.stageID);
+      this.PageEditorService.dynamicUnits.set(this.stageID, new Map());
       this.vcRef.clear();
       this.comRef = this.vcRef.createComponent(factory, 0);
       this.comRef.instance.stageID = this.stageID;

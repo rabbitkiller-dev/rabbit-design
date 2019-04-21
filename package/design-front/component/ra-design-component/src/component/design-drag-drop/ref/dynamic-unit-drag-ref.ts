@@ -74,6 +74,12 @@ export class DynamicUnitDragRef<HtmlJson> extends FlowDragRef {
   }
 
   _cleanupDragArtifacts(event: MouseEvent | TouchEvent) {
+    this._rootElement.style.display = '';
+    if (this._placeholder.nextSibling) {
+      this._placeholder.parentNode.insertBefore(this._rootElement, this._placeholder.nextSibling);
+    } else {
+      this._placeholder.parentNode.appendChild(this._rootElement);
+    }
     this._destroyPreview();
     this._destroyPlaceholder();
     this.NgZone.run(() => {

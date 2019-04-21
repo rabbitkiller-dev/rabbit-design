@@ -179,6 +179,7 @@ export class PageEditorService {
       add.push(htmlJson);
     }
     if (origin) {
+      this.selections.get(stageID).delete(origin);
       const originParentNode = this.getParentNodeJson(origin);
       originParentNode.children.splice(originParentNode.children.indexOf(htmlJson), 1);
     }
@@ -203,11 +204,12 @@ export class PageEditorService {
     } else {
       add.push(htmlJson);
     }
+    const stageID: string = path.split('|')[0];
     if (origin) {
+      this.selections.get(stageID).delete(origin);
       const originParentNode = this.getParentNodeJson(origin);
       originParentNode.children.splice(originParentNode.children.indexOf(htmlJson), 1);
     }
-    const stageID: string = path.split('|')[0];
     const targetNode = this.getNodeJson(path);
     const targetParentNode = this.getParentNodeJson(path);
     targetParentNode.children.splice(targetParentNode.children.indexOf(targetNode), 0, ...add);
@@ -227,11 +229,12 @@ export class PageEditorService {
     } else {
       add.push(htmlJson);
     }
+    const stageID: string = path.split('|')[0];
     if (origin) {
+      this.selections.get(stageID).delete(origin);
       const originParentNode = this.getParentNodeJson(origin);
       originParentNode.children.splice(originParentNode.children.indexOf(htmlJson), 1);
     }
-    const stageID: string = path.split('|')[0];
     const targetNode = this.getNodeJson(path);
     const targetParentNode = this.getParentNodeJson(path);
     console.log(targetParentNode.children.indexOf(targetNode));
@@ -252,11 +255,12 @@ export class PageEditorService {
     } else {
       add.push(htmlJson);
     }
+    const stageID: string = path.split('|')[0];
     if (origin) {
+      this.selections.get(stageID).delete(origin);
       const originParentNode = this.getParentNodeJson(origin);
       originParentNode.children.splice(originParentNode.children.indexOf(htmlJson), 1);
     }
-    const stageID: string = path.split('|')[0];
     const targetNode = this.getNodeJson(path);
     targetNode.children.push(...add);
     this.updateRabbitID(stageID, this.htmlJsons.get(stageID));
@@ -396,8 +400,6 @@ export class PageEditorService {
         childrenNode.RabbitPath = `${node.RabbitPath}/${childrenNode.RabbitID}`;
       });
     });
-    this.dynamicUnits.delete(stageID);
-    this.dynamicUnits.set(stageID, new Map());
     this.next(stageID, {
       stageID: stageID,
       type: 'update-dynamic-html',
