@@ -375,13 +375,11 @@ export class PageEditorService {
 
       if (!node.RabbitPath) {
         node.RabbitPath = `${stageID}|${node.RabbitID}`;
-        htmlJsonMap.get(node.RabbitID).RabbitPath = node.RabbitPath;
         node.attributes.push({
           key: 'design-dynamic-unit',
           value: node.RabbitPath,
         });
       } else if (node.RabbitPath) {
-        htmlJsonMap.get(node.RabbitID).RabbitPath = node.RabbitPath;
         node.attributes.push({
           key: 'design-dynamic-unit',
           value: node.RabbitPath,

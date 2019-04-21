@@ -23,7 +23,6 @@ export interface PageEditorServiceEvent {
 
 export interface DesignHtmlJson extends HtmlJson {
   RabbitID: string;
-  RabbitPath?: string;
   children: DesignHtmlJson[];
 }
 

@@ -10,9 +10,6 @@ export class ComponentService {
   getPlaceholder(key: string): HTMLElement {
     return ComponentMap.get(key).getPlaceholder();
     /*switch (key) {
-      case 'input':
-        div.innerHTML = '<input class="ant-input">';
-        break;
       case 'top-right-content':
         div.innerHTML = `<nz-layout class="ant-layout">
       <nz-header class="ant-layout-header dynamic-blank">Header</nz-header>

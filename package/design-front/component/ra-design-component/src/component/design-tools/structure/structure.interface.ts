@@ -115,8 +115,9 @@ export class StructureInterface extends RaDesignToolsInterface {
       return;
     }
     let selectNode: TreeNodeModel;
+    const dynamicUnit = this.PageEditorService.dynamicUnits.get(this.currentStage.id);
     RaDesignTreeService.forEachTree(this.structureTree.nzNodes, (node) => {
-      if (this.selection.indexOf(node.origin.RabbitPath) !== -1) {
+      if (this.selection.indexOf(dynamicUnit.get(node.origin.RabbitID).RabbitPath) !== -1) {
         selectNode = node;
       }
     });
@@ -135,6 +136,6 @@ export class StructureInterface extends RaDesignToolsInterface {
 
   onClick($event: NzFormatEmitEvent) {
     const htmlJson: DesignHtmlJson = $event.node.origin;
-    this.PageEditorService.select(htmlJson.RabbitPath);
+    this.PageEditorService.select(this.PageEditorService.dynamicUnits.get(this.currentStage.id).get(htmlJson.RabbitID).RabbitPath);
   }
 }
