@@ -1,6 +1,41 @@
 @import "../../design-style/themes/default.less";
-[design-input]{
+
+[design-input] {
   color: @text-color;
   background-color: @back-extra-color;
   border: 1px solid @back-color;
+}
+
+.ra-design-side-bar-interface {
+  .ant-form-item-label label{
+    color: @text-color;
+  }
+  .ant-input:not(.ant-input-disabled) {
+    &:hover {
+      border-color: @primary-color;
+    }
+    &:focus {
+      border-color: @primary-color;
+    }
+  }
+  .ant-input {
+    color: @text-color;
+    background-color: @back-extra-color;
+    border: 1px solid @back-color;
+  }
+  .ant-select-selection {
+    color: @text-color;
+    background-color: @back-extra-color;
+    border: 1px solid @back-color;
+    &:hover {
+      border-color: @primary-color;
+    }
+    &:focus {
+      border-color: @primary-color;
+    }
+  }
+  .ant-select-selection__clear{
+    background: transparent;
+    color: @text-color;
+  }
 }

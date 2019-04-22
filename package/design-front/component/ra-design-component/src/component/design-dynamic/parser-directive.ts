@@ -1,6 +1,6 @@
 import {HtmlJson} from 'himalaya';
 
-const DirectiveNames = ['nz-icon', 'nz-input'];
+const DirectiveNames = ['nz-button', 'nz-icon', 'nz-input'];
 const componentName = ['nz-header', 'nz-content', 'nz-footer', 'nz-layout', 'nz-sider'];
 const properties: any = {
   'nz-icon': [{

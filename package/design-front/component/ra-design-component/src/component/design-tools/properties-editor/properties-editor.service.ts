@@ -21,12 +21,7 @@ export class PropertiesEditorService {
 
   static getNzButton() {
     return `
-            <nz-form-item>
-        <nz-form-label [nzSm]="6">type: {{proxy.type}}</nz-form-label>
-        <nz-form-control [nzSm]="14">
-          <input design-input [(ngModel)]="instance.type">
-        </nz-form-control>
-      </nz-form-item>
+            <ra-design-button-panel [instance]="instance['nz-button']" [nodeJson]="nodeJson"></ra-design-button-panel>
 `;
   }
 
@@ -36,8 +31,10 @@ export class PropertiesEditorService {
 
   getDirective(htmlJson: DesignHtmlJson): string {
     return [`
-    <ra-design-input-properties label="RabbitID" [value]="RabbitID.value" (valueChange)="RabbitID.value = $event; nodeJson.RabbitID = $event;"></ra-design-input-properties>
-    `].concat(parserDirective(htmlJson).map((directiveName) => {
+    <ra-design-input-properties label="RabbitID" 
+    [value]="RabbitID.value"
+    (valueChange)="RabbitID.value = $event; nodeJson.RabbitID = $event;" [disabled]="true"></ra-design-input-properties>
+`].concat(parserDirective(htmlJson).map((directiveName) => {
       return this.getDirectiveProperties(directiveName);
     })).join('');
     //    return parserDirective(htmlJson).map((directiveName) => {
@@ -72,6 +69,8 @@ export class PropertiesEditorService {
         return PropertiesEditorService.getNzIcon();
       case 'nz-input':
         return PropertiesEditorService.getNzInput();
+      case 'nz-button':
+        return PropertiesEditorService.getNzButton();
     }
   }
 }

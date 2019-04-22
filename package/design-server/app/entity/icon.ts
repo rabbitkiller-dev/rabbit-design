@@ -15,9 +15,14 @@ export class Icon extends Base {
   projectID: string; // 项目ID @Project
 
   @Column()
+  namespace: string; // 所属命令空间
+
+  @Column()
   fontClass: string; // 字体类名称
 
   @Column('longtext')
-  svg: string; // svg图标
+  svgContent: string; // svg图标
 
+  @Column()
+  author: string; // 创作者 @User.userID
 }

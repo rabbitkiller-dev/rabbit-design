@@ -18,7 +18,7 @@ import {
   NzInputDirective,
   NzHeaderComponent,
   NzIconDirective,
-  NzLayoutComponent, NzContentComponent, NzFooterComponent, NzSiderComponent
+  NzLayoutComponent, NzContentComponent, NzFooterComponent, NzSiderComponent, NzButtonComponent
 } from './nz-module/ng-zorro-antd.module';
 import {PageEditorService} from '../design-stage/page-editor/page-editor.service';
 import {HtmlJson} from 'himalaya';
@@ -112,6 +112,8 @@ export class RaDesignDynamicUnitDirective extends RaDesignDragDirective<HtmlJson
     directives.forEach((directives) => {
       if (directives === 'nz-icon') {
         this.ref['nz-icon'] = this.Injector.get(NzIconDirective, null, InjectFlags.SkipSelf);
+      } else if (directives === 'nz-button') {
+        this.ref['nz-button'] = this.Injector.get(NzButtonComponent, null, InjectFlags.SkipSelf);
       } else if (directives === 'nz-input') {
         this.ref['nz-input'] = this.Injector.get(NzInputDirective, null, InjectFlags.SkipSelf);
       } else if (directives === 'nz-header') {

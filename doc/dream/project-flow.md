@@ -24,6 +24,7 @@
     - projectID
     - projectName 项目名称
     - projectDesc 项目描述
+    - projectFavicon 项目图标
     - projectAlias 项目别名(较为特殊的字段后面补需求)
 - socket
     - 进入项目
