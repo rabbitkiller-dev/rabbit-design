@@ -24,6 +24,9 @@
     - pageType:页面类型
         - 必填*
         - [dir/page/router/component]
+    - 详细 
+    ./package/design-server/app/entity/page.ts
+    ./package/design-server/app/entity/page-info.ts
 - socket
     - 修改页面
     - 进入页面
