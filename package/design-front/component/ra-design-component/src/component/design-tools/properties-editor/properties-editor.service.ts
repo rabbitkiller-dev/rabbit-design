@@ -25,6 +25,12 @@ export class PropertiesEditorService {
 `;
   }
 
+  static getNzMenu() {
+    return `
+            <ra-design-menu-panel [instance]="instance['nz-menu']" [nodeJson]="nodeJson"></ra-design-menu-panel>
+`;
+  }
+
   getPanel(nodeJson: DesignHtmlJson): string {
     return this.getDirective(nodeJson);
   }
@@ -71,6 +77,8 @@ export class PropertiesEditorService {
         return PropertiesEditorService.getNzInput();
       case 'nz-button':
         return PropertiesEditorService.getNzButton();
+      case 'nz-menu':
+        return PropertiesEditorService.getNzMenu();
     }
   }
 }
