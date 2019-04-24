@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --aot --base-href=/design/",
+    "build": "ng build --base-href=/design/",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e --port=4210",
