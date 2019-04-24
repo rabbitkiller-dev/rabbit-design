@@ -1,0 +1,28 @@
+{
+  "name": "rabbit",
+  "version": "1.0.0",
+  "description": "前端自动化工具, (i18n合并json)",
+  "main": "bundles/rabbit-bin.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:script:watch": "tsc --build --watch ./tsconfig.json",
+    "build:script": "tsc --build ./tsconfig.json"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^11.13.7",
+    "commander": "^2.20.0",
+    "shelljs": "^0.8.3",
+    "typescript": "^3.4.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HungryBunny-wei/rabbit-design.git"
+  },
+  "author": "养肥那兔子 (Fatten the rabbit)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HungryBunny-wei/rabbit-design/issues"
+  },
+  "homepage": "https://github.com/HungryBunny-wei/rabbit-design#readme"
+}

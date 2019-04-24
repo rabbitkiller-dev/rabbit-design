@@ -1,5 +1,8 @@
 {
-  "i18nPaths": [
-    "./component/ra-design-component/assets/i18n"
-  ]
+  "i18n": {
+    "source": [
+      "./component/ra-design-component/assets/i18n"
+    ],
+    "target": "./src/assets/i18n"
+  }
 }

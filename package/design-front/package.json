@@ -8,10 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e --port=4210",
-    "build:i18n": "node ./scripts/bundles/rabbit-bin.js i18n",
-    "build:i18n:watch": "node ./scripts/bundles/rabbit-bin.js i18n --watch",
-    "build:script:watch": "tsc --build --watch ./scripts/tsconfig.json",
-    "build:script": "tsc --build ./scripts/tsconfig.json"
+    "build:i18n": "node ../rabbit-cli/bundles/rabbit-bin.js i18n",
+    "build:i18n:watch": "node ./rabbit-cli/bundles/rabbit-bin.js i18n --watch"
   },
   "private": true,
   "dependencies": {
@@ -46,7 +44,6 @@
     "@types/node": "~8.9.4",
     "chokidar": "^2.1.5",
     "codelyzer": "~4.5.0",
-    "commander": "^2.19.0",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~3.1.1",
