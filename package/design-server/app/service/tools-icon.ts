@@ -51,7 +51,7 @@ export default class ToolsPageService extends Service {
     for (const icon of icons) {
       const iconEntity = new Icon();
       iconEntity.fontClass = icon.name;
-      iconEntity.svg = await this.ctx.renderView('icon.svg.ejs', {
+      iconEntity.svgContent = await this.ctx.renderView('icon.svg.ejs', {
         data: icon,
         ctx: this.ctx,
       });

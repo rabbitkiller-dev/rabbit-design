@@ -20,7 +20,7 @@ export default class ToolsIconController extends Controller {
     const fontClass: string = this.getParams().filename.replace('.svg', '');
     await this.app.typeorm.transaction(async (entityManager: EntityManager) => {
       const icon = await this.service.toolsIcon.getIcon(entityManager, {fontClass: fontClass, namespace: namespace, projectID: this.config.user.projectID});
-      this.ctx.body = icon.svg;
+      this.ctx.body = icon.svgContent;
     });
   }
 }

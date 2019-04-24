@@ -15,7 +15,7 @@ ToolsTabModel改名为sideBar
 聚焦样式
 build:i18n增加监听文件
 build:i18n增加target目录
-
+monaco-editor
 命令行
 埋点
   日志
@@ -49,8 +49,6 @@ UI
   测试代码生成
   api测试
   随机json生成
-bug中心
-需求中心
 url配置
   api
   资源
