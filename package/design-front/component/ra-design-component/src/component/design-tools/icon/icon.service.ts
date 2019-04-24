@@ -11,7 +11,7 @@ export class IconService {
   index() {
     return this.HttpClient.get('api/tools-icon').pipe(map((result: any) => {
       result.data.forEach((icon) => {
-        this.NzIconService.addIconLiteral(`rabbit-design:${icon.fontClass}`, icon.svg);
+        this.NzIconService.addIconLiteral(`rabbit-design:${icon.fontClass}`, icon.svgContent);
       });
       return result.data;
     }));
