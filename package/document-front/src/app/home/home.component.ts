@@ -12,7 +12,7 @@ import {Component} from '@angular/core';
         [nzZeroTrigger]="zeroTrigger"
       >
         <div class="logo"></div>
-        <ul nz-menu [nzTheme]="'dark'" [nzMode]="'inline'" [nzInlineCollapsed]="isCollapsed">
+        <ul nz-menu [nzMode]="'inline'" [nzInlineCollapsed]="isCollapsed">
           <li nz-menu-item>
             <span><i nz-icon type="user"></i><span class="nav-text">nav 1</span></span>
           </li>
@@ -28,9 +28,9 @@ import {Component} from '@angular/core';
         </ul>
       </nz-sider>
       <nz-layout>
-        <nz-header style="background: #fff; padding:0;"></nz-header>
+        <nz-header style="background: #5e6366; padding:0;"></nz-header>
         <nz-content style="margin:24px 16px 0;">
-          <div style="padding:24px; background: #fff; min-height: 360px;">
+          <div style="padding:24px; background: #5e6366; min-height: 360px;">
             Content
           </div>
         </nz-content>

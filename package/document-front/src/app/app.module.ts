@@ -5,18 +5,19 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {NgZorroAntdModule, NZ_I18N, NzFormModule, zh_CN} from 'ng-zorro-antd';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientModule, HttpClientXsrfModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {registerLocaleData} from '@angular/common';
 import zh from '@angular/common/locales/zh';
 import {LoginComponent} from './login/login.component';
 import {HomeComponent} from './home/home.component';
+import {OauthGithubComponent} from './login/oauth.github.component';
 
 registerLocaleData(zh);
 
 @NgModule({
   declarations: [
-    AppComponent, LoginComponent, HomeComponent
+    AppComponent, LoginComponent, OauthGithubComponent, HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -24,6 +25,10 @@ registerLocaleData(zh);
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    HttpClientXsrfModule.withOptions({
+      cookieName: 'csrfToken',
+      headerName: 'x-csrf-token',
+    }),
     BrowserAnimationsModule,
     NgZorroAntdModule,
   ],
