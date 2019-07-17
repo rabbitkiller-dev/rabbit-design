@@ -1,17 +1,35 @@
-# rabbit-deisgn
-
+# rabbit-deisgn(关于这个项目就不在这里更新了,和公司合作,所以以后有机会在出,但是有计划了别的东西看下面!)
 这是一个正在构思的项目,
 以拖拉拽的方式拖拽窗口和组件,并且点击code又能以代码的方式调整改写,改写完还能够转换为拖拉拽
 
+# rabbit-document(文档系统,能够用在代码工程/需求/api/笔记)
+# rabbit-console(控制台系统,对后端的日志和埋点做统计,并且提供前端方便的埋点服务)
 
-# RabbitDesign
+目前只有两人的团队,一个我另一个我朋友准备做的内容,计划为自己的工作室提供流畅的基础工具
+当然,市面上一定已经有了我想要的东西,但是没有什么东西比自己做要开心的了.
+(简介到这,后面计划正在做document中,有一个进展了,就更新markdown到github上)
+
 
 该项目包含
-  - design-front 设计平台前端
+  - design-front 设计平台前端 (停止开发)
     - ra-component rabbit组件
     - ra-component 设计平台组件
-  - design-server 设计平台后端
-  
+  - design-server 设计平台后端(停止开发)
+  - document-front 文档系统前端
+  - document-server 文档系统后端
+
+
+
+
+
+
+
+
+
+
+
+
+# RabbitDesign (此内容是旧版本)
 ### 目录
 - [项目流程](./doc/dream/project-flow.md)
 - [数据源管理](#android)
