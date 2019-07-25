@@ -1,17 +1,28 @@
 import {Common} from './common';
 import * as fs from 'fs';
 import * as path from 'path';
+
 const shell = require('shelljs');
+import * as chokidar from 'chokidar';
+
+let watcher;
 
 class I18n extends Common {
   // 暂存变量
+  // 语言Json
   languages: {
-    [index: string]: any;
+    [languageKey: string]: any;
   } = {};
+  // 文件缓存
+  files: Map<string, {
+    [path: string]: string,
+  }> = new Map();
+  watcher: chokidar.FSWatcher;
 
-  constructor(mode, option) {
+  constructor(public mode, public option) {
     super(mode, option);
   }
+
   // 开始
   async start() {
     const sources = this.getSources();
@@ -30,7 +41,11 @@ class I18n extends Common {
       }
     }
     await this.saveLanguages();
+    if (this.option.watch) {
+      this.watchLanguage(sources);
+    }
   }
+
   // 获取源目录
   getSources(): string[] {
     if (!this.config.i18n) {
@@ -42,30 +57,93 @@ class I18n extends Common {
       return [this.config.i18n.source]
     }
   }
+
   // 遍历某个语言目录的所有json文件, 合并然后返回
   async getLanguageJson(languageFolder: string): Promise<any> {
-    const languageFiles = fs.readdirSync(languageFolder).// 遍历文件获取文件
-    filter((filename, index) => {
-      return !fs.statSync(path.join(languageFolder, filename)).isDirectory();
-    });
+    const languageFiles = fs.readdirSync(languageFolder);// 遍历文件获取文件
     const result = {};
-    languageFiles.forEach((languageFile) => {
-      const json = JSON.parse(fs.readFileSync(path.join(languageFolder, languageFile)).toString());
-      Object.assign(result, json);
-    });
+    for (const languageFile of languageFiles) {
+      if (path.extname(languageFile) !== '.json') {
+        continue;
+      }
+      const filePath = path.join(languageFolder, languageFile);
+      if (fs.statSync(filePath).isDirectory()) {
+        const json = await this.getLanguageJson(filePath);
+        Object.assign(result, json);
+      } else {
+        const json = JSON.parse(fs.readFileSync(filePath).toString());
+        Object.assign(result, json);
+      }
+    }
     return result;
   }
+
   // 保存this.languages到文件
   async saveLanguages() {
-    if(!this.config.i18n.target){
+    if (!this.config.i18n.target) {
       throw new Error('请配置18n输入目录,例: {"i18n":{"target":"./src/assets/i18n"}');
     }
-    for(const language of Object.keys(this.languages)){
+    for (const language of Object.keys(this.languages)) {
       shell.mkdir('-p', path.join(this.config.i18n.target));
       fs.writeFileSync(path.join(this.config.i18n.target, language) + '.json', JSON.stringify(this.languages[language], null, 2));
     }
   }
 
+  /**
+   * watch
+   */
+  watchLanguage(sources) {
+    // watcher = this.watcher = chokidar.watch(sources, {ignored: /(^((?!\.json$).)*$)|(\..*___jb_tmp___)/g});
+    watcher = this.watcher = chokidar.watch(sources, {depth: 1});
+    watcher
+      .on('add', () => {
+      })
+      .on('unlink', () => {
+      })
+      .on('error', function (error) {
+        console.info('Error happened', error);
+      })
+      .on('ready', () => {
+        watcher
+          .on('addDir', this.addLanguage.bind(this))
+          .on('change', this.watchChange.bind(this))
+          .on('unlinkDir', this.deleteLanguage.bind(this));
+      })
+  }
+
+  watchLanguageFile() {
+
+  }
+
+  watchChange(changeFilePath) {
+    console.log(changeFilePath);
+  }
+
+  addLanguage(changeFolder) {
+    this.files.set(path.basename(changeFolder), {});
+    /**
+     * 初始化语言目录
+     */
+      // 如果开启监听
+    const watcher = chokidar.watch(changeFolder);
+    watcher
+      .on('error', function (error) {
+        console.info('Error happened', error);
+      })
+      .on('ready', () => {
+        watcher
+          .on('add', () => {
+          })
+          .on('change', () => {
+          })
+          .on('unlink', () => {
+          });
+      })
+  }
+
+  deleteLanguage(changeFolder) {
+    this.files.delete(path.basename(changeFolder));
+  }
 }
 
 // @ts-ignore

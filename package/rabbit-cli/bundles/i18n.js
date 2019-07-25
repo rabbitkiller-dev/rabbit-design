@@ -18,11 +18,18 @@ const common_1 = require("./common");
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 const shell = require('shelljs');
+const chokidar = __importStar(require("chokidar"));
+let watcher;
 class I18n extends common_1.Common {
     constructor(mode, option) {
         super(mode, option);
+        this.mode = mode;
+        this.option = option;
         // 暂存变量
+        // 语言Json
         this.languages = {};
+        // 文件缓存
+        this.files = new Map();
     }
     // 开始
     start() {
@@ -43,6 +50,9 @@ class I18n extends common_1.Common {
                 }
             }
             yield this.saveLanguages();
+            if (this.option.watch) {
+                this.watchLanguage(sources);
+            }
         });
     }
     // 获取源目录
@@ -60,15 +70,22 @@ class I18n extends common_1.Common {
     // 遍历某个语言目录的所有json文件, 合并然后返回
     getLanguageJson(languageFolder) {
         return __awaiter(this, void 0, void 0, function* () {
-            const languageFiles = fs.readdirSync(languageFolder). // 遍历文件获取文件
-                filter((filename, index) => {
-                return !fs.statSync(path.join(languageFolder, filename)).isDirectory();
-            });
+            const languageFiles = fs.readdirSync(languageFolder); // 遍历文件获取文件
             const result = {};
-            languageFiles.forEach((languageFile) => {
-                const json = JSON.parse(fs.readFileSync(path.join(languageFolder, languageFile)).toString());
-                Object.assign(result, json);
-            });
+            for (const languageFile of languageFiles) {
+                if (path.extname(languageFile) !== '.json') {
+                    continue;
+                }
+                const filePath = path.join(languageFolder, languageFile);
+                if (fs.statSync(filePath).isDirectory()) {
+                    const json = yield this.getLanguageJson(filePath);
+                    Object.assign(result, json);
+                }
+                else {
+                    const json = JSON.parse(fs.readFileSync(filePath).toString());
+                    Object.assign(result, json);
+                }
+            }
             return result;
         });
     }
@@ -83,6 +100,56 @@ class I18n extends common_1.Common {
                 fs.writeFileSync(path.join(this.config.i18n.target, language) + '.json', JSON.stringify(this.languages[language], null, 2));
             }
         });
+    }
+    /**
+     * watch
+     */
+    watchLanguage(sources) {
+        // watcher = this.watcher = chokidar.watch(sources, {ignored: /(^((?!\.json$).)*$)|(\..*___jb_tmp___)/g});
+        watcher = this.watcher = chokidar.watch(sources, { depth: 1 });
+        watcher
+            .on('add', () => {
+        })
+            .on('unlink', () => {
+        })
+            .on('error', function (error) {
+            console.info('Error happened', error);
+        })
+            .on('ready', () => {
+            watcher
+                .on('addDir', this.addLanguage.bind(this))
+                .on('change', this.watchChange.bind(this))
+                .on('unlinkDir', this.deleteLanguage.bind(this));
+        });
+    }
+    watchLanguageFile() {
+    }
+    watchChange(changeFilePath) {
+        console.log(changeFilePath);
+    }
+    addLanguage(changeFolder) {
+        this.files.set(path.basename(changeFolder), {});
+        /**
+         * 初始化语言目录
+         */
+        // 如果开启监听
+        const watcher = chokidar.watch(changeFolder);
+        watcher
+            .on('error', function (error) {
+            console.info('Error happened', error);
+        })
+            .on('ready', () => {
+            watcher
+                .on('add', () => {
+            })
+                .on('change', () => {
+            })
+                .on('unlink', () => {
+            });
+        });
+    }
+    deleteLanguage(changeFolder) {
+        this.files.delete(path.basename(changeFolder));
     }
 }
 module.exports = I18n;

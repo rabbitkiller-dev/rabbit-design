@@ -28,6 +28,11 @@ commander
     .description('国际化')
     .option('-w, --watch', '开启监听', false)
     .action(execute('i18n'));
+commander
+    .command('base-url [env]')
+    .description('国际化')
+    .option('-w, --watch', '开启监听', false)
+    .action(execute('i18n'));
 function execute(type) {
     const Start = require('./' + type + '.js');
     return function (mode, options) {
