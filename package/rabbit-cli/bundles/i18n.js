@@ -45,7 +45,7 @@ class I18n extends common_1.Common {
                     if (!this.languages[languageFolderName]) {
                         this.languages[languageFolderName] = {};
                     }
-                    Object.assign(this.languages[languageFolderName], json);
+                    this.mergeJson(this.languages[languageFolderName], json);
                     // fs.writeFileSync(path.join(src, languageFolderName) + '.json', JSON.stringify(json, null, 2));
                 }
             }
@@ -73,17 +73,17 @@ class I18n extends common_1.Common {
             const languageFiles = fs.readdirSync(languageFolder); // 遍历文件获取文件
             const result = {};
             for (const languageFile of languageFiles) {
-                if (path.extname(languageFile) !== '.json') {
-                    continue;
-                }
                 const filePath = path.join(languageFolder, languageFile);
                 if (fs.statSync(filePath).isDirectory()) {
                     const json = yield this.getLanguageJson(filePath);
-                    Object.assign(result, json);
+                    this.mergeJson(result, json);
                 }
                 else {
+                    if (path.extname(languageFile) !== '.json') {
+                        continue;
+                    }
                     const json = JSON.parse(fs.readFileSync(filePath).toString());
-                    Object.assign(result, json);
+                    this.mergeJson(result, json);
                 }
             }
             return result;
@@ -97,6 +97,7 @@ class I18n extends common_1.Common {
             }
             for (const language of Object.keys(this.languages)) {
                 shell.mkdir('-p', path.join(this.config.i18n.target));
+                console.log(`[generate] ${path.join(this.config.i18n.target, language) + '.json'}`);
                 fs.writeFileSync(path.join(this.config.i18n.target, language) + '.json', JSON.stringify(this.languages[language], null, 2));
             }
         });
@@ -150,6 +151,27 @@ class I18n extends common_1.Common {
     }
     deleteLanguage(changeFolder) {
         this.files.delete(path.basename(changeFolder));
+    }
+    mergeJson(target, source) {
+        for (const key of Object.keys(source)) {
+            if (target[key] === null || target[key] === undefined) {
+                target[key] = source[key];
+                continue;
+            }
+            if (typeof target[key] === 'string' || typeof target[key] === 'number' || typeof target[key] === 'boolean') {
+                target[key] = source[key];
+                continue;
+            }
+            if (Array.isArray(target[key])) {
+                if (Array.isArray(source[key])) {
+                    target[key].push(...source[key]);
+                    continue;
+                }
+                target[key] = source[key];
+                continue;
+            }
+            this.mergeJson(target[key], source[key]);
+        }
     }
 }
 module.exports = I18n;
